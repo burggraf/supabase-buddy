@@ -7,10 +7,12 @@ export class StartupService {
     }
 
     public getDefaultRoute(): string {
-        return '/page';
+        console.log('** getDefaultRoute()');
+        return '/home';
     }
 
     public getStartupRoute(): string {
+        console.log('** getStartupRoute()');
         // handle password recovery links
         const hash = window.location.hash;
         console.log('#hash', hash);

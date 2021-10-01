@@ -43,6 +43,9 @@ const appPages: AppPage[] = [
 
   { title: 'Home', url: 'home', icon: 'home',
     children: [
+      { title: 'Dashboard', url: 'home-dashboard', icon: 'search' },
+      { title: 'Client Libraries', url: 'home-client-libs', icon: 'search' },
+      { title: 'Example Projects', url: 'home-examples', icon: 'search' },
     ] 
   },
   { title: 'Table Editor', url: 'table-editor', icon: 'list',
@@ -86,8 +89,10 @@ const appPages: AppPage[] = [
       { title: 'Hooks', url: 'database-hooks', icon: 'map' },
     ] 
   },
-  { title: 'Reports', url: 'reports', icon: 'document',
+  { title: 'Reports', url: 'reports', icon: 'document-text',
     children: [
+      { title: 'Dashboard', url: 'reports-dashboard', icon: 'map' },
+      { title: 'Add/Remove', url: 'reports-add-remove', icon: 'map' },
     ]
   },
   { title: 'API', url: 'api', icon: 'link', 
@@ -211,7 +216,7 @@ const Menu: React.FC = () => {
             }
             { !email && 
               <>
-                <IonIcon src="/assets/aire.svg" size="large"></IonIcon>
+                <IonIcon src="/assets/supabase-logo-icon.svg" size="large"></IonIcon>
                 <span style={{position: 'relative', top: '-8px'}}>&nbsp;&nbsp; <strong>Supabase Buddy</strong></span>
               </>
             }
