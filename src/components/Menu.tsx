@@ -1,98 +1,254 @@
-import {
-  IonContent,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonListHeader,
-  IonMenu,
-  IonMenuToggle,
-  IonNote,
-} from '@ionic/react';
-
+import { IonAccordion, IonAccordionGroup, IonButton, IonContent, IonFooter, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote } from '@ionic/react';
+import { User } from '@supabase/supabase-js';
+import { addIcons } from 'ionicons';
+import { analytics, archiveOutline, archiveSharp, barChart, barChartOutline, barChartSharp, bookmarkOutline, code, documentText, fileTrayStacked, hammer, heartOutline, heartSharp, home, homeOutline, homeSharp, informationCircle, informationCircleOutline, informationCircleSharp, link, list, listCircleOutline, listCircleSharp, listOutline, listSharp, lockClosed, lockClosedOutline, lockClosedSharp, logIn, logInOutline, logInSharp, logoApple, logoBitbucket, logoDiscord, logoFacebook, logoGithub, logoGitlab, logoGoogle, logoTwitch, logoTwitter, logOut, logOutOutline, logOutSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, people, peopleOutline, peopleSharp, person, personOutline, personSharp, search, searchOutline, searchSharp, settings, settingsOutline, settingsSharp, trashOutline, trashSharp, warningOutline, warningSharp } from 'ionicons/icons';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { archiveOutline, archiveSharp, bookmarkOutline, heartOutline, heartSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, warningOutline, warningSharp } from 'ionicons/icons';
+
+import { description, version } from '../../package.json';
+import { SupabaseAuthService } from '../Login/supabase.auth.service';
+
 import './Menu.css';
 
+const supabaseAuthService = new SupabaseAuthService();
+
 interface AppPage {
-  url: string;
-  iosIcon: string;
-  mdIcon: string;
   title: string;
+  url: string;
+  icon?: string;
+  iosIcon?: string;
+  mdIcon?: string;
+  children: AppChild[];
 }
+interface AppChild {
+  title: string;
+  url: string;
+  icon: string;
+}
+addIcons({
+  'home': home,
+  'people': people,
+  'settings': settings,
+  'list': list,
+  'file-tray-stacked': fileTrayStacked,
+  'code': code,
+  'analytics': analytics,
+  'document-text': documentText,
+  'link': link
+
+});
+
 
 const appPages: AppPage[] = [
-  {
-    title: 'Inbox',
-    url: '/page/Inbox',
-    iosIcon: mailOutline,
-    mdIcon: mailSharp
+
+  { title: 'Home', url: 'home', icon: 'home',
+    children: [
+    ] 
   },
-  {
-    title: 'Outbox',
-    url: '/page/Outbox',
-    iosIcon: paperPlaneOutline,
-    mdIcon: paperPlaneSharp
+  { title: 'Table Editor', url: 'table-editor', icon: 'list',
+    children: [
+      { title: 'Tables', url: 'editor-tables', icon: 'search' },
+      { title: 'Views', url: 'editor-views', icon: 'search' },
+    ] 
   },
-  {
-    title: 'Favorites',
-    url: '/page/Favorites',
-    iosIcon: heartOutline,
-    mdIcon: heartSharp
+  { title: 'Authentication', url: 'authentication', icon: 'people',
+    children: [
+      { title: 'Users', url: 'auth-users', icon: 'search' },
+      { title: 'Policies', url: 'auth-policies', icon: 'search' },
+      { title: 'Templates', url: 'auth-templates', icon: 'search' },
+      { title: 'Settings', url: 'auth-settings', icon: 'search' },
+    ] 
   },
-  {
-    title: 'Archived',
-    url: '/page/Archived',
-    iosIcon: archiveOutline,
-    mdIcon: archiveSharp
+  { title: 'Storage', url: 'storage', icon: 'file-tray-stacked',
+    children: [
+      { title: 'All Buckets', url: 'storage-buckets', icon: 'search' },
+      { title: 'Settings', url: 'storage-settings', icon: 'list' },
+      { title: 'Policies', url: 'storage-policies', icon: 'business' },
+      { title: 'Usage', url: 'storage-usage', icon: 'list' },
+    ] 
   },
-  {
-    title: 'Trash',
-    url: '/page/Trash',
-    iosIcon: trashOutline,
-    mdIcon: trashSharp
+  { title: 'SQL', url: 'sql', icon: 'code', 
+    children: [
+      { title: 'Getting Started', url: 'sql-start', icon: 'map' },
+      { title: 'Snippets', url: 'sql-snippets', icon: 'map' },
+    ] 
   },
-  {
-    title: 'Spam',
-    url: '/page/Spam',
-    iosIcon: warningOutline,
-    mdIcon: warningSharp
-  }
+  { title: 'Database', url: 'database', icon: 'analytics',
+    children: [
+      { title: 'Tables', url: 'database-tables', icon: 'map' },
+      { title: 'Roles', url: 'database-roles', icon: 'map' },
+      { title: 'Extensions', url: 'database-extensions', icon: 'map' },
+      { title: 'Replication', url: 'database-replication', icon: 'map' },
+      { title: 'Backups', url: 'database-backups', icon: 'map' },
+      { title: 'Connection Pooling', url: 'database-pooling', icon: 'map' },
+      { title: 'Triggers', url: 'database-triggers', icon: 'map' },
+      { title: 'Functions', url: 'database-functions', icon: 'map' },
+      { title: 'Hooks', url: 'database-hooks', icon: 'map' },
+    ] 
+  },
+  { title: 'Reports', url: 'reports', icon: 'document',
+    children: [
+    ]
+  },
+  { title: 'API', url: 'api', icon: 'link', 
+    children: [
+      { title: 'Introduction', url: 'api-intro', icon: 'map' },
+      { title: 'Authentication', url: 'api-auth', icon: 'map' },
+      { title: 'User Management', url: 'api-users', icon: 'map' },
+      { title: 'Tables & Views', url: 'api-tables', icon: 'map' },
+      { title: 'Functions', url: 'api-functions', icon: 'map' },
+    ] 
+  },
+  { title: 'Settings', url: 'settings', icon: 'settings', 
+    children: [
+      { title: 'General', url: 'settings-general', icon: 'map' },
+      { title: 'Database', url: 'settings-database', icon: 'map' },
+      { title: 'API', url: 'settings-api', icon: 'map' },
+      { title: 'Auth Settings', url: 'settings-auth', icon: 'map' },
+      { title: 'Billing & Usage', url: 'settings-billing', icon: 'map' },
+    ] 
+  },
+
 ];
 
-const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
 
 const Menu: React.FC = () => {
+  const initialMenuRef = useRef();
   const location = useLocation();
+  let _user: User | null = null;
+  const selectedAccordionItem = localStorage.getItem('selectedAccordionItem') || '';
+  const selectedAccordion = localStorage.getItem('selectedAccordion') || '';
+  const [avatar, setAvatar] = useState('./assets/img/profile160x160.png');
+  const [email, setEmail] = useState('');
+  const [selectedItem, setSelectedItem] = useState(selectedAccordionItem);
+
+  function clickHandler(e: any) {
+    document.getElementById(selectedItem)?.classList.remove('selected');
+    e.target.classList.add('selected');
+    setSelectedItem(e.target.id);
+    localStorage.setItem('selectedAccordionItem', e.target.id);  
+    localStorage.setItem('selectedAccordion', e.target.parentElement.parentElement.parentElement.value);  
+  }
+  function renderMenuChildren(list: AppChild[]) {
+    return list
+      //.filter(route => !!route.path)
+      .map((appChild, index) => (
+        <IonMenuToggle autoHide={false} key={'AppChild' + index}>
+          <IonItem id={appChild.url} onClick={clickHandler} routerLink={appChild.url} lines="none" detail={false} routerDirection="root" className="appPageChildItem">
+            <IonIcon slot="start" ios="" md=""></IonIcon>
+            <IonLabel>{appChild.title}</IonLabel>
+          </IonItem>
+        </IonMenuToggle>
+      ));
+  }
+  function renderMenuItems(list: AppPage[]) {
+    return list
+      //.filter(route => !!route.path)
+      .map((appPage, index) => (
+  
+        <IonAccordion key={'MenuPage' + index} value={appPage.url}>
+        <IonItem slot="header">
+          <IonLabel>{appPage.title}</IonLabel>
+          <IonIcon slot="start" icon={appPage.icon}></IonIcon>
+        </IonItem>
+        <IonList slot="content" className="appPageChildList">
+          {renderMenuChildren(appPage.children)}
+        </IonList>
+        </IonAccordion>  
+  
+      ));
+  }
+  
+  const signOut = async () => {
+    const { error } = await supabaseAuthService.signOut();
+    if (error) {
+      console.error('Error signing out', error);
+    }
+  }
+  const loadImage = () =>{
+    console.log('loadImage() not implemented');
+  }
+  const selectImage = ($event: any) => {
+    console.log('selectImage() not implemented');
+  }
+  const getPhotoURL = () => {
+    console.log('getPhotoURL: _user', _user);
+    return _user?.user_metadata?.avatar_url || './assets/img/profile160x160.png';
+  }
+
+
+  useEffect(()=>{
+    // Only run this one time!  No multiple subscriptions!
+    supabaseAuthService.user.subscribe((user: User | null) => {
+      _user = user;
+      console.log('subscribed: _user', _user);
+      if (_user?.email) {
+        setEmail(_user.email);
+        setAvatar(_user?.user_metadata?.avatar_url || './assets/img/profile160x160.png')
+      } else {
+        setEmail('');
+      }
+    });
+    setTimeout(() => {
+      document.getElementById(selectedAccordionItem)?.click();
+    } , 1000);
+  }, []) // <-- empty dependency array
 
   return (
     <IonMenu contentId="main" type="overlay">
+
+      <IonHeader className="menuHeader">
+        <div style={{paddingLeft: "20px"}}>
+          <h4>
+            { email &&
+              <>
+                <img onClick={loadImage} style={{height: '35px', borderRadius: '50%', objectFit: 'cover'}}
+                  src={avatar}
+                />
+                <input type="file" hidden id="fileInput" onChange={selectImage} accept=".jpg, .jpeg, .png" />
+                <span style={{position: 'relative', top: '-8px'}}>&nbsp;&nbsp; { email || ''  }</span>
+              </>
+            }
+            { !email && 
+              <>
+                <IonIcon src="/assets/aire.svg" size="large"></IonIcon>
+                <span style={{position: 'relative', top: '-8px'}}>&nbsp;&nbsp; <strong>Supabase Buddy</strong></span>
+              </>
+            }
+          </h4>
+        </div>
+      </IonHeader>
+
       <IonContent>
         <IonList id="inbox-list">
-          <IonListHeader>Inbox</IonListHeader>
-          <IonNote>hi@ionicframework.com</IonNote>
-          {appPages.map((appPage, index) => {
-            return (
-              <IonMenuToggle key={index} autoHide={false}>
-                <IonItem className={location.pathname === appPage.url ? 'selected' : ''} routerLink={appPage.url} routerDirection="none" lines="none" detail={false}>
-                  <IonIcon slot="start" ios={appPage.iosIcon} md={appPage.mdIcon} />
-                  <IonLabel>{appPage.title}</IonLabel>
-                </IonItem>
-              </IonMenuToggle>
-            );
-          })}
+          <IonListHeader>menu header</IonListHeader>
+          { email && <IonNote><strong>{email || ''}</strong></IonNote>}
+          <IonMenuToggle autoHide={false}>
+            { email &&
+              <IonItem href='' onClick={signOut} lines="none" detail={false}>
+                <IonIcon slot="start" ios={logOutOutline} md={logOutSharp}></IonIcon>
+                <IonLabel><strong>Sign Out</strong></IonLabel>
+              </IonItem>
+            }    
+            { !email &&
+              <IonItem routerDirection="root" routerLink="/login" lines="none" detail={false}>
+                <IonIcon slot="start" ios={logInOutline} md={logInSharp}></IonIcon>
+                <IonLabel><strong>Sign In</strong></IonLabel>
+              </IonItem>
+            }
+          </IonMenuToggle>
         </IonList>
 
-        <IonList id="labels-list">
-          <IonListHeader>Labels</IonListHeader>
-          {labels.map((label, index) => (
-            <IonItem lines="none" key={index}>
-              <IonIcon slot="start" icon={bookmarkOutline} />
-              <IonLabel>{label}</IonLabel>
-            </IonItem>
-          ))}
-        </IonList>
+        <IonAccordionGroup id="page-list" value={selectedAccordion}>
+          {renderMenuItems(appPages)}
+        </IonAccordionGroup>
+
       </IonContent>
+      <IonFooter>
+        <div className="ion-text-center">
+          { description } v{ version }
+        </div>
+      </IonFooter>
     </IonMenu>
   );
 };

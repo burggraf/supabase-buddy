@@ -26,3 +26,10 @@ yarn-error.log*
 
 # Optional eslint cache
 .eslintcache
+/src/services/keys.service.ts
+
+.vercel
+sql-ts/config.json
+/deploy-data-pump.sh
+/tmp
+
