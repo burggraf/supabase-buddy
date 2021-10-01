@@ -1,0 +1,7 @@
+{
+  "name": "supabase-buddy",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
