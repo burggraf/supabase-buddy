@@ -45,7 +45,7 @@ const App: React.FC = () => {
             <Route path="/home" component={Home} />
             <Route path="/home-dashboard" component={HomeDashboard} />
             <Route path="/auth-users" component={AuthUsers} />
-            <Route path="/sql-editor" component={SqlEditor} />
+            <Route path="/sql-editor/:id" component={SqlEditor} />
             <Route path="/sql-snippets" component={SqlSnippets} />
             <Route path="/login" component={Login} />
             <Route path="/" exact={true}>

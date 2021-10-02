@@ -1,12 +1,13 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
 import { add } from 'ionicons/icons';
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import './SqlSnippets.css';
 import { SupabaseDataService } from '../services/supabase.data.service';
 import { useEffect, useState } from 'react';
 import { Snippet } from '../models/Snippet';
 
 const SqlSnippets: React.FC = () => {
+    const history = useHistory();
   const supabaseDataService = new SupabaseDataService();
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const { name } = useParams<{ name: string; }>();
@@ -20,9 +21,19 @@ const SqlSnippets: React.FC = () => {
   useEffect( () => {
       loadSnippets();
   }, []);
+    // generate a random uuid
+    const uuidv4 = () => {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+    
   const addSnippet = () => {
-
+      const id = uuidv4();
+      history.push(`/sql-editor/${id}`);
   }
+            
   return (
     <IonPage>
       <IonHeader>
@@ -39,7 +50,29 @@ const SqlSnippets: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        snippets: {snippets}
+
+        <IonGrid>
+                <IonRow key="header">
+                        <IonCol>Title</IonCol>
+                        <IonCol>Description</IonCol>
+                        <IonCol>Created</IonCol>
+                        <IonCol>Updated</IonCol>
+                    </IonRow>
+
+            {
+                snippets.map(snippet => (
+                    <IonRow key={snippet.id}>
+                        <IonCol>{snippet.title}</IonCol>
+                        <IonCol>{snippet.description}</IonCol>
+                        <IonCol>{snippet.created_at}</IonCol>
+                        <IonCol>{snippet.updated_at}</IonCol>
+                    </IonRow>
+                ))
+            }
+            <IonRow>
+                <IonCol></IonCol>
+            </IonRow>
+        </IonGrid>
       </IonContent>
     </IonPage>
   );

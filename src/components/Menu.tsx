@@ -73,7 +73,6 @@ const appPages: AppPage[] = [
   { title: 'SQL', url: 'sql', icon: 'code', 
     children: [
       { title: 'Getting Started', url: 'sql-start', icon: 'map' },
-      { title: 'Editor', url: 'sql-editor', icon: 'map' },
       { title: 'Snippets', url: 'sql-snippets', icon: 'map' },
     ] 
   },

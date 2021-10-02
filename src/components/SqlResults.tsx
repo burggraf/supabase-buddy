@@ -33,7 +33,7 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
                     {resultJson.map((row, index) => (
                         <IonRow key={++uniqueKey}>
                             {keys.map((key, index) => (
-                                <IonCol key={++uniqueKey}>{row[key]}</IonCol>
+                                <IonCol className="boxed" key={++uniqueKey}>{row[key]}</IonCol>
                             ))}
                         </IonRow>   
                     ))}
