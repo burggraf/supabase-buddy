@@ -12,9 +12,6 @@ const SqlEditor: React.FC = () => {
     const [results, setResults] = useState<any[]>([]);
     const supabaseDataService = new SupabaseDataService();
 
-    
-
-    
     function handleEditorChange(value: any, event: any) {
         // here is the current value
         console.log('handleEditorChange', value)
@@ -64,12 +61,12 @@ const SqlEditor: React.FC = () => {
 
       <IonContent>
 
-        <IonGrid>
-            <IonRow>
+        <IonGrid style={{height: '50%'}}>
+            <IonRow style={{height: '100%'}}>
                 <IonCol>
                 <Editor
                     className="textarea"
-                    height="50vh"
+                    // height="50vh"
                     defaultLanguage="sql"
                     defaultValue={text}
                     onChange={debounce(handleEditorChange, 750)}

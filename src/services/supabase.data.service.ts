@@ -1,4 +1,5 @@
 import { createClient, Provider, SupabaseClient, User } from '@supabase/supabase-js';
+import { Snippet } from '../models/Snippet';
 
 // import { keys } from 'rxjs';
 // import { keys } from './keys.service';
@@ -26,34 +27,6 @@ export class SupabaseDataService {
       }
   }
 
-  // generic sample functions
-  public async getRow(table: string, whereColumn: string, whereValue: any, columnList: string = '*') {
-    const { data, error } = 
-    await supabase.from(table)
-    .select(columnList)
-    .eq(whereColumn, whereValue)
-    .limit(1)
-    .single(); // return a single object (not an array)
-    return { data, error };
-  }
-
-  public async getAllRows(table: string, offset: number = 0, limit: number = 100) {
-    console.log('supabase', supabase);
-    const { data, error } = 
-    await supabase.from(table)
-    .select('*')
-    .range(offset, offset + limit)
-    return { data, error };
-  }
-
-  public async getRows(table: string, whereColumn: string, whereValue: any, columnList: string = '*', offset: number = 0, limit: number = 100) {
-    const { data, error } = 
-    await supabase.from(table)
-    .select(columnList)
-    .eq(whereColumn, whereValue)
-    .range(offset, offset + limit)
-    return { data, error };
-  }
 
   public async runSql(sql: string) {
     if (!this.isConnected()) {
@@ -71,6 +44,15 @@ export class SupabaseDataService {
     const { data, error } = await supabase.from('snippets')
     .select('*')
     .order(sortBy[0], {ascending: sortBy[1]});
+    return { data, error };
+  }
+  
+  public async createSnippet(snippet: Snippet) {
+    if (!this.isConnected()) {
+      await this.connect();
+    }
+    const { data, error } = await supabase.from('snippets')
+    .insert(snippet);
     return { data, error };
   }
 

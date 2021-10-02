@@ -4,10 +4,11 @@ import { useParams } from 'react-router';
 import './SqlSnippets.css';
 import { SupabaseDataService } from '../services/supabase.data.service';
 import { useEffect, useState } from 'react';
+import { Snippet } from '../models/Snippet';
 
 const SqlSnippets: React.FC = () => {
   const supabaseDataService = new SupabaseDataService();
-  const [snippets, setSnippets] = useState<any[]>([]);
+  const [snippets, setSnippets] = useState<Snippet[]>([]);
   const { name } = useParams<{ name: string; }>();
   const loadSnippets = async () => {
     const { data, error } = await supabaseDataService.getSnippets();

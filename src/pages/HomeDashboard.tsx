@@ -6,17 +6,6 @@ import { SupabaseDataService } from '../services/supabase.data.service';
 const HomeDashboard: React.FC = () => {
     const supabaseDataService = new SupabaseDataService()
   const { name } = useParams<{ name: string; }>();
-    const connect = async () => {
-        const result = await supabaseDataService.connect();
-        console.log(result);
-    }
-  const test = async () => {
-        console.log("test");
-        await supabaseDataService.connect();
-        const { data, error } = await supabaseDataService.getAllRows('test');
-        console.log('error', error);
-        console.log('data', data);
-    }
   return (
     <IonPage>
       <IonHeader>
@@ -29,8 +18,6 @@ const HomeDashboard: React.FC = () => {
       </IonHeader>
 
       <IonContent>
-      <IonButton strong color="primary" onClick={connect}>Connect</IonButton>
-        <IonButton strong color="primary" onClick={test}>Test</IonButton>
       </IonContent>
     </IonPage>
   );
