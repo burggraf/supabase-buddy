@@ -63,5 +63,15 @@ export class SupabaseDataService {
     await supabase.rpc('execute_sql', {sqlcode: sql});
     return { data, error };
   }
+  
+  public async getSnippets(sortBy: any[] = ['created_at', false]) {
+    if (!this.isConnected()) {
+      await this.connect();
+    }
+    const { data, error } = await supabase.from('snippets')
+    .select('*')
+    .order(sortBy[0], {ascending: sortBy[1]});
+    return { data, error };
+  }
 
 }

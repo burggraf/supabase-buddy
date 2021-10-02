@@ -29,6 +29,7 @@ import PageNotFound from './pages/PageNotFound';
 import SettingsGeneral from './pages/SettingsGeneral';
 import HomeDashboard from './pages/HomeDashboard';
 import SqlEditor from './pages/SqlEditor';
+import SqlSnippets from './pages/SqlSnippets';
 
 const App: React.FC = () => {
   return (
@@ -45,6 +46,7 @@ const App: React.FC = () => {
             <Route path="/home-dashboard" component={HomeDashboard} />
             <Route path="/auth-users" component={AuthUsers} />
             <Route path="/sql-editor" component={SqlEditor} />
+            <Route path="/sql-snippets" component={SqlSnippets} />
             <Route path="/login" component={Login} />
             <Route path="/" exact={true}>
               <Redirect to="/home" />
