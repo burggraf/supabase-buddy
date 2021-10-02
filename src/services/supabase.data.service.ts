@@ -1,18 +1,29 @@
 import { createClient, Provider, SupabaseClient, User } from '@supabase/supabase-js';
 
 // import { keys } from 'rxjs';
-import { keys } from './keys.service';
+// import { keys } from './keys.service';
 
-const supabase: SupabaseClient = createClient(keys.SUPABASE_URL, keys.SUPABASE_KEY);
+let supabase: SupabaseClient; // = createClient(keys.SUPABASE_URL, keys.SUPABASE_KEY);
 
 export class SupabaseDataService {
 
   constructor() {}
   
-  // generic sample functions
-  public getProperty = async (ListingKey: string, view: string) => {
-    const { data, error } = await supabase.rpc('getProperty', { _ListingKey: ListingKey, _view: view });
-    return { data, error };    
+  public isConnected = () => {
+    return (typeof supabase !== 'undefined');
+  }
+
+  public connect = async () => {
+      const url = localStorage.getItem('url');
+      const anonkey = localStorage.getItem('anonkey');
+      console.log('url', url);
+      console.log('anonkey', anonkey);
+      if (url && anonkey) {
+        supabase = await createClient(url, anonkey);
+        return true;
+      } else {
+        return false;
+      }
   }
 
   // generic sample functions
@@ -25,6 +36,16 @@ export class SupabaseDataService {
     .single(); // return a single object (not an array)
     return { data, error };
   }
+
+  public async getAllRows(table: string, offset: number = 0, limit: number = 100) {
+    console.log('supabase', supabase);
+    const { data, error } = 
+    await supabase.from(table)
+    .select('*')
+    .range(offset, offset + limit)
+    return { data, error };
+  }
+
   public async getRows(table: string, whereColumn: string, whereValue: any, columnList: string = '*', offset: number = 0, limit: number = 100) {
     const { data, error } = 
     await supabase.from(table)

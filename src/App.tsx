@@ -26,6 +26,8 @@ import Login from './Login/Login';
 import Home from './pages/Home';
 import AuthUsers from './pages/AuthUsers';
 import PageNotFound from './pages/PageNotFound';
+import SettingsGeneral from './pages/SettingsGeneral';
+import HomeDashboard from './pages/HomeDashboard';
 
 const App: React.FC = () => {
   return (
@@ -37,7 +39,9 @@ const App: React.FC = () => {
             <Route path="/editor-tables" exact={true}>
               <Redirect to="/home" />
             </Route>
+            <Route path="/settings-general" component={SettingsGeneral} />
             <Route path="/home" component={Home} />
+            <Route path="/home-dashboard" component={HomeDashboard} />
             <Route path="/auth-users" component={AuthUsers} />
             <Route path="/login" component={Login} />
             <Route path="/" exact={true}>
