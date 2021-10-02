@@ -5,10 +5,37 @@ import { useParams } from 'react-router';
 import './SqlEditor.css';
 import { SupabaseDataService } from '../services/supabase.data.service';
 import SqlResults from '../components/SqlResults';
+import Editor from "@monaco-editor/react";
+import { debounce } from "ts-debounce";
 const SqlEditor: React.FC = () => {
     const [text, setText] = useState<string>(localStorage.getItem('sqlQuery') || '');
     const [results, setResults] = useState<any[]>([]);
     const supabaseDataService = new SupabaseDataService();
+
+    
+
+    
+    function handleEditorChange(value: any, event: any) {
+        // here is the current value
+        console.log('handleEditorChange', value)
+        setText(value);
+        localStorage.setItem('sqlQuery', value);
+      }
+    
+      function handleEditorDidMount(editor: any, monaco: any) {
+        console.log("onMount: the editor instance:", editor);
+        console.log("onMount: the monaco instance:", monaco)
+      }
+    
+      function handleEditorWillMount(monaco: any) {
+        console.log("beforeMount: the monaco instance:", monaco);
+      }
+    
+      function handleEditorValidation(markers: any) {
+        // model markers
+        console.log('handleEditorValidation', markers);
+        markers.forEach((marker: { message: any; }) => console.log('onValidate:', marker.message));
+      }
 
     console.log('localStorage', localStorage.getItem('sqlQuery'));
   const { name } = useParams<{ name: string; }>();
@@ -40,16 +67,21 @@ const SqlEditor: React.FC = () => {
         <IonGrid>
             <IonRow>
                 <IonCol>
-                    <IonTextarea className="textarea"
-                        placeholder="SQL Statement" 
-                        rows={10} 
-                        value={text} 
-                        debounce={750}
-                        onIonChange={e => {setText(e.detail.value!);localStorage.setItem('sqlQuery',e.detail.value!);}}></IonTextarea>
+                <Editor
+                    className="textarea"
+                    height="50vh"
+                    defaultLanguage="sql"
+                    defaultValue="-- type your sql here"
+                    onChange={debounce(handleEditorChange, 750)}
+                    onMount={handleEditorDidMount}
+                    beforeMount={handleEditorWillMount}
+                    onValidate={handleEditorValidation}
+                />
                 </IonCol>
             </IonRow>
         </IonGrid>
         <SqlResults results={results} />
+
 
       </IonContent>
       <IonFooter >
