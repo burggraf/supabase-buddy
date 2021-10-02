@@ -71,7 +71,7 @@ const SqlEditor: React.FC = () => {
                     className="textarea"
                     height="50vh"
                     defaultLanguage="sql"
-                    defaultValue="-- type your sql here"
+                    defaultValue={text}
                     onChange={debounce(handleEditorChange, 750)}
                     onMount={handleEditorDidMount}
                     beforeMount={handleEditorWillMount}
@@ -81,7 +81,6 @@ const SqlEditor: React.FC = () => {
             </IonRow>
         </IonGrid>
         <SqlResults results={results} />
-
 
       </IonContent>
       <IonFooter >
