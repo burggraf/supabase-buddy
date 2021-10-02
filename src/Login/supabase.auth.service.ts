@@ -1,8 +1,8 @@
 import { createClient, Provider, SupabaseClient, User } from '@supabase/supabase-js';
 import { BehaviorSubject } from 'rxjs';
-import { keys } from '../services/keys.service';
+//import { keys } from '../services/keys.service';
 
-const supabase: SupabaseClient = createClient(keys.SUPABASE_URL, keys.SUPABASE_KEY);
+const supabase: SupabaseClient = createClient('URL', 'ANON-KEY');
 
 export class SupabaseAuthService {
 
