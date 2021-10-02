@@ -4,16 +4,24 @@ import { useState } from 'react';
 import { useParams } from 'react-router';
 import './SqlEditor.css';
 import { SupabaseDataService } from '../services/supabase.data.service';
+import SqlResults from '../components/SqlResults';
 const SqlEditor: React.FC = () => {
-    const [text, setText] = useState<string>();
+    const [text, setText] = useState<string>(localStorage.getItem('sqlQuery') || '');
+    const [results, setResults] = useState<any[]>([]);
     const supabaseDataService = new SupabaseDataService();
+
+    console.log('localStorage', localStorage.getItem('sqlQuery'));
   const { name } = useParams<{ name: string; }>();
     const runSql = async () => {
         console.log('text', text);
         if (text) {
             const { data, error } = await supabaseDataService.runSql(text);
-            console.log('error', error);
-            console.log('data', data);
+            if (error) {
+                console.error(error);
+            } else {
+                console.log('data', data);
+                setResults(data!);
+            }
         }
     }
   return (
@@ -36,20 +44,18 @@ const SqlEditor: React.FC = () => {
                         placeholder="SQL Statement" 
                         rows={10} 
                         value={text} 
-                        onIonChange={e => setText(e.detail.value!)}></IonTextarea>
+                        debounce={750}
+                        onIonChange={e => {setText(e.detail.value!);localStorage.setItem('sqlQuery',e.detail.value!);}}></IonTextarea>
                 </IonCol>
             </IonRow>
-            <IonRow>
-                <IonCol>row 2 col1</IonCol>
-            </IonRow>
         </IonGrid>
+        <SqlResults results={results} />
 
       </IonContent>
       <IonFooter >
         <IonToolbar>
             <IonButtons slot="end">
                 <IonButton color="dark" fill="outline" onClick={runSql}><strong>RUN</strong>
-                  {/* <IonIcon size="large" icon={checkmark}></IonIcon> */}
                 </IonButton>
             </IonButtons>
         </IonToolbar>
