@@ -55,5 +55,13 @@ export class SupabaseDataService {
     return { data, error };
   }
 
+  public async runSql(sql: string) {
+    if (!this.isConnected()) {
+      await this.connect();
+    }
+    const { data, error } = 
+    await supabase.rpc('execute_sql', {sqlcode: sql});
+    return { data, error };
+  }
 
 }
