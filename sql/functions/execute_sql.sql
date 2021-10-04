@@ -1,5 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS PLV8;
-DROP FUNCTION execute_sql;
+DROP FUNCTION IF EXISTS execute_sql;
 CREATE OR REPLACE FUNCTION execute_sql(sqlcode TEXT) RETURNS JSON SECURITY DEFINER AS $$
 
 const arr = sqlcode.split(';');

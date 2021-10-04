@@ -30,6 +30,7 @@ import SettingsGeneral from './pages/SettingsGeneral';
 import HomeDashboard from './pages/HomeDashboard';
 import SqlEditor from './pages/SqlEditor';
 import SqlSnippets from './pages/SqlSnippets';
+import DatabaseTables from './pages/DatabaseTables';
 
 const App: React.FC = () => {
   return (
@@ -44,6 +45,7 @@ const App: React.FC = () => {
             <Route path="/settings-general" component={SettingsGeneral} />
             <Route path="/home" component={Home} />
             <Route path="/home-dashboard" component={HomeDashboard} />
+            <Route path="/database-tables" component={DatabaseTables} />
             <Route path="/auth-users" component={AuthUsers} />
             <Route path="/sql-editor/:id" component={SqlEditor} />
             <Route path="/sql-snippets" component={SqlSnippets} />

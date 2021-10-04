@@ -78,4 +78,13 @@ export class SupabaseDataService {
     return { data, error };
   }
 
+  public async getTables(exclude_schemas: string) {
+    if (!this.isConnected()) {
+      await this.connect();
+    }
+    const { data, error } = await supabase.rpc('get_tables', {options: {exclude_schemas: exclude_schemas}});
+    return { data, error };
+  }
+
+
 }
