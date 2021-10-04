@@ -10,12 +10,13 @@ import {
 	IonTitle,
 	IonToolbar,
 } from '@ionic/react'
-import { useParams } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import './DatabaseTables.css'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { useEffect, useState } from 'react'
 
 const DatabaseTables: React.FC = () => {
+    const history = useHistory();
 	const supabaseDataService = new SupabaseDataService()
 	const { name } = useParams<{ name: string }>()
     const [tables, setTables] = useState<any[]>([])
@@ -51,7 +52,7 @@ const DatabaseTables: React.FC = () => {
 					</IonRow>
                     {tables.map((table: any) => {
                         return (
-                            <IonRow key={table.table_name}>
+                            <IonRow key={table.table_name} onClick={() => history.push(`/database-table/${table.table_schema}/${table.table_name}`)}>
                                 <IonCol>{table.table_name}</IonCol>
                                 <IonCol>{table.description}</IonCol>
                                 <IonCol>{table.table_schema}</IonCol>

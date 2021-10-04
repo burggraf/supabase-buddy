@@ -86,5 +86,14 @@ export class SupabaseDataService {
     return { data, error };
   }
 
+  public async getColumns(table_schema: string, table_name: string) {
+    if (!this.isConnected()) {
+      await this.connect();
+    }
+    const { data, error } = await supabase.rpc('get_columns', {table_schema, table_name});
+    return { data, error };
+  }
+
+
 
 }
