@@ -86,6 +86,7 @@ const SqlEditor: React.FC = () => {
                     // height="50vh"
                     defaultLanguage="sql"
                     defaultValue={content}
+                    theme={window.matchMedia('(prefers-color-scheme: dark)').matches ? "vs-dark" : "vs-light"}
                     onChange={debounce(handleEditorChange, 750)}
                     onMount={handleEditorDidMount}
                     beforeMount={handleEditorWillMount}
