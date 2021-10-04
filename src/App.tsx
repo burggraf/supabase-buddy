@@ -32,6 +32,7 @@ import SqlEditor from './pages/SqlEditor';
 import SqlSnippets from './pages/SqlSnippets';
 import DatabaseTables from './pages/DatabaseTables';
 import DatabaseTable from './pages/DatabaseTable';
+import DatabaseColumn from './pages/DatabaseColumn';
 
 const App: React.FC = () => {
   return (
@@ -48,6 +49,7 @@ const App: React.FC = () => {
             <Route path="/home-dashboard" component={HomeDashboard} />
             <Route path="/database-tables" component={DatabaseTables} />
             <Route path="/database-table/:table_schema/:table_name" component={DatabaseTable} />
+            <Route path="/database-column/:table_schema/:table_name/:column_name" component={DatabaseColumn} />
             <Route path="/auth-users" component={AuthUsers} />
             <Route path="/sql-editor/:id" component={SqlEditor} />
             <Route path="/sql-snippets" component={SqlSnippets} />

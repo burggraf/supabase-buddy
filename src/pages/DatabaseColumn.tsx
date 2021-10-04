@@ -12,30 +12,32 @@ import {
 	IonToolbar,
 } from '@ionic/react'
 import { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import { SupabaseDataService } from '../services/supabase.data.service'
-import './DatabaseTable.css'
+import './DatabaseColumn.css'
 
-const DatabaseTable: React.FC = () => {
-    const history = useHistory();
+const DatabaseColumn: React.FC = () => {
 	const { table_schema } = useParams<{ table_schema: string }>()
 	const { table_name } = useParams<{ table_name: string }>()
-	const [columns, setColumns] = useState<any[]>([])
+	const { column_name } = useParams<{ column_name: string }>()
+    const [attributes, setAttributes] = useState<any>({})
+
 	const supabaseDataService = new SupabaseDataService()
-	const loadColumns = async () => {
-        console.log('loadColumns');
+	const loadColumn = async () => {
+        console.log('loadColumn');
         console.log('table_schema', table_schema);
         console.log('table_name', table_name);
-		const { data, error } = await supabaseDataService.getColumns(table_schema, table_name)
+        console.log('column_name', column_name);
+		const { data, error } = await supabaseDataService.getColumn(table_schema, table_name, column_name)
 		if (error) {
 			console.error(error)
 		} else {
-			setColumns(data!)
-            console.log('data', data);
+			setAttributes(data![0])
+            console.log('attributes', data![0]);
 		}
 	}
 	useEffect(() => {
-		loadColumns()
+		loadColumn()
 	}, [])
 	return (
 		<IonPage>
@@ -45,22 +47,18 @@ const DatabaseTable: React.FC = () => {
 						<IonBackButton />
 					</IonButtons>
 					<IonTitle>
-						{table_schema}.{table_name}
+						{table_schema}.{table_name}.{column_name}
 					</IonTitle>
 				</IonToolbar>
 			</IonHeader>
 
 			<IonContent>
 				<IonGrid>
-					<IonRow>
-						<IonCol>name</IonCol>
-						<IonCol>type</IonCol>
-					</IonRow>
-					{columns.map((column: any) => {
+                    {Object.keys(attributes).map((key, index) => {
                         return (
-                            <IonRow key={column.column_name} onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}>
-                                <IonCol>{column.column_name}</IonCol>
-                                <IonCol>{column.data_type}</IonCol>
+                            <IonRow key={key}>
+                                <IonCol>{key}</IonCol>
+                                <IonCol>{attributes[key]}</IonCol>
                             </IonRow>
                         )
                     })}
@@ -70,4 +68,4 @@ const DatabaseTable: React.FC = () => {
 	)
 }
 
-export default DatabaseTable
+export default DatabaseColumn
