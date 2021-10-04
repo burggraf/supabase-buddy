@@ -1,12 +1,13 @@
 import { IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { SupabaseDataService } from '../services/supabase.data.service';
 import './AuthUsers.css';
 import Moment from 'moment';
 
-const Page: React.FC = () => {
-	const supabaseDataService = new SupabaseDataService()
+const AuthUsers: React.FC = () => {
+	const supabaseDataService = new SupabaseDataService();
+    const history = useHistory();
     const [users, setUsers] = useState<any[]>([])
 	const loadUsers = async () => {
 		const { data, error } = await supabaseDataService.getUsers()
@@ -36,36 +37,6 @@ const Page: React.FC = () => {
       <IonContent>
         <IonGrid>
 
-        {/* 
-        aud: "authenticated"
-confirmation_sent_at: "2021-10-01T23:17:36.816Z"
-confirmation_token: ""
-confirmed_at: "2021-10-01T23:18:00.495Z"
-created_at: "2021-10-01T23:17:36.813Z"
-email: "markb@mantisbible.com"
-email_change: ""
-email_change_confirm_status: 0
-email_change_sent_at: null
-email_change_token_current: ""
-email_change_token_new: ""
-email_confirmed_at: "2021-10-01T23:18:00.495Z"
-encrypted_password: "$2a$10$jItprxBLueztMpIfsgpZJ.zFbHdKgANQ3ZHXrmtAwym92emZM/gRe"
-id: "f91bb44b-9538-4993-809a-df15d6a817d5"
-instance_id: "00000000-0000-0000-0000-000000000000"
-invited_at: "2021-10-01T23:17:36.816Z"
-is_super_admin: false
-last_sign_in_at: "2021-10-01T23:18:00.496Z"
-phone: null
-phone_change: ""
-phone_change_sent_at: null
-phone_change_token: ""
-phone_confirmed_at: null
-raw_app_meta_data: {provider: 'email'}
-raw_user_meta_data: [null]
-recovery_sent_at: null
-recovery_token: ""
-role: "authenticated"
-updated_at: "2021-10-01T23:17:36.813Z" */}
             <IonRow>
                 <IonCol>
                     <IonLabel>Email</IonLabel>
@@ -81,7 +52,7 @@ updated_at: "2021-10-01T23:17:36.813Z" */}
                </IonCol>
             </IonRow>
             {users.map((user: any) => (
-                <IonRow key={user.id}>
+                <IonRow key={user.id} onClick={()=>{history.push(`/auth-user/${user.id}`)}}>
                     <IonCol>
                         <IonLabel>{user.email}</IonLabel>
                     </IonCol>
@@ -103,4 +74,4 @@ updated_at: "2021-10-01T23:17:36.813Z" */}
   );
 };
 
-export default Page;
+export default AuthUsers;

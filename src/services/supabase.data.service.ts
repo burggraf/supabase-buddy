@@ -109,6 +109,13 @@ export class SupabaseDataService {
     const { data, error } = await supabase.rpc('get_users', {});
     return { data, error };
   }
+  public async getUser(id: string) {
+    if (!this.isConnected()) {
+      await this.connect();
+    }
+    const { data, error } = await supabase.rpc('get_user', {id});
+    return { data, error };
+  }
 
 
 
