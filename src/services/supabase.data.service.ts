@@ -46,6 +46,17 @@ export class SupabaseDataService {
     .order(sortBy[0], {ascending: sortBy[1]});
     return { data, error };
   }
+
+  public async getSnippet(id: string) {
+    if (!this.isConnected()) {
+      await this.connect();
+    }
+    const { data, error } = await supabase.from('snippets')
+    .select('*')
+    .eq('id', id)
+    .single();
+    return { data, error };
+  }
   
   public async createSnippet(snippet: Snippet) {
     if (!this.isConnected()) {
@@ -53,6 +64,17 @@ export class SupabaseDataService {
     }
     const { data, error } = await supabase.from('snippets')
     .insert(snippet);
+    return { data, error };
+  }
+
+  public async saveSnippet(snippet: Snippet) {
+    if (!this.isConnected()) {
+      await this.connect();
+    }
+    // snippet.updated_at = new Date().toISOString();
+    snippet.updated_at = 'NOW()'; 
+    const { data, error } = await supabase.from('snippets')
+    .upsert(snippet);
     return { data, error };
   }
 
