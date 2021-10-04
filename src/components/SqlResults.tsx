@@ -1,4 +1,4 @@
-import { IonGrid, IonRow, IonCol } from '@ionic/react';
+import { IonGrid, IonRow, IonCol, IonLabel } from '@ionic/react';
 import './SqlResults.css'
 
 interface ContainerProps {
@@ -6,6 +6,7 @@ interface ContainerProps {
 }
 
 const SqlResults: React.FC<ContainerProps> = ({ results }) => {
+    console.log('SqlResults got results', results);
   const outputArray = [];
   let uniqueKey = 0;
   for (let i = 0; i < results.length; i++) {
@@ -14,7 +15,8 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
     try {
         resultJson = JSON.parse(result);
     } catch (err) {
-        console.error(`could not parse result #${i+1}`, result);
+        // console.error(`could not parse result #${i+1}`, result);
+        resultJson = result;
     }
     // test if resultJson is an array
     if (resultJson && Array.isArray(resultJson)) {
@@ -23,21 +25,23 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
             const keys = Object.keys(resultJson[0]);
             console.log('keys', keys);
             outputArray.push(
-                <IonGrid key={++uniqueKey}>
-                    <IonRow className="resultHeader" key={++uniqueKey}><IonCol key={++uniqueKey}><strong>Result #{i+1}</strong></IonCol></IonRow>
-                    <IonRow key={++uniqueKey}>
+                <>
+                <IonLabel className="resultHeader"><strong>Result #{i+1}</strong></IonLabel>
+                <IonGrid key={i}>
+                    <IonRow>
                         {keys.map((key, index) => (                            
-                            <IonCol key={++uniqueKey}><strong>{key}</strong></IonCol>
+                            <IonCol><strong>{key}</strong></IonCol>
                         ))}
                     </IonRow>
                     {resultJson.map((row, index) => (
-                        <IonRow key={++uniqueKey}>
+                        <IonRow>
                             {keys.map((key, index) => (
-                                <IonCol className="boxed" key={++uniqueKey}>{row[key]}</IonCol>
+                                <IonCol className="boxed">{row[key]}</IonCol>
                             ))}
-                        </IonRow>   
+                        </IonRow>
                     ))}
                 </IonGrid>
+                </>
             )
             // resultJson[0]
         }
@@ -46,7 +50,7 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
             <IonGrid key={++uniqueKey}>
                 <IonRow className="resultHeader" key={++uniqueKey}><IonCol key={++uniqueKey}><strong>Result #{i+1}</strong></IonCol></IonRow>
                 <IonRow>
-                    <IonCol>{resultJson}</IonCol>
+                    <IonCol><IonLabel className="error" color={parseInt(resultJson) === resultJson ? 'dark':'danger'}>{resultJson}</IonLabel></IonCol>
                 </IonRow>
             </IonGrid>
         )

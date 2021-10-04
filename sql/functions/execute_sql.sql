@@ -14,8 +14,10 @@ function toJson(data) {
 }
 
 for (let i = 0; i < arr.length; i++) {
-  const result = plv8.execute(arr[i]);
-  results.push(toJson(result));
+    if (arr[i].trim() !== '') {
+        const result = plv8.execute(arr[i]);
+        results.push(toJson(result));
+    }
 }
 return results;
 

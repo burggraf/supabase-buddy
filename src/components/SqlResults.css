@@ -1,6 +1,10 @@
 .resultHeader {
     color: var(--ion-color-primary);
+    padding-left: 10pt;
 }
 ion-col.boxed {
     border: 1px solid;
+}
+.error {
+    font-weight: bold;
 }

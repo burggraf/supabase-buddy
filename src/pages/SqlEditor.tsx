@@ -104,7 +104,13 @@ const SqlEditor: React.FC = () => {
 		if (content) {
 			const { data, error } = await supabaseDataService.runSql(content)
 			if (error) {
-				console.error(error)
+				if (error && error.message) {
+					// console.error(error.message);
+					//setResults([error.message]);
+					setResults( [error.message] );
+				} else {
+					console.error(error)
+				}
 			} else {
 				console.log('data', data)
 				setResults(data!)
@@ -128,7 +134,7 @@ const SqlEditor: React.FC = () => {
 			</IonHeader>
 
 			<IonContent>
-				<IonGrid style={{ height: '50%' }}>
+				<IonGrid>
 					<IonRow>
 						<IonCol>
 							Title:{' '}
@@ -149,11 +155,11 @@ const SqlEditor: React.FC = () => {
 							/>
 						</IonCol>
 					</IonRow>
-					<IonRow style={{ height: '100%' }}>
+					<IonRow>
 						<IonCol>
 							<Editor
 								className='textarea'
-								// height="50vh"
+								height="40vh"
 								defaultLanguage='sql'
 								defaultValue={content}
 								value={content}
@@ -173,10 +179,11 @@ const SqlEditor: React.FC = () => {
 						</IonCol>
 					</IonRow>
 				</IonGrid>
-				<SqlResults results={results} />
+				<div style={{ height: '60%' }}>
+					<SqlResults results={results} />
+				</div>
 			</IonContent>
 			<IonFooter>
-				title: {title} description: {description}
 				<IonToolbar>
 					<IonButtons slot='end'>
 						<IonButton color='dark' fill='outline' onClick={runSql}>
