@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS snippets (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID UNIQUE PRIMARY KEY DEFAULT uuid_generate_v4(),
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   content TEXT NOT NULL,

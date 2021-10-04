@@ -28,7 +28,7 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
                 <>
                 <IonLabel className="resultHeader"><strong>Result #{i+1}</strong></IonLabel>
                 <IonGrid key={i}>
-                    <IonRow>
+                    <IonRow key={++uniqueKey}>
                         {keys.map((key, index) => (                            
                             <IonCol><strong>{key}</strong></IonCol>
                         ))}
