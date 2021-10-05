@@ -1,5 +1,8 @@
 DROP FUNCTION IF EXISTS get_functions;
 CREATE OR REPLACE FUNCTION get_functions(options JSON) RETURNS JSON SECURITY DEFINER AS $$
+if (!plv8.execute("select auth.is_admin()")[0].is_admin) {
+    throw 'not authorized';
+}
 
     const exclude_schemas = 
         options.exclude_schemas || 

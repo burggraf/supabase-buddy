@@ -1,5 +1,8 @@
 DROP FUNCTION IF EXISTS get_function;
 CREATE OR REPLACE FUNCTION get_function(function_schema text, function_name text) RETURNS JSON SECURITY DEFINER AS $$
+if (!plv8.execute("select auth.is_admin()")[0].is_admin) {
+    throw 'not authorized';
+}
 
     return plv8.execute(
         `select n.nspname as function_schema,

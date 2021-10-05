@@ -6,7 +6,7 @@ import { useState } from 'react';
 import './ResetPassword.css';
 import { useHistory } from "react-router-dom";
 
-import { SupabaseAuthService } from './supabase.auth.service';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { useParams } from 'react-router';
 
 import { StartupService } from '../services/startup.service';
@@ -14,11 +14,28 @@ const startupService = new StartupService();
 const defaultRoute = startupService.getDefaultRoute();
 
 
-const supabaseAuthService = new SupabaseAuthService();
+let supabase: SupabaseClient;
+
+const isConnected = () => {
+  return (typeof supabase !== 'undefined');
+}
+const connect = async () => {
+  const url = localStorage.getItem('url');
+  const anonkey = localStorage.getItem('anonkey');
+  console.log('url', url);
+  console.log('anonkey', anonkey);
+  if (url && anonkey) {
+    supabase = await createClient(url, anonkey);
+    return true;
+  } else {
+    return false;
+  }
+}
 
 const ResetPassword: React.FC = () => {
     const history = useHistory();
     const { token } = useParams<{ token: string; }>();
+    console.log('token', token);
     
     const [present, dismiss] = useIonToast();
     const [password, setPassword] = useState('');
@@ -34,8 +51,12 @@ const ResetPassword: React.FC = () => {
           })
     }
     const updatePassword = async () => {
-        const { data, error }  = 
-            await supabaseAuthService.updatePassword(token, password);
+      if (!isConnected()) {
+        await connect();
+      }
+
+      const { error, data } = await supabase.auth.api
+      .updateUser(token, { password: password });
         if (error) { toast(error.message) }
         else { 
             present({

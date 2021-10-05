@@ -5,15 +5,31 @@ import { link, logIn, personAdd, refreshCircle } from 'ionicons/icons';
 import { useState } from 'react';
 import './Login.css';
 
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 import ProviderSignInButton from './ProviderSignInButton';
-import { SupabaseAuthService } from './supabase.auth.service';
-const supabaseAuthService = new SupabaseAuthService();
+let supabase: SupabaseClient;
 
 const validateEmail = (email: string) => {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
+const isConnected = () => {
+    return (typeof supabase !== 'undefined');
+}
+const connect = async () => {
+    const url = localStorage.getItem('url');
+    const anonkey = localStorage.getItem('anonkey');
+    console.log('url', url);
+    console.log('anonkey', anonkey);
+    if (url && anonkey) {
+      supabase = await createClient(url, anonkey);
+      return true;
+    } else {
+      return false;
+    }
+}
+
 const Login: React.FC = () => {
     const [present, dismiss] = useIonToast();
     const [email, setEmail] = useState('');
@@ -30,25 +46,45 @@ const Login: React.FC = () => {
           })
     }
     const signInWithEmail = async () => {
+        if (!isConnected()) {
+            await connect();
+          }
         const {user, session, error} = 
-            await supabaseAuthService.signInWithEmail(email, password);
-        if (error) { toast(error.message) }
+            await supabase.auth.signIn({email, password}, {
+                redirectTo: window.location.origin
+              });
+        if (error) { console.error(error); toast(error.message) }
     }
     const signUp = async () => {
+        if (!isConnected()) {
+            await connect();
+          }
         const {user, session, error} = 
-            await supabaseAuthService.signUpWithEmail(email, password);
+            await supabase.auth.signUp({email, password}, {
+                redirectTo: window.location.origin
+              });
             if (error) { toast(error.message) }
             else { toast('Please check your email for a confirmation link', 'success') }
         }
     const resetPassword = async () => {
+        if (!isConnected()) {
+            await connect();
+          }
         const {data, error} = 
-            await supabaseAuthService.resetPassword(email);
+            await supabase.auth.api.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin
+              });
             if (error) { toast(error.message) }
             else { toast('Please check your email for a password reset link', 'success') }
         }
     const sendMagicLink = async () => {
+        if (!isConnected()) {
+            await connect();
+          }
         const {user, session, error} = 
-            await supabaseAuthService.sendMagicLink(email);
+            await supabase.auth.signIn({email}, {
+                redirectTo: window.location.origin
+              });
             if (error) { toast(error.message) }
         }
     

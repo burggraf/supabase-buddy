@@ -36,6 +36,11 @@ import DatabaseColumn from './pages/DatabaseColumn';
 import AuthUser from './pages/AuthUser';
 import DatabaseFunctions from './pages/DatabaseFunctions';
 import DatabaseFunction from './pages/DatabaseFunction';
+import ResetPassword from './Login/ResetPassword';
+import { StartupService } from './services/startup.service';
+
+const startupService = new StartupService();
+const startupRoute = startupService.getStartupRoute();
 
 const App: React.FC = () => {
   return (
@@ -60,8 +65,9 @@ const App: React.FC = () => {
             <Route path="/sql-editor/:id" component={SqlEditor} />
             <Route path="/sql-snippets" component={SqlSnippets} />
             <Route path="/login" component={Login} />
+            <Route path="/resetpassword/:token" component={ResetPassword} />
             <Route path="/" exact={true}>
-              <Redirect to="/home" />
+              <Redirect to={startupRoute || '/home-dashboard'} />
             </Route>
             <Route path="/page/:name" exact={true}>
               <Page />
