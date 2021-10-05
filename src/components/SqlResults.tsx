@@ -36,9 +36,19 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
                     </IonRow>
                     {resultJson.map((row, index) => (
                         <IonRow key={getUniqueKey()}>
-                            {keys.map((key, index) => (
-                                <IonCol key={getUniqueKey()} className="boxed">{row[key]}</IonCol>
-                            ))}
+                            {keys.map((key, index) => {
+                                if (!Array.isArray(row[key])) {
+                                    return (
+                                        <IonCol key={getUniqueKey()} className="boxed">{row[key]}</IonCol>
+                                        )
+                                } else {
+                                    return (
+                                        <IonCol key={getUniqueKey()} className="boxed">{JSON.stringify(row[key])}</IonCol>
+                                        )
+
+                                }
+                            }
+                            )}
                         </IonRow>
                     ))}
                 </IonGrid>
