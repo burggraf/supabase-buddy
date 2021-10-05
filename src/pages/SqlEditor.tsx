@@ -43,6 +43,7 @@ const SqlEditor: React.FC = () => {
 	const [content, setContent] = useState<string>('')
 	const [title, setTitle] = useState<string>('')
 	const [description, setDescription] = useState<string>('')
+	const [statementDelimiter, setStatementDelimiter] = useState<string>('')
 	const [results, setResults] = useState<any[]>([])
 	const supabaseDataService = new SupabaseDataService()
 
@@ -53,8 +54,10 @@ const SqlEditor: React.FC = () => {
         console.log('content', content);
         const {data, error} = await supabaseDataService.saveSnippet({
             id,
+			user: null,
             title,
             description,
+			statement_delimiter: statementDelimiter,
             content
         });
 		if (error) {
@@ -72,6 +75,7 @@ const SqlEditor: React.FC = () => {
 			setTitle(data.title)
 			setDescription(data.description)
 			setContent(data.content)
+			setStatementDelimiter(data.statement_delimiter)
 			console.log('title', title);
 			console.log('description', description);
 			console.log('content', content);
@@ -102,7 +106,7 @@ const SqlEditor: React.FC = () => {
 	const runSql = async () => {
 		console.log('content', content)
 		if (content) {
-			const { data, error } = await supabaseDataService.runSql(content)
+			const { data, error } = await supabaseDataService.runSql(content, statementDelimiter)
 			if (error) {
 				if (error && error.message) {
 					// console.error(error.message);
@@ -136,7 +140,7 @@ const SqlEditor: React.FC = () => {
 			<IonContent>
 				<IonGrid>
 					<IonRow>
-						<IonCol>
+						<IonCol size="5">
 							Title:{' '}
 							<IonInput
 								value={title}
@@ -145,13 +149,22 @@ const SqlEditor: React.FC = () => {
 								style={{ border: '1px solid' }}
 							/>
 						</IonCol>
-						<IonCol>
+						<IonCol size="6">
 							Description:{' '}
 							<IonInput
 								value={description}
 								onIonChange={debounce((e) => setDescription(e.detail.value!), 750)}
 								type='text'
 								style={{ border: '1px solid' }}
+							/>
+						</IonCol>
+						<IonCol size="1">
+							Sep:{' '}
+							<IonInput
+								value={statementDelimiter}
+								onIonChange={debounce((e) => setStatementDelimiter(e.detail.value!), 750)}
+								type='text'
+								style={{ width:'20pt', border: '1px solid' }}
 							/>
 						</IonCol>
 					</IonRow>

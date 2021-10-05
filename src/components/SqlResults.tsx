@@ -4,11 +4,12 @@ import './SqlResults.css'
 interface ContainerProps {
   results: any[]
 }
-
 const SqlResults: React.FC<ContainerProps> = ({ results }) => {
-    console.log('SqlResults got results', results);
+  console.log('SqlResults got results', results);
   const outputArray = [];
-  let uniqueKey = 0;
+  const getUniqueKey = () => {
+      return Math.random().toString(36).substr(2, 9);
+  }
   for (let i = 0; i < results.length; i++) {
     const result = results[i];
     let resultJson;
@@ -27,16 +28,16 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
             outputArray.push(
                 <>
                 <IonLabel className="resultHeader"><strong>Result #{i+1}</strong></IonLabel>
-                <IonGrid key={i}>
-                    <IonRow key={++uniqueKey}>
+                <IonGrid key={getUniqueKey()}>
+                    <IonRow key={getUniqueKey()}>
                         {keys.map((key, index) => (                            
-                            <IonCol><strong>{key}</strong></IonCol>
+                            <IonCol key={getUniqueKey()}><strong>{key}</strong></IonCol>
                         ))}
                     </IonRow>
                     {resultJson.map((row, index) => (
-                        <IonRow>
+                        <IonRow key={getUniqueKey()}>
                             {keys.map((key, index) => (
-                                <IonCol className="boxed">{row[key]}</IonCol>
+                                <IonCol key={getUniqueKey()} className="boxed">{row[key]}</IonCol>
                             ))}
                         </IonRow>
                     ))}
@@ -47,10 +48,14 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
         }
     } else {
         outputArray.push(
-            <IonGrid key={++uniqueKey}>
-                <IonRow className="resultHeader" key={++uniqueKey}><IonCol key={++uniqueKey}><strong>Result #{i+1}</strong></IonCol></IonRow>
-                <IonRow>
-                    <IonCol><IonLabel className="error" color={parseInt(resultJson) === resultJson ? 'dark':'danger'}>{resultJson}</IonLabel></IonCol>
+            <IonGrid key={getUniqueKey()}>
+                <IonRow className="resultHeader" key={getUniqueKey()}>
+                    <IonCol key={getUniqueKey()}><strong>Result #{i+1}</strong></IonCol>
+                </IonRow>
+                <IonRow key={getUniqueKey()}>
+                    <IonCol key={getUniqueKey()}>
+                        <IonLabel key={getUniqueKey()} className="error" color={parseInt(resultJson) === resultJson ? 'dark':'danger'}>{resultJson}</IonLabel>
+                    </IonCol>
                 </IonRow>
             </IonGrid>
         )

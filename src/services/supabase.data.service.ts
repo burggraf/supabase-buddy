@@ -28,12 +28,12 @@ export class SupabaseDataService {
   }
 
 
-  public async runSql(sql: string) {
+  public async runSql(sql: string, statementDelimiter: string = ';') {
     if (!this.isConnected()) {
       await this.connect();
     }
     const { data, error } = 
-    await supabase.rpc('execute_sql', {sqlcode: sql});
+    await supabase.rpc('execute_sql', {sqlcode: sql, statement_delimiter: statementDelimiter});
     return { data, error };
   }
   
