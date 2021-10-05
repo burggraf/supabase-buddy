@@ -9,6 +9,7 @@ import {
 	IonRow,
 	IonTitle,
 	IonToolbar,
+    useIonViewDidEnter,
 } from '@ionic/react'
 import { useHistory, useParams } from 'react-router'
 import './DatabaseFunctions.css'
@@ -29,8 +30,12 @@ const DatabaseFunctions: React.FC = () => {
             setFunctions(data!);
         }
     }
+	useIonViewDidEnter(() => {
+		console.log('useIonViewDidEnter...')
+        loadFunctions()
+	})
     useEffect(() => {
-        loadFunctions();
+        //loadFunctions();
     },[]);
     
 	return (
