@@ -88,6 +88,23 @@ export class SupabaseDataService {
     return { data, error };
   }
 
+  public async getFunctions(exclude_schemas: string = '') {
+    if (!this.isConnected()) {
+      await this.connect();
+    }
+    const { data, error } = await supabase.rpc('get_functions', {options: {exclude_schemas: exclude_schemas}});
+    return { data, error };
+  }
+
+  public async getFunction(function_schema: string, function_name: string) {
+    if (!this.isConnected()) {
+      await this.connect();
+    }
+    const { data, error } = await supabase.rpc('get_function', {function_schema, function_name});
+    return { data, error };
+  }
+
+
   public async getTables(exclude_schemas: string) {
     if (!this.isConnected()) {
       await this.connect();

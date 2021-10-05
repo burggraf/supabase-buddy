@@ -34,6 +34,8 @@ import DatabaseTables from './pages/DatabaseTables';
 import DatabaseTable from './pages/DatabaseTable';
 import DatabaseColumn from './pages/DatabaseColumn';
 import AuthUser from './pages/AuthUser';
+import DatabaseFunctions from './pages/DatabaseFunctions';
+import DatabaseFunction from './pages/DatabaseFunction';
 
 const App: React.FC = () => {
   return (
@@ -48,6 +50,8 @@ const App: React.FC = () => {
             <Route path="/settings-general" component={SettingsGeneral} />
             <Route path="/home" component={Home} />
             <Route path="/home-dashboard" component={HomeDashboard} />
+            <Route path="/database-functions" component={DatabaseFunctions} />
+            <Route path="/database-function/:function_schema/:function_name" component={DatabaseFunction} />
             <Route path="/database-tables" component={DatabaseTables} />
             <Route path="/database-table/:table_schema/:table_name" component={DatabaseTable} />
             <Route path="/database-column/:table_schema/:table_name/:column_name" component={DatabaseColumn} />
