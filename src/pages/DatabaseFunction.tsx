@@ -25,10 +25,10 @@ const DatabaseFunction: React.FC = () => {
     const [definition, setDefinition] = useState<string>("")
     const [functionArguments, setFunctionArguments] = useState<string>("")
     const [functionLanguage, setFunctionLanguage] = useState<string>("")
-    const [functionReturnType, setFunctionReturnType] = useState<string>("")
+    const [returnType, setReturnType] = useState<string>("")
     const [functionName, setFunctionName] = useState<string>("")
     const [functionSchema, setFunctionSchema] = useState<string>("")
-
+    const [securityDefiner, setSecurityDefiner] = useState<boolean>(false)
 	const supabaseDataService = new SupabaseDataService()
 	const loadFunction = async () => {
         console.log('loadFunction');
@@ -42,9 +42,10 @@ const DatabaseFunction: React.FC = () => {
             setDefinition(data![0].definition);
             setFunctionArguments(data![0].function_arguments);
             setFunctionLanguage(data![0].function_language);
-            setFunctionReturnType(data![0].function_return_type);
+            setReturnType(data![0].return_type);
             setFunctionName(data![0].function_name);
             setFunctionSchema(data![0].function_schema);
+            setSecurityDefiner(data![0].security_definer);
 		}
 	}
 	useEffect(() => {
@@ -111,7 +112,11 @@ const DatabaseFunction: React.FC = () => {
                     </IonRow>
                     <IonRow key="return_type">
                         <IonCol size="2">Return Type</IonCol>
-                        <IonCol>{functionReturnType}</IonCol>
+                        <IonCol>{returnType}</IonCol>
+                    </IonRow>
+                    <IonRow key="security_definer">
+                        <IonCol size="2">SecDef</IonCol>
+                        <IonCol>{securityDefiner?'true':'false'}</IonCol>
                     </IonRow>
 				</IonGrid>
                 <Editor

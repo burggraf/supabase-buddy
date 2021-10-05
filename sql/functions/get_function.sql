@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION get_function(function_schema text, function_name text
             else pg_get_functiondef(p.oid)
             end as definition,
        pg_get_function_arguments(p.oid) as function_arguments,
-       t.typname as return_type
+       t.typname as return_type, p.prosecdef as security_definer
         from pg_proc p
         left join pg_namespace n on p.pronamespace = n.oid
         left join pg_language l on p.prolang = l.oid
