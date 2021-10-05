@@ -9,6 +9,7 @@ import {
 	IonRow,
 	IonTitle,
 	IonToolbar,
+    useIonViewDidEnter
 } from '@ionic/react'
 import { useHistory, useParams } from 'react-router'
 import './DatabaseTables.css'
@@ -29,8 +30,12 @@ const DatabaseTables: React.FC = () => {
             setTables(data!);
         }
     }
+	useIonViewDidEnter(() => {
+		console.log('useIonViewDidEnter...')
+        loadTables()
+	})
     useEffect(() => {
-        loadTables();
+        // loadTables();
     },[]);
 	return (
 		<IonPage>

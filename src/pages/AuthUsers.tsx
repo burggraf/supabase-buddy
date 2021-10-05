@@ -1,4 +1,4 @@
-import { IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { SupabaseDataService } from '../services/supabase.data.service';
@@ -18,8 +18,12 @@ const AuthUsers: React.FC = () => {
             console.log('users', data);
 		}
 	}
-	useEffect(() => {
+	useIonViewDidEnter(() => {
+		console.log('useIonViewDidEnter...')
 		loadUsers()
+	})
+	useEffect(() => {
+		//loadUsers()
 	}, [])
   const { name } = useParams<{ name: string; }>();
 

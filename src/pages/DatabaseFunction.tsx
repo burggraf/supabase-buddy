@@ -48,7 +48,7 @@ const DatabaseFunction: React.FC = () => {
             setSecurityDefiner(data![0].security_definer);
 		}
 	}
-	useEffect(() => {
+    useEffect(() => {
 		loadFunction()
 	}, [])
 	function handleEditorChange(value: any, event: any) {

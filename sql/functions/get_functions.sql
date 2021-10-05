@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION get_functions(options JSON) RETURNS JSON SECURITY DEF
 
     const exclude_schemas = 
         options.exclude_schemas || 
-        "'pg_catalog', 'information_schema', 'extensions', 'auth', 'storage'";
+        "'pg_catalog', 'information_schema', 'extensions', 'auth', 'storage', 'pgbouncer'";
 
     return plv8.execute(
         `select n.nspname as function_schema,
