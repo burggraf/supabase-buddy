@@ -15,6 +15,7 @@ import {
 	IonTextarea,
 	IonTitle,
 	IonToolbar,
+	useIonAlert,
 	useIonViewDidEnter,
 } from '@ionic/react'
 import { checkmark } from 'ionicons/icons'
@@ -28,6 +29,7 @@ import { debounce } from 'ts-debounce'
 import { Snippet } from '../models/Snippet'
 const SqlEditor: React.FC = () => {
 	const { id } = useParams<{ id: string }>()
+	const [present] = useIonAlert();
 	const history = useHistory();
 	useIonViewDidEnter(() => {
 		console.log('useIonViewDidEnter...');
@@ -43,7 +45,7 @@ const SqlEditor: React.FC = () => {
 	const [content, setContent] = useState<string>('')
 	const [title, setTitle] = useState<string>('')
 	const [description, setDescription] = useState<string>('')
-	const [statementDelimiter, setStatementDelimiter] = useState<string>('')
+	const [statementDelimiter, setStatementDelimiter] = useState<string>(';')
 	const [results, setResults] = useState<any[]>([])
 	const supabaseDataService = new SupabaseDataService()
 
@@ -119,6 +121,16 @@ const SqlEditor: React.FC = () => {
 				console.log('data', data)
 				setResults(data!)
 			}
+		}
+	}
+	const deleteSnippet = async () => {
+		console.log('deleteSnippet', id)
+		const { data, error } = await supabaseDataService.deleteSnippet(id)
+		if (error) {
+			console.error(error)
+		} else {
+			console.log(data)
+			history.replace('/sql-snippets');
 		}
 	}
 	return (
@@ -198,6 +210,23 @@ const SqlEditor: React.FC = () => {
 			</IonContent>
 			<IonFooter>
 				<IonToolbar>
+					<IonButtons slot='start'>
+						<IonButton color='danger' fill='outline' 
+						onClick={() =>
+							present({
+							  cssClass: 'my-css',
+							  header: 'Delete',
+							  message: 'Are you sure?',
+							  buttons: [
+								'Cancel',
+								{ text: 'OK', handler: (d) => deleteSnippet() },
+							  ],
+							  onDidDismiss: (e) => console.log('did dismiss'),
+							})
+						  }>
+							<strong>DELETE</strong>
+						</IonButton>
+					</IonButtons>
 					<IonButtons slot='end'>
 						<IonButton color='dark' fill='outline' onClick={runSql}>
 							<strong>RUN</strong>

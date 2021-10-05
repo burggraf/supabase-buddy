@@ -57,6 +57,16 @@ export class SupabaseDataService {
     .single();
     return { data, error };
   }
+
+  public async deleteSnippet(id: string) {
+    if (!this.isConnected()) {
+      await this.connect();
+    }
+    const { data, error } = await supabase.from('snippets')
+    .delete()
+    .eq('id', id);
+    return { data, error };
+  }
   
   public async createSnippet(snippet: Snippet) {
     if (!this.isConnected()) {
