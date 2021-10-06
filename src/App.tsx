@@ -38,22 +38,40 @@ import DatabaseFunctions from './pages/DatabaseFunctions';
 import DatabaseFunction from './pages/DatabaseFunction';
 import ResetPassword from './Login/ResetPassword';
 import { StartupService } from './services/startup.service';
+import Welcome from './pages/Welcome';
+import { useEffect } from 'react';
+import { User } from '@supabase/supabase-js';
+
+import { SupabaseAuthService } from './services/supabase.auth.service';
 
 const startupService = new StartupService();
 const startupRoute = startupService.getStartupRoute();
+const supabaseAuthService = new SupabaseAuthService();
 
 const App: React.FC = () => {
+  let _user: User | null = null;
+
+  useEffect(()=>{
+    // Only run this one time!  No multiple subscriptions!
+    supabaseAuthService.user.subscribe((user: User | null) => {
+      _user = user;
+      console.log('subscribed: _user', _user);
+    });
+  }, []) // <-- empty dependency array
+
+
   return (
     <IonApp>
       <IonReactRouter>
         <IonSplitPane contentId="main">
-          <Menu />
+          { _user || true && <Menu /> }
           <IonRouterOutlet id="main">
             <Route path="/editor-tables" exact={true}>
               <Redirect to="/home" />
             </Route>
             <Route path="/settings-general" component={SettingsGeneral} />
             <Route path="/home" component={Home} />
+            <Route path="/welcome" component={Welcome} />
             <Route path="/home-dashboard" component={HomeDashboard} />
             <Route path="/database-functions" component={DatabaseFunctions} />
             <Route path="/database-function/:function_schema/:function_name" component={DatabaseFunction} />
@@ -67,7 +85,7 @@ const App: React.FC = () => {
             <Route path="/login" component={Login} />
             <Route path="/resetpassword/:token" component={ResetPassword} />
             <Route path="/" exact={true}>
-              <Redirect to={startupRoute || '/home-dashboard'} />
+              <Redirect to={startupRoute || '/welcome'} />
             </Route>
             <Route path="/page/:name" exact={true}>
               <Page />

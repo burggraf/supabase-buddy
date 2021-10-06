@@ -43,6 +43,7 @@ const appPages: AppPage[] = [
 
   { title: 'Home', url: 'home', icon: 'home',
     children: [
+      { title: 'Welcome', url: 'welcome', icon: 'search' },
       { title: 'Dashboard', url: 'home-dashboard', icon: 'search' },
       { title: 'Client Libraries', url: 'home-client-libs', icon: 'search' },
       { title: 'Example Projects', url: 'home-examples', icon: 'search' },
@@ -194,9 +195,9 @@ const Menu: React.FC = () => {
         setEmail('');
       }
     });
-    setTimeout(() => {
-      document.getElementById(selectedAccordionItem)?.click();
-    } , 1000);
+    // setTimeout(() => {
+    //   document.getElementById(selectedAccordionItem)?.click();
+    // } , 1000);
   }, []) // <-- empty dependency array
 
   return (

@@ -7,7 +7,7 @@ export class StartupService {
     }
 
     public getDefaultRoute(): string {
-        return '/home-dashboard';
+        return '/welcome';
     }
 
     public getStartupRoute(): string {
