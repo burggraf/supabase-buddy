@@ -204,12 +204,6 @@ const Welcome: React.FC = () => {
                 </IonCol>
             </IonRow>
         </IonGrid>
-        url: {url}<br/>
-        anonkey: {anonkey}<br/>
-        email: {email}<br/>
-
-
-
 
       </IonContent>
     </IonPage>
