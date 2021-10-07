@@ -27,6 +27,17 @@ export class SupabaseDataService {
       }
   }
 
+  public async runStatement(sql: string) {
+    let { data, error } = await this.runSql(sql);
+    try {
+      if (data!) {
+        data = JSON.parse(data![0]);
+      }
+    } catch(err) {
+      console.log('error parsing data', err);
+    }
+    return { data, error };
+  }
 
   public async runSql(sql: string, statementDelimiter: string = ';') {
     if (!this.isConnected()) {
@@ -88,60 +99,86 @@ export class SupabaseDataService {
     return { data, error };
   }
 
-  public async getFunctions(exclude_schemas: string = '') {
-    if (!this.isConnected()) {
-      await this.connect();
-    }
-    const { data, error } = await supabase.rpc('get_functions', {options: {exclude_schemas: exclude_schemas}});
-    return { data, error };
+  public async getFunctions(exclude_schemas: string = "'pg_catalog', 'information_schema', 'extensions', 'auth', 'storage', 'pgbouncer'") {
+    return this.runStatement(
+        `select n.nspname as function_schema,
+       p.proname as function_name,
+       l.lanname as function_language,
+       pg_get_function_arguments(p.oid) as function_arguments,
+       t.typname as return_type
+        from pg_proc p
+        left join pg_namespace n on p.pronamespace = n.oid
+        left join pg_language l on p.prolang = l.oid
+        left join pg_type t on t.oid = p.prorettype 
+        where n.nspname not in (${exclude_schemas})
+        order by function_schema,
+         function_name;
+        `);
   }
 
   public async getFunction(function_schema: string, function_name: string) {
-    if (!this.isConnected()) {
-      await this.connect();
-    }
-    const { data, error } = await supabase.rpc('get_function', {function_schema, function_name});
-    return { data, error };
+    return this.runStatement(`select n.nspname as function_schema,
+    p.proname as function_name,
+    l.lanname as function_language,
+    case when l.lanname = 'internal' then p.prosrc
+         else pg_get_functiondef(p.oid)
+         end as definition,
+    pg_get_function_arguments(p.oid) as function_arguments,
+    t.typname as return_type, p.prosecdef as security_definer
+     from pg_proc p
+     left join pg_namespace n on p.pronamespace = n.oid
+     left join pg_language l on p.prolang = l.oid
+     left join pg_type t on t.oid = p.prorettype 
+     where n.nspname = '${function_schema}'
+     and p.proname = '${function_name}'
+     `);
   }
 
 
-  public async getTables(exclude_schemas: string) {
-    if (!this.isConnected()) {
-      await this.connect();
-    }
-    const { data, error } = await supabase.rpc('get_tables', {options: {exclude_schemas: exclude_schemas}});
-    return { data, error };
+  public async getTables(exclude_schemas: string = "'pg_catalog', 'information_schema', 'extensions', 'auth', 'storage'") {
+    console.log('******');
+    console.log(`SELECT information_schema.tables.*,pg_description.description 
+    FROM information_schema.tables 
+    LEFT OUTER JOIN pg_description 
+    ON pg_description.objoid = (information_schema.tables.table_schema || '.' || information_schema.tables.table_name)::regclass
+    WHERE table_schema 
+    NOT IN (${exclude_schemas})
+    `);
+    
+    return this.runStatement(`SELECT information_schema.tables.*,pg_description.description 
+    FROM information_schema.tables 
+    LEFT OUTER JOIN pg_description 
+    ON pg_description.objoid = (information_schema.tables.table_schema || '.' || information_schema.tables.table_name)::regclass
+    WHERE table_schema 
+    NOT IN (${exclude_schemas})
+    `);
   }
 
   public async getColumns(table_schema: string, table_name: string) {
-    if (!this.isConnected()) {
-      await this.connect();
-    }
-    const { data, error } = await supabase.rpc('get_columns', {table_schema, table_name});
-    return { data, error };
+    return this.runStatement(`SELECT *
+    FROM information_schema.columns
+    WHERE table_schema = '${table_schema}'
+    AND table_name = '${table_name}'
+    `);
   }
 
   public async getColumn(table_schema: string, table_name: string, column_name: string) {
-    if (!this.isConnected()) {
-      await this.connect();
-    }
-    const { data, error } = await supabase.rpc('get_column', {table_schema, table_name, column_name});
-    return { data, error };
+    return this.runStatement(`SELECT *
+    FROM information_schema.columns
+    WHERE table_schema = '${table_schema}'
+    AND table_name = '${table_name}'
+    AND column_name = '${column_name}'
+    `);
   }
 
   public async getUsers() {
-    if (!this.isConnected()) {
-      await this.connect();
-    }
-    const { data, error } = await supabase.rpc('get_users', {});
-    return { data, error };
+    return this.runStatement(`SELECT id, email, phone, last_sign_in_at FROM auth.users`);
   }
   public async getUser(id: string) {
-    if (!this.isConnected()) {
-      await this.connect();
-    }
-    const { data, error } = await supabase.rpc('get_user', {id});
-    return { data, error };
+    return this.runStatement(`SELECT *
+    FROM auth.users
+    WHERE id = '${id}'
+    `);
   }
 
 

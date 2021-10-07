@@ -22,7 +22,7 @@ const DatabaseFunctions: React.FC = () => {
 	const { name } = useParams<{ name: string }>()
     const [functions, setFunctions] = useState<any[]>([])
     const loadFunctions = async () => {
-        const { data, error } = await supabaseDataService.getFunctions('');
+        const { data, error } = await supabaseDataService.getFunctions();
         if (error) {
             console.log(error);
         } else {

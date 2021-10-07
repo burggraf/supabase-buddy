@@ -22,7 +22,7 @@ const DatabaseTables: React.FC = () => {
 	const { name } = useParams<{ name: string }>()
     const [tables, setTables] = useState<any[]>([])
     const loadTables = async () => {
-        const { data, error } = await supabaseDataService.getTables('');
+        const { data, error } = await supabaseDataService.getTables();
         if (error) {
             console.log(error);
         } else {
