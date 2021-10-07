@@ -1,4 +1,4 @@
-import { IonApp, IonRouterOutlet, IonSplitPane } from '@ionic/react';
+import { IonApp, IonRouterOutlet, IonSplitPane, useIonViewWillEnter } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 import Menu from './components/Menu';
@@ -39,7 +39,7 @@ import DatabaseFunction from './pages/DatabaseFunction';
 import ResetPassword from './Login/ResetPassword';
 import { StartupService } from './services/startup.service';
 import Welcome from './pages/Welcome';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 
 import { SupabaseAuthService } from './services/supabase.auth.service';
@@ -49,22 +49,51 @@ const startupRoute = startupService.getStartupRoute();
 const supabaseAuthService = new SupabaseAuthService();
 
 const App: React.FC = () => {
-  let _user: User | null = null;
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+  
+  useIonViewWillEnter(() => {
+    console.log('ionViewWillEnter event fired');
+  });
+
+  const setupSubscription = async () => {
+  }
 
   useEffect(()=>{
     // Only run this one time!  No multiple subscriptions!
     supabaseAuthService.user.subscribe((user: User | null) => {
-      _user = user;
-      console.log('subscribed: _user', _user);
+      console.log('>>>>>>> user received:', user);
+      setCurrentUser(user);
+      console.log('App.tsx subscribed to user:', user);
+      if (user === null) {
+        console.log('App.tsx ******* USER: null');
+      } else {
+        console.log('App.tsx ******* USER:', user);
+      }
     });
   }, []) // <-- empty dependency array
 
-
   return (
-    <IonApp>
+    <>
+    { (currentUser === null) && 
+      <IonApp>
+      <IonReactRouter>
+          <IonRouterOutlet id="main">
+            <Route path="/welcome" component={Welcome} />
+            <Route path="/resetpassword/:token" component={ResetPassword} />
+            <Route path="/" exact={true}>
+              <Redirect to={'/welcome'} />
+            </Route>
+            <Route component={PageNotFound} />
+          </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
+    }
+    { (currentUser !== null) && 
+      <IonApp>
       <IonReactRouter>
         <IonSplitPane contentId="main">
-          { _user || true && <Menu /> }
+          <Menu />
           <IonRouterOutlet id="main">
             <Route path="/editor-tables" exact={true}>
               <Redirect to="/home" />
@@ -95,6 +124,8 @@ const App: React.FC = () => {
         </IonSplitPane>
       </IonReactRouter>
     </IonApp>
+    }
+    </>
   );
 };
 

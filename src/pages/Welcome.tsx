@@ -1,11 +1,12 @@
 import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonToast, useIonViewDidEnter } from '@ionic/react';
 import { useState } from 'react';
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import './Welcome.css';
 import { SupabaseAuthService } from '../services/supabase.auth.service';
 import { logIn, personAdd, refreshCircle, link } from 'ionicons/icons';
 
 const Welcome: React.FC = () => {
+  const history = useHistory();
   const supabaseAuthService = new SupabaseAuthService();
   const { name } = useParams<{ name: string; }>();
   const [url, setUrl] = useState('');
@@ -20,7 +21,7 @@ const Welcome: React.FC = () => {
     setAnonkey(anonkey);
   }
   useIonViewDidEnter(async () => {
-    console.log('useIonViewDidEnter...');
+    console.log('Welcome useIonViewDidEnter...');
     await loadSettings();
     // console.log('url', url);
     // console.log('anonkey', anonkey);
@@ -61,6 +62,10 @@ const Welcome: React.FC = () => {
       const {user, session, error} = 
           await supabaseAuthService.signInWithEmail(email, password);
       if (error) { console.error(error); toast(error.message) }
+      else { 
+          // history.replace('/home-dashboard');
+          window.location.href = '/home-dashboard';
+       }
   }
   const resetPassword = async () => {
     saveChanges();

@@ -3,7 +3,7 @@ import { logoApple, logoBitbucket, logoDiscord, logoFacebook, logoGithub,
     logoGitlab, logoGoogle, logoTwitch, logoTwitter } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import './ProviderSignInButton.css';
-import { SupabaseAuthService } from './supabase.auth.service';
+import { SupabaseAuthService } from '../services/supabase.auth.service';
 import { Provider } from '@supabase/gotrue-js';
 
 interface ContainerProps {

@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { description, version } from '../../package.json';
-import { SupabaseAuthService } from '../Login/supabase.auth.service';
+import { SupabaseAuthService } from '../services/supabase.auth.service';
 
 import './Menu.css';
 
@@ -187,7 +187,7 @@ const Menu: React.FC = () => {
     // Only run this one time!  No multiple subscriptions!
     supabaseAuthService.user.subscribe((user: User | null) => {
       _user = user;
-      console.log('subscribed: _user', _user);
+      console.log('menu.tsx subscribed: _user', _user);
       if (_user?.email) {
         setEmail(_user.email);
         setAvatar(_user?.user_metadata?.avatar_url || './assets/img/profile160x160.png')

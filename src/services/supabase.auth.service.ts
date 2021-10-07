@@ -64,6 +64,11 @@ export class SupabaseAuthService {
       email: email,
       password: password,
     });
+    if (!error) {
+      console.log('** supabase.auth.service.ts signInWithEmail successfull', user, session);
+      this._user = user;
+      this.user.next(user);
+    }
     return { user, session, error };
   }
 
@@ -74,6 +79,10 @@ export class SupabaseAuthService {
     }, {
       redirectTo: window.location.origin
     });
+    if (!error) {
+      this._user = user;
+      this.user.next(user);
+    }
     return { user, session, error };
   }
 
@@ -107,6 +116,7 @@ export class SupabaseAuthService {
     if (!this.isConnected) this.connect();
     const { error } = await supabase.auth.signOut();
     if (!error) {
+      this._user = null;
       this.user.next(null);
     }
     return { error };
