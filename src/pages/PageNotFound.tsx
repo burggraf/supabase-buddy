@@ -13,16 +13,14 @@ const PageNotFound: React.FC = () => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>Not Found</IonTitle>
+          <IonTitle>Page Not Found</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Page Not Found</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+      <IonContent>
+        <div className="ion-padding ion-text-center">
+        <h1><a href="/"><b>LOG IN</b></a></h1>
+        </div>
       </IonContent>
     </IonPage>
   );
