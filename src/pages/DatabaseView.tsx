@@ -42,8 +42,21 @@ const DatabaseView: React.FC = () => {
             //onWillDismiss: () => console.log('will dismiss'),
           })
     }
-    const save = async () => {
-        toast('not implmented yet', 'danger');
+	const save = async () => {
+        console.log('running this:', view.definition);
+        const sql = `DROP VIEW ${table_schema}.${table_name};;;CREATE OR REPLACE VIEW ${table_schema}.${table_name} AS ${view.view_definition}`;
+        console.log("RUN SQL:", sql);
+        const { data, error } = await supabaseDataService.runSql(sql, ';;;')
+        if (error) {
+            if (error && error.message) {
+                toast(error.message, 'danger');
+            } else {
+                toast(JSON.stringify(error), 'danger');
+                console.error(error)
+            }
+        } else {
+            toast('View was saved.', 'success');
+        }
     }
     const deleteView = async () => {
         toast('not implmented yet', 'danger');
@@ -67,6 +80,7 @@ const DatabaseView: React.FC = () => {
 	function handleEditorChange(value: any, event: any) {
 		// here is the current value
 		console.log('handleEditorChange', value)
+        setView({...view, view_definition: value})
 	}
 
 	function handleEditorDidMount(editor: any, monaco: any) {
