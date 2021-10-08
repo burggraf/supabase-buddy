@@ -50,7 +50,7 @@ const DatabaseTables: React.FC = () => {
 
 			<IonContent>
 				<IonGrid>
-					<IonRow>
+					<IonRow className="header">
 						<IonCol>Name</IonCol>
 						<IonCol>Description</IonCol>
 						<IonCol>Schema</IonCol>

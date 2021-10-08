@@ -1,6 +1,14 @@
 /* Ionic Variables and Theming. For more info, please see:
 http://ionicframework.com/docs/theming/ */
 
+ion-col {
+  border: 1px solid;
+  border-color: var(--ion-color-medium);
+  cursor: pointer;
+}
+ion-row.header{
+  font-weight: bold;
+}
 /** Ionic CSS Variables **/
 :root {
   /** primary **/

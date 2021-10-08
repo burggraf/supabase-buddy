@@ -77,7 +77,7 @@ const SqlSnippets: React.FC = () => {
 			</IonHeader>
 			<IonContent>
 				<IonGrid>
-					<IonRow key='header'>
+					<IonRow key='header' className="header">
 						<IonCol>Title</IonCol>
 						<IonCol>Description</IonCol>
 						<IonCol>Created</IonCol>

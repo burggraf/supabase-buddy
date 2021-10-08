@@ -42,7 +42,7 @@ const AuthUsers: React.FC = () => {
       <IonContent>
         <IonGrid>
 
-            <IonRow>
+            <IonRow className="header">
                 <IonCol>
                     <IonLabel>Email</IonLabel>
                 </IonCol>

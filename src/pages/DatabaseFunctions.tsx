@@ -51,7 +51,7 @@ const DatabaseFunctions: React.FC = () => {
 
 			<IonContent>
 				<IonGrid>
-					<IonRow>
+					<IonRow className="header">
                         <IonCol>Schema</IonCol>
 						<IonCol>Name</IonCol>
 						<IonCol>Language</IonCol>
