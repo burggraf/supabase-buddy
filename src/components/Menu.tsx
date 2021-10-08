@@ -226,24 +226,6 @@ const Menu: React.FC = () => {
       </IonHeader>
 
       <IonContent>
-        <IonList id="inbox-list">
-          <IonListHeader>menu header</IonListHeader>
-          { email && <IonNote><strong>{email || ''}</strong></IonNote>}
-          <IonMenuToggle autoHide={false}>
-            { email &&
-              <IonItem href='' onClick={signOut} lines="none" detail={false}>
-                <IonIcon slot="start" ios={logOutOutline} md={logOutSharp}></IonIcon>
-                <IonLabel><strong>Sign Out</strong></IonLabel>
-              </IonItem>
-            }    
-            { !email &&
-              <IonItem routerDirection="root" routerLink="/login" lines="none" detail={false}>
-                <IonIcon slot="start" ios={logInOutline} md={logInSharp}></IonIcon>
-                <IonLabel><strong>Sign In</strong></IonLabel>
-              </IonItem>
-            }
-          </IonMenuToggle>
-        </IonList>
 
         <IonAccordionGroup id="page-list" value={selectedAccordion}>
           {renderMenuItems(appPages)}
@@ -251,6 +233,19 @@ const Menu: React.FC = () => {
 
       </IonContent>
       <IonFooter>
+      <IonList id="inbox-list">
+          {/* <IonListHeader>menu header</IonListHeader>
+          { email && <IonNote><strong>{email || ''}</strong></IonNote>} */}
+          {/* <IonMenuToggle autoHide={false}> */}
+            { email &&
+              <IonItem href='' onClick={signOut} lines="none" detail={false}>
+                <IonIcon slot="start" ios={logOutOutline} md={logOutSharp}></IonIcon>
+                <IonLabel><strong>Sign Out</strong></IonLabel>
+              </IonItem>
+            }    
+          {/* </IonMenuToggle> */}
+        </IonList>
+
         <div className="ion-text-center">
           { description } v{ version }
         </div>
