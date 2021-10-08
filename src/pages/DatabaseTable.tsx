@@ -25,7 +25,9 @@ const DatabaseTable: React.FC = () => {
 	const { table_name } = useParams<{ table_name: string }>()
 	const [columns, setColumns] = useState<any[]>([])
 	const [rows, setRows] = useState<any[]>([])
-	const [ mode, setMode ] = useState<'schema' | 'data'>('schema')
+	const [indexes, setIndexes] = useState<any[]>([])
+	const [grants, setGrants] = useState<any[]>([])
+	const [ mode, setMode ] = useState<'schema' | 'data' | 'tls' | 'rls' | 'indexes'>('schema')
 	const supabaseDataService = new SupabaseDataService()
 	const loadColumns = async () => {
         console.log('loadColumns');
@@ -51,9 +53,35 @@ const DatabaseTable: React.FC = () => {
             console.log('loadData', data);
 		}
 	}
+	const loadIndexes = async () => {
+        console.log('loadIndexes');
+        console.log('table_schema', table_schema);
+        console.log('table_name', table_name);
+		const { data, error } = await supabaseDataService.getIndexes(table_schema, table_name)
+		if (error) {
+			console.error(error)
+		} else {
+			setIndexes(data!)
+            console.log('loadIndexxes', data);
+		}
+	}
+	const loadGrants = async () => {
+        console.log('loadGrants');
+        console.log('table_schema', table_schema);
+        console.log('table_name', table_name);
+		const { data, error } = await supabaseDataService.getGrants(table_schema, table_name)
+		if (error) {
+			console.error(error)
+		} else {
+			setGrants(data!)
+            console.log('loadGrants', data);
+		}
+	}
 	useEffect(() => {
 		loadColumns();
 		loadData();
+		loadIndexes();
+		loadGrants();
 	}, [])
 	return (
 		<IonPage>
@@ -71,7 +99,11 @@ const DatabaseTable: React.FC = () => {
 			<IonContent>
 
 			<IonSegment value={mode} onIonChange={e => {
-				if (e.detail.value === 'data' || e.detail.value === 'schema') {
+				if (e.detail.value === 'data' || 
+					e.detail.value === 'schema' ||
+					e.detail.value === 'tls' ||
+					e.detail.value === 'rls' ||
+					e.detail.value === 'indexes') {
 					setMode(e.detail.value)
 				}
 			}}>
@@ -80,6 +112,15 @@ const DatabaseTable: React.FC = () => {
           		</IonSegmentButton>
           		<IonSegmentButton value="data">
             		<IonLabel>Data</IonLabel>
+          		</IonSegmentButton>
+          		<IonSegmentButton value="tls">
+            		<IonLabel>TLS</IonLabel>
+          		</IonSegmentButton>
+          		<IonSegmentButton value="rls">
+            		<IonLabel>RLS</IonLabel>
+          		</IonSegmentButton>
+          		<IonSegmentButton value="indexes">
+            		<IonLabel>Indexes</IonLabel>
           		</IonSegmentButton>
         	</IonSegment>
 			{ mode === 'schema' &&
@@ -113,6 +154,57 @@ const DatabaseTable: React.FC = () => {
 								{Object.keys(row).map((key, index) => {
 									return (
 										<IonCol key={key}>{row[key]}</IonCol>
+									)
+								})}
+							</IonRow>
+						)
+					})}
+				</IonGrid>
+			}
+			{ mode === 'tls' &&
+				<IonGrid>
+				<IonRow className="header">
+					{Object.keys(grants[0]).map((key, index) => {
+						return (
+								<IonCol key={key}>{key}</IonCol>
+						)
+					})}
+				</IonRow>
+				{grants.map((grant: any) => {
+					return (
+						<IonRow key={grant.id}>
+							{Object.keys(grant).map((key, index) => {
+								return (
+									<IonCol key={key}>{grant[key]}</IonCol>
+								)
+							})}
+						</IonRow>
+					)
+				})}
+			</IonGrid>
+		}
+			{ mode === 'rls' &&
+				<IonGrid>
+					<IonRow className="header">
+						<IonCol>SHOW RLS</IonCol>
+					</IonRow>
+				</IonGrid>
+			}
+			{ mode === 'indexes' && indexes?.length > 0 &&
+				<IonGrid>
+					<IonRow className="header">
+						{Object.keys(indexes[0]).map((key, index) => {
+							return (
+									<IonCol key={key}>{key}</IonCol>
+							)
+						})}
+					</IonRow>
+					{indexes.map((idx: any) => {
+						return (
+							<IonRow key={idx.id}>
+								{Object.keys(idx).map((key, index) => {
+									return (
+										<IonCol key={key}>{idx[key]}</IonCol>
 									)
 								})}
 							</IonRow>

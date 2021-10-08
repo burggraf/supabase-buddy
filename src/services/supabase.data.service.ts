@@ -186,6 +186,24 @@ export class SupabaseDataService {
     WHERE id = '${id}'
     `);
   }
+  public async getIndexes(table_schema: string, table_name: string) {
+    return this.runStatement(`SELECT *
+    FROM pg_indexes
+    WHERE schemaname = '${table_schema}'
+    AND tablename = '${table_name}'
+    `);
+  }
+  public async getGrants(table_schema: string, table_name: string) {
+    return this.runStatement(`SELECT *
+    FROM information_schema.role_table_grants
+    WHERE table_schema = '${table_schema}'
+    AND table_name = '${table_name}'
+    `);
+  }
+  // SELECT *
+  // FROM information_schema.role_table_grants
+  // WHERE table_schema = 'public' AND
+  // table_name = 'people'
 
 
 
