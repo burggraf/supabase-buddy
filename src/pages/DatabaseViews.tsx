@@ -1,9 +1,11 @@
 import {
+    IonButton,
 	IonButtons,
 	IonCol,
 	IonContent,
 	IonGrid,
 	IonHeader,
+	IonIcon,
 	IonMenuButton,
 	IonPage,
 	IonRow,
@@ -15,6 +17,7 @@ import { useHistory, useParams } from 'react-router'
 import './DatabaseViews.css'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { useEffect, useState } from 'react'
+import { add } from 'ionicons/icons'
 
 const DatabaseViews: React.FC = () => {
     const history = useHistory();
@@ -37,6 +40,9 @@ const DatabaseViews: React.FC = () => {
     useEffect(() => {
         // loadTables();
     },[]);
+    const addView = () => {
+        history.push(`/database-view/public/NEW-VIEW`);
+    }
 	return (
 		<IonPage>
 			<IonHeader>
@@ -45,6 +51,11 @@ const DatabaseViews: React.FC = () => {
 						<IonMenuButton />
 					</IonButtons>
 					<IonTitle>Database Views</IonTitle>
+					<IonButtons slot='end'>
+						<IonButton color='primary' onClick={addView}>
+							<IonIcon size='large' icon={add}></IonIcon>
+						</IonButton>
+					</IonButtons>
 				</IonToolbar>
 			</IonHeader>
 

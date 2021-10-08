@@ -7,6 +7,7 @@ import {
 	IonFooter,
 	IonGrid,
 	IonHeader,
+	IonInput,
 	IonMenuButton,
 	IonPage,
 	IonRow,
@@ -43,9 +44,8 @@ const DatabaseView: React.FC = () => {
           })
     }
 	const save = async () => {
-        console.log('running this:', view.definition);
-        const sql = `DROP VIEW ${table_schema}.${table_name};;;CREATE OR REPLACE VIEW ${table_schema}.${table_name} AS ${view.view_definition}`;
-        console.log("RUN SQL:", sql);
+        const sql = `DROP VIEW IF EXISTS ${view.table_schema}."${view.table_name}";;;CREATE OR REPLACE VIEW ${view.table_schema}."${view.table_name}" AS ${view.view_definition}`;
+        console.log('run:', sql);
         const { data, error } = await supabaseDataService.runSql(sql, ';;;')
         if (error) {
             if (error && error.message) {
@@ -59,7 +59,19 @@ const DatabaseView: React.FC = () => {
         }
     }
     const deleteView = async () => {
-        toast('not implmented yet', 'danger');
+        const sql = `DROP VIEW IF EXISTS ${table_schema}."${table_name}";`;
+        const { data, error } = await supabaseDataService.runSql(sql, ';;;')
+        if (error) {
+            if (error && error.message) {
+                toast(error.message, 'danger');
+            } else {
+                toast(JSON.stringify(error), 'danger');
+                console.error(error)
+            }
+        } else {
+            toast('View was deleted.', 'success');
+            history.replace('/database-views');
+        }
     }
 
 	const loadView = async () => {
@@ -74,9 +86,24 @@ const DatabaseView: React.FC = () => {
             setView(data![0])
 		}
 	}
+    ///useEffect public NEW-VIEW false true false ***NEW-VIEW***
     useEffect(() => {
-		loadView()
+        if (table_schema === 'public' && table_name === 'NEW-VIEW') {
+            const new_view = {
+                table_schema: 'public',
+                table_name: 'new_view',
+                view_definition: `SELECT * FROM <table>`,
+            }
+            // useEffect public NEW-VIEW false true false ***NEW-VIEW***
+            console.log('setting view to', new_view);
+            setView(new_view)        
+        } else {
+            loadView()
+        }
 	}, [])
+    useEffect(() => {
+        console.log('view', view);
+    }, [view]);
 	function handleEditorChange(value: any, event: any) {
 		// here is the current value
 		console.log('handleEditorChange', value)
@@ -113,34 +140,52 @@ const DatabaseView: React.FC = () => {
 
 			<IonContent>
 				<IonGrid>
-
-                    <IonRow key="info-header" className="header scrollMe">
-                        <IonCol>Schema</IonCol>
-                        <IonCol>Name</IonCol>
-                        <IonCol>check_option</IonCol>
-                        <IonCol>is_updatable</IonCol>
-                        <IonCol>is_insertable_into</IonCol>
-                        <IonCol>is_trigger_updatable</IonCol>
-                        <IonCol>is_trigger_deletable</IonCol>
-                        <IonCol>is_trigger_insertable_into</IonCol>
-                    </IonRow>
-                    <IonRow key="info-data" className="scrollMe">
-                        <IonCol>{view.table_schema}</IonCol>
-                        <IonCol>{view.table_name}</IonCol>
-                        <IonCol>{view.check_option}</IonCol>
-                        <IonCol>{view.is_updatable}</IonCol>
-                        <IonCol>{view.is_insertable_into}</IonCol>
-                        <IonCol>{view.is_trigger_updatable}</IonCol>
-                        <IonCol>{view.is_trigger_deletable}</IonCol>
-                        <IonCol>{view.is_trigger_insertable_into}</IonCol>
-                    </IonRow>
+                    { (table_schema === 'public' && table_name === 'NEW-VIEW') &&
+                        <>
+                        <IonRow key="name-header" className="header">
+                            <IonCol>
+							View Name:{' '}
+							<IonInput
+								value={view.table_name}
+								onIonChange={debounce((e) => setView({...view, table_name: e.detail.value!}), 750)}
+								type='text'
+								style={{ border: '1px solid' }}
+							/>
+                            </IonCol>
+                        </IonRow>
+                        </>
+                    }
+                    { !(table_schema === 'public' && table_name === 'NEW-VIEW') &&
+                        <>
+                        <IonRow key="info-header" className="header scrollMe">
+                            <IonCol>Schema</IonCol>
+                            <IonCol>Name</IonCol>
+                            <IonCol>check_option</IonCol>
+                            <IonCol>is_updatable</IonCol>
+                            <IonCol>is_insertable_into</IonCol>
+                            <IonCol>is_trigger_updatable</IonCol>
+                            <IonCol>is_trigger_deletable</IonCol>
+                            <IonCol>is_trigger_insertable_into</IonCol>
+                        </IonRow>
+                        <IonRow key="info-data" className="scrollMe">
+                            <IonCol>{view?.table_schema}</IonCol>
+                            <IonCol>{view?.table_name}</IonCol>
+                            <IonCol>{view?.check_option}</IonCol>
+                            <IonCol>{view?.is_updatable}</IonCol>
+                            <IonCol>{view?.is_insertable_into}</IonCol>
+                            <IonCol>{view?.is_trigger_updatable}</IonCol>
+                            <IonCol>{view?.is_trigger_deletable}</IonCol>
+                            <IonCol>{view?.is_trigger_insertable_into}</IonCol>
+                        </IonRow>
+                        </>
+                    }
 				</IonGrid>
                 <Editor
 								className='textarea'
 								height="60vh"
 								defaultLanguage='sql'
-								defaultValue={view.view_definition}
-								value={view.view_definition}
+								defaultValue={view?.view_definition}
+								value={view?.view_definition}
 								theme={
 									window.matchMedia('(prefers-color-scheme: dark)').matches ? 'vs-dark' : 'vs-light'
 								}
