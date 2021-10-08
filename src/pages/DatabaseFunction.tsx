@@ -1,8 +1,10 @@
 import {
     IonBackButton,
+	IonButton,
 	IonButtons,
 	IonCol,
 	IonContent,
+	IonFooter,
 	IonGrid,
 	IonHeader,
 	IonMenuButton,
@@ -10,6 +12,8 @@ import {
 	IonRow,
 	IonTitle,
 	IonToolbar,
+	useIonAlert,
+	useIonToast,
 } from '@ionic/react'
 import Editor from '@monaco-editor/react'
 import { useEffect, useState } from 'react'
@@ -20,6 +24,7 @@ import { debounce } from 'ts-debounce'
 
 const DatabaseFunction: React.FC = () => {
     const history = useHistory();
+	const [present] = useIonAlert();
 	const { function_schema } = useParams<{ function_schema: string }>()
 	const { function_name } = useParams<{ function_name: string }>()
     const [definition, setDefinition] = useState<string>("")
@@ -30,6 +35,21 @@ const DatabaseFunction: React.FC = () => {
     const [functionSchema, setFunctionSchema] = useState<string>("")
     const [securityDefiner, setSecurityDefiner] = useState<boolean>(false)
 	const supabaseDataService = new SupabaseDataService()
+
+	const [presentToast, dismissToast] = useIonToast();
+    const toast = (message: string, color: string = 'danger') => {
+        presentToast({
+            color: color,
+            message: message,
+            cssClass: 'toast',
+            buttons: [{ icon: 'close', handler: () => dismissToast() }],
+            duration: 6000,
+            //onDidDismiss: () => console.log('dismissed'),
+            //onWillDismiss: () => console.log('will dismiss'),
+          })
+    }
+
+
 	const loadFunction = async () => {
         console.log('loadFunction');
         console.log('function_schema', function_schema);
@@ -70,6 +90,24 @@ const DatabaseFunction: React.FC = () => {
 		// model markers
 		console.log('handleEditorValidation', markers)
 		markers.forEach((marker: { message: any }) => console.log('onValidate:', marker.message))
+	}
+	const runSql = async () => {
+			const { data, error } = await supabaseDataService.runSql(definition, ';;;')
+			if (error) {
+				if (error && error.message) {
+					toast(error.message, 'danger');
+				} else {
+					toast(JSON.stringify(error), 'danger');
+					console.error(error)
+				}
+			} else {
+				toast('Function was saved.', 'success');
+			}
+		}
+	
+	const deleteFunction = async () => {
+		console.log('no implemented yet');
+		toast('not implemented yet');
 	}
 
     return (
@@ -140,6 +178,32 @@ const DatabaseFunction: React.FC = () => {
 							/>
 
 			</IonContent>
+			<IonFooter>
+				<IonToolbar>
+					<IonButtons slot='start'>
+						<IonButton color='danger' fill='outline' 
+						onClick={() =>
+							present({
+							  cssClass: 'my-css',
+							  header: 'Delete',
+							  message: 'Are you sure?',
+							  buttons: [
+								'Cancel',
+								{ text: 'OK', handler: (d) => deleteFunction() },
+							  ],
+							  onDidDismiss: (e) => console.log('did dismiss'),
+							})
+						  }>
+							<strong>DELETE</strong>
+						</IonButton>
+					</IonButtons>
+					<IonButtons slot='end'>
+						<IonButton color='dark' fill='outline' onClick={runSql}>
+							<strong>SAVE</strong>
+						</IonButton>
+					</IonButtons>
+				</IonToolbar>
+			</IonFooter>
 		</IonPage>
 	)
 }
