@@ -56,7 +56,6 @@ const SqlEditor: React.FC = () => {
         console.log('content', content);
         const {data, error} = await supabaseDataService.saveSnippet({
             id,
-			user: null,
             title,
             description,
 			statement_delimiter: statementDelimiter,
