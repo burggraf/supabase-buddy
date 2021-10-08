@@ -139,9 +139,9 @@ const DatabaseView: React.FC = () => {
 			</IonHeader>
 
 			<IonContent>
-				<IonGrid>
                     { (table_schema === 'public' && table_name === 'NEW-VIEW') &&
                         <>
+        				<IonGrid>
                         <IonRow key="name-header" className="header">
                             <IonCol>
 							View Name:{' '}
@@ -153,33 +153,23 @@ const DatabaseView: React.FC = () => {
 							/>
                             </IonCol>
                         </IonRow>
+                        </IonGrid>
                         </>
                     }
                     { !(table_schema === 'public' && table_name === 'NEW-VIEW') &&
                         <>
-                        <IonRow key="info-header" className="header scrollMe">
+                        <IonGrid>
+                        <IonRow key="info-header" className="header">
                             <IonCol>Schema</IonCol>
                             <IonCol>Name</IonCol>
-                            <IonCol>check_option</IonCol>
-                            <IonCol>is_updatable</IonCol>
-                            <IonCol>is_insertable_into</IonCol>
-                            <IonCol>is_trigger_updatable</IonCol>
-                            <IonCol>is_trigger_deletable</IonCol>
-                            <IonCol>is_trigger_insertable_into</IonCol>
                         </IonRow>
-                        <IonRow key="info-data" className="scrollMe">
+                        <IonRow key="info-data">
                             <IonCol>{view?.table_schema}</IonCol>
                             <IonCol>{view?.table_name}</IonCol>
-                            <IonCol>{view?.check_option}</IonCol>
-                            <IonCol>{view?.is_updatable}</IonCol>
-                            <IonCol>{view?.is_insertable_into}</IonCol>
-                            <IonCol>{view?.is_trigger_updatable}</IonCol>
-                            <IonCol>{view?.is_trigger_deletable}</IonCol>
-                            <IonCol>{view?.is_trigger_insertable_into}</IonCol>
                         </IonRow>
+                        </IonGrid>
                         </>
                     }
-				</IonGrid>
                 <Editor
 								className='textarea'
 								height="60vh"
