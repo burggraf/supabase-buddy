@@ -200,11 +200,13 @@ export class SupabaseDataService {
     AND table_name = '${table_name}'
     `);
   }
-  // SELECT *
-  // FROM information_schema.role_table_grants
-  // WHERE table_schema = 'public' AND
-  // table_name = 'people'
-
+  public async getRLSPolicies(table_schema: string, table_name: string) {
+    return this.runStatement(`SELECT *
+    FROM pg_policies
+    WHERE schemaname = '${table_schema}'
+    AND tablename = '${table_name}'
+    `);
+  }
 
 
 }

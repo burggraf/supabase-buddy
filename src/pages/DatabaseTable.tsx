@@ -27,6 +27,7 @@ const DatabaseTable: React.FC = () => {
 	const [rows, setRows] = useState<any[]>([])
 	const [indexes, setIndexes] = useState<any[]>([])
 	const [grants, setGrants] = useState<any[]>([])
+	const [policies, setPolicies] = useState<any[]>([])
 	const [ mode, setMode ] = useState<'schema' | 'data' | 'tls' | 'rls' | 'indexes'>('schema')
 	const supabaseDataService = new SupabaseDataService()
 	const loadColumns = async () => {
@@ -77,11 +78,24 @@ const DatabaseTable: React.FC = () => {
             console.log('loadGrants', data);
 		}
 	}
+	const loadPolicies = async () => {
+        console.log('loadPolicies');
+        console.log('table_schema', table_schema);
+        console.log('table_name', table_name);
+		const { data, error } = await supabaseDataService.getRLSPolicies(table_schema, table_name)
+		if (error) {
+			console.error(error)
+		} else {
+			setPolicies(data!)
+            console.log('loadPolicies', data);
+		}
+	}
 	useEffect(() => {
 		loadColumns();
 		loadData();
 		loadIndexes();
 		loadGrants();
+		loadPolicies();
 	}, [])
 	return (
 		<IonPage>
@@ -183,12 +197,27 @@ const DatabaseTable: React.FC = () => {
 				})}
 			</IonGrid>
 		}
-			{ mode === 'rls' &&
+			{ mode === 'rls' && policies?.length > 0 &&
 				<IonGrid>
-					<IonRow className="header">
-						<IonCol>SHOW RLS</IonCol>
-					</IonRow>
-				</IonGrid>
+				<IonRow className="header">
+					{Object.keys(policies[0]).map((key, index) => {
+						return (
+								<IonCol key={key}>{key}</IonCol>
+						)
+					})}
+				</IonRow>
+				{policies.map((policy: any) => {
+					return (
+						<IonRow key={policy.id}>
+							{Object.keys(policy).map((key, index) => {
+								return (
+									<IonCol key={key}>{policy[key]}</IonCol>
+								)
+							})}
+						</IonRow>
+					)
+				})}
+			</IonGrid>
 			}
 			{ mode === 'indexes' && indexes?.length > 0 &&
 				<IonGrid>
