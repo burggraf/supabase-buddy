@@ -207,6 +207,17 @@ export class SupabaseDataService {
     AND tablename = '${table_name}'
     `);
   }
-
-
+  public async getView(table_schema: string, table_name: string) {
+    return this.runStatement(`SELECT *
+    FROM information_schema.views
+    WHERE table_schema = '${table_schema}'
+    AND table_name = '${table_name}'
+    `);
+  }
+  public async getViews(exclude_schemas: string = "'pg_catalog', 'information_schema', 'extensions', 'auth', 'storage'") {
+    return this.runStatement(`SELECT table_schema, table_name
+    FROM information_schema.views
+    WHERE table_schema NOT IN (${exclude_schemas})
+    `);
+  }
 }

@@ -49,18 +49,19 @@ const appPages: AppPage[] = [
       { title: 'Example Projects', url: 'home-examples', icon: 'search' },
     ] 
   },
-  { title: 'Table Editor', url: 'table-editor', icon: 'list',
+  { title: 'Database', url: 'database', icon: 'analytics',
     children: [
-      { title: 'Tables', url: 'editor-tables', icon: 'search' },
-      { title: 'Views', url: 'editor-views', icon: 'search' },
+      { title: 'Tables', url: 'database-tables', icon: 'map' },
+      { title: 'Views', url: 'database-views', icon: 'search' },
+      { title: 'Functions', url: 'database-functions', icon: 'map' },
+      { title: 'Triggers', url: 'database-triggers', icon: 'map' },
+      { title: 'Extensions', url: 'database-extensions', icon: 'map' },
+      { title: 'Snippets', url: 'sql-snippets', icon: 'map' },
     ] 
   },
   { title: 'Authentication', url: 'authentication', icon: 'people',
     children: [
       { title: 'Users', url: 'auth-users', icon: 'search' },
-      { title: 'Policies', url: 'auth-policies', icon: 'search' },
-      { title: 'Templates', url: 'auth-templates', icon: 'search' },
-      { title: 'Settings', url: 'auth-settings', icon: 'search' },
     ] 
   },
   { title: 'Storage', url: 'storage', icon: 'file-tray-stacked',
@@ -69,25 +70,6 @@ const appPages: AppPage[] = [
       { title: 'Settings', url: 'storage-settings', icon: 'list' },
       { title: 'Policies', url: 'storage-policies', icon: 'business' },
       { title: 'Usage', url: 'storage-usage', icon: 'list' },
-    ] 
-  },
-  { title: 'SQL', url: 'sql', icon: 'code', 
-    children: [
-      { title: 'Getting Started', url: 'sql-start', icon: 'map' },
-      { title: 'Snippets', url: 'sql-snippets', icon: 'map' },
-    ] 
-  },
-  { title: 'Database', url: 'database', icon: 'analytics',
-    children: [
-      { title: 'Tables', url: 'database-tables', icon: 'map' },
-      { title: 'Roles', url: 'database-roles', icon: 'map' },
-      { title: 'Extensions', url: 'database-extensions', icon: 'map' },
-      { title: 'Replication', url: 'database-replication', icon: 'map' },
-      { title: 'Backups', url: 'database-backups', icon: 'map' },
-      { title: 'Connection Pooling', url: 'database-pooling', icon: 'map' },
-      { title: 'Triggers', url: 'database-triggers', icon: 'map' },
-      { title: 'Functions', url: 'database-functions', icon: 'map' },
-      { title: 'Hooks', url: 'database-hooks', icon: 'map' },
     ] 
   },
   { title: 'Reports', url: 'reports', icon: 'document-text',

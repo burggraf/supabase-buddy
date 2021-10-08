@@ -43,6 +43,8 @@ import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 
 import { SupabaseAuthService } from './services/supabase.auth.service';
+import DatabaseViews from './pages/DatabaseViews';
+import DatabaseView from './pages/DatabaseView';
 
 const startupService = new StartupService();
 const startupRoute = startupService.getStartupRoute();
@@ -107,6 +109,8 @@ const App: React.FC = () => {
             <Route path="/database-tables" component={DatabaseTables} />
             <Route path="/database-table/:table_schema/:table_name" component={DatabaseTable} />
             <Route path="/database-column/:table_schema/:table_name/:column_name" component={DatabaseColumn} />
+            <Route path="/database-views" component={DatabaseViews} />
+            <Route path="/database-view/:table_schema/:table_name" component={DatabaseView} />
             <Route path="/auth-users" component={AuthUsers} />
             <Route path="/auth-user/:id" component={AuthUser} />
             <Route path="/sql-editor/:id" component={SqlEditor} />
