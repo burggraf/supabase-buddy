@@ -144,7 +144,7 @@ export class SupabaseDataService {
     WHERE table_schema 
     NOT IN (${exclude_schemas})
     `);
-    
+
     return this.runStatement(`SELECT information_schema.tables.*,pg_description.description 
     FROM information_schema.tables 
     LEFT OUTER JOIN pg_description 
@@ -159,6 +159,12 @@ export class SupabaseDataService {
     FROM information_schema.columns
     WHERE table_schema = '${table_schema}'
     AND table_name = '${table_name}'
+    `);
+  }
+  public async getTableRows(table_schema: string, table_name: string) {
+    return this.runStatement(`SELECT *
+    FROM ${table_schema}.${table_name}
+    LIMIT 100 OFFSET 0
     `);
   }
 
