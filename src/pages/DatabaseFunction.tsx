@@ -115,7 +115,7 @@ const DatabaseFunction: React.FC = () => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot='start'>
-						<IonBackButton />
+						<IonBackButton defaultHref="/database-functions" />
 					</IonButtons>
 					<IonTitle>
 						Function: {function_schema}.{function_name}

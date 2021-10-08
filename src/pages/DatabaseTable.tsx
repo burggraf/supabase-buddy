@@ -1,10 +1,13 @@
 import {
     IonBackButton,
+	IonButton,
 	IonButtons,
 	IonCol,
 	IonContent,
 	IonGrid,
 	IonHeader,
+	IonIcon,
+	IonInput,
 	IonLabel,
 	IonMenuButton,
 	IonPage,
@@ -13,9 +16,13 @@ import {
 	IonSegmentButton,
 	IonTitle,
 	IonToolbar,
+	useIonToast,
 } from '@ionic/react'
+import { checkmark } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
+import { debounce } from 'ts-debounce'
+import ColumnType from '../components/ColumnType'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import './DatabaseTable.css'
 
@@ -23,6 +30,7 @@ const DatabaseTable: React.FC = () => {
     const history = useHistory();
 	const { table_schema } = useParams<{ table_schema: string }>()
 	const { table_name } = useParams<{ table_name: string }>()
+	const [name, setName] = useState(table_name === 'NEW-TABLE' ? '' : table_name)
 	const [columns, setColumns] = useState<any[]>([])
 	const [rows, setRows] = useState<any[]>([])
 	const [indexes, setIndexes] = useState<any[]>([])
@@ -90,64 +98,163 @@ const DatabaseTable: React.FC = () => {
             console.log('loadPolicies', data);
 		}
 	}
+	const [presentToast, dismissToast] = useIonToast();
+    const toast = (message: string, color: string = 'danger') => {
+        presentToast({
+            color: color,
+            message: message,
+            cssClass: 'toast',
+            buttons: [{ icon: 'close', handler: () => dismissToast() }],
+            duration: 6000,
+            //onDidDismiss: () => console.log('dismissed'),
+            //onWillDismiss: () => console.log('will dismiss'),
+          })
+    }
 	useEffect(() => {
-		loadColumns();
-		loadData();
-		loadIndexes();
-		loadGrants();
-		loadPolicies();
+		if (table_schema === 'public' && table_name === 'NEW-TABLE') {
+			const newColumns = [
+				{
+					character_maximum_length: null,
+					character_octet_length: null,
+					character_set_catalog: null,
+					character_set_name: null,
+					character_set_schema: null,
+					collation_catalog: null,
+					collation_name: null,
+					collation_schema: null,
+					column_default: "uuid_generate_v4()",
+					column_name: "id",
+					data_type: "uuid",
+					datetime_precision: null,
+					domain_catalog: null,
+					domain_name: null,
+					domain_schema: null,
+					dtd_identifier: "1",
+					generation_expression: null,
+					identity_cycle: "NO",
+					identity_generation: null,
+					identity_increment: null,
+					identity_maximum: null,
+					identity_minimum: null,
+					identity_start: null,
+					interval_precision: null,
+					interval_type: null,
+					is_generated: "NEVER",
+					is_identity: "NO",
+					is_nullable: "NO",
+					is_self_referencing: "NO",
+					is_updatable: "YES",
+					maximum_cardinality: null,
+					numeric_precision: null,
+					numeric_precision_radix: null,
+					numeric_scale: null,
+					ordinal_position: "1",
+					scope_catalog: null,
+					scope_name: null,
+					scope_schema: null,
+					table_catalog: "postgres",
+					table_name: "snippets",
+					table_schema: "public",
+					udt_catalog: "postgres",
+					udt_name: "uuid",
+					udt_schema: "pg_catalog"
+					 }
+			];
+			setColumns(newColumns);
+		} else {
+			loadColumns();
+			loadData();
+			loadIndexes();
+			loadGrants();
+			loadPolicies();	
+		}
 	}, [])
+	const save = async () => {
+		toast('not implemented yet', 'danger');
+	}
 	return (
 		<IonPage>
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot='start'>
-						<IonBackButton />
+						<IonBackButton defaultHref="/database-tables" />
 					</IonButtons>
 					<IonTitle>
 						{table_schema}.{table_name}
 					</IonTitle>
+					{ table_name === 'NEW-TABLE' &&
+                    	<IonButtons slot="end">
+							<IonButton color="primary" onClick={save}>
+								<IonIcon size="large" icon={checkmark}></IonIcon>
+							</IonButton>
+						</IonButtons>
+					}
 				</IonToolbar>
 			</IonHeader>
 
 			<IonContent>
 
-			<IonSegment value={mode} onIonChange={e => {
-				if (e.detail.value === 'data' || 
-					e.detail.value === 'schema' ||
-					e.detail.value === 'tls' ||
-					e.detail.value === 'rls' ||
-					e.detail.value === 'indexes') {
-					setMode(e.detail.value)
-				}
-			}}>
-          		<IonSegmentButton value="schema">
-            		<IonLabel>Schema</IonLabel>
-          		</IonSegmentButton>
-          		<IonSegmentButton value="data">
-            		<IonLabel>Data</IonLabel>
-          		</IonSegmentButton>
-          		<IonSegmentButton value="tls">
-            		<IonLabel>TLS</IonLabel>
-          		</IonSegmentButton>
-          		<IonSegmentButton value="rls">
-            		<IonLabel>RLS</IonLabel>
-          		</IonSegmentButton>
-          		<IonSegmentButton value="indexes">
-            		<IonLabel>Indexes</IonLabel>
-          		</IonSegmentButton>
-        	</IonSegment>
-			{ mode === 'schema' &&
+			{ (table_schema === 'public' && table_name === 'NEW-TABLE') &&
+				<IonGrid>
+					<IonRow key="name-header" className="header">
+						<IonCol>
+						Table Name:{' '}
+						<IonInput
+							value={name}
+							placeholder="Enter table name"
+							onIonChange={debounce((e) => setName(e.detail.value!), 750)}
+							type='text'
+							style={{ border: '1px solid' }}
+						/>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
+			}
+			{ !(table_schema === 'public' && table_name === 'NEW-TABLE') &&
+				<IonSegment value={mode} onIonChange={e => {
+					if (e.detail.value === 'data' || 
+						e.detail.value === 'schema' ||
+						e.detail.value === 'tls' ||
+						e.detail.value === 'rls' ||
+						e.detail.value === 'indexes') {
+						setMode(e.detail.value)
+					}
+				}}>
+					<IonSegmentButton value="schema">
+						<IonLabel>Schema</IonLabel>
+					</IonSegmentButton>
+					<IonSegmentButton value="data">
+						<IonLabel>Data</IonLabel>
+					</IonSegmentButton>
+					<IonSegmentButton value="tls">
+						<IonLabel>TLS</IonLabel>
+					</IonSegmentButton>
+					<IonSegmentButton value="rls">
+						<IonLabel>RLS</IonLabel>
+					</IonSegmentButton>
+					<IonSegmentButton value="indexes">
+						<IonLabel>Indexes</IonLabel>
+					</IonSegmentButton>
+				</IonSegment>
+			}
+
+			{ ((mode === 'schema') || (table_schema === 'public' && table_name === 'NEW-TABLE')) &&
 				<IonGrid>
 				<IonRow className="header">
-					<IonCol>name</IonCol>
-					<IonCol>type</IonCol>
+					<IonCol>Name</IonCol>
+					<IonCol>Type</IonCol>
+					<IonCol>Default</IonCol>
+					<IonCol>Key</IonCol>
+					<IonCol>Null</IonCol>
 				</IonRow>
 				{columns.map((column: any) => {
 					return (
-						<IonRow key={column.column_name} onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}>
-							<IonCol>{column.column_name}</IonCol>
-							<IonCol>{column.data_type}</IonCol>
+						<IonRow key={column.column_name}>
+							<IonCol onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}>{column.column_name}</IonCol>
+							<IonCol><ColumnType stateVariable={column.data_type} stateFunction={(e: any) => {console.log('woo hoo!  I got e', e)}} /></IonCol>
+							<IonCol>{column.column_default}</IonCol>
+							<IonCol>???</IonCol>
+							<IonCol>{column.is_nullable}</IonCol>
 						</IonRow>
 					)
 				})}

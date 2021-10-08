@@ -44,7 +44,7 @@ const DatabaseColumn: React.FC = () => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot='start'>
-						<IonBackButton />
+						<IonBackButton defaultHref="/database-tables" />
 					</IonButtons>
 					<IonTitle>
 						{table_schema}.{table_name}.{column_name}

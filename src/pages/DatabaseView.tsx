@@ -130,7 +130,7 @@ const DatabaseView: React.FC = () => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot='start'>
-						<IonBackButton />
+						<IonBackButton defaultHref="/database-views" />
 					</IonButtons>
 					<IonTitle>
 						View: {table_schema}.{table_name}

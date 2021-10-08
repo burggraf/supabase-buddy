@@ -9,6 +9,10 @@ ion-col {
 ion-row.header{
   font-weight: bold;
 }
+.alert-button-inner {
+  font-weight: bold;
+
+}
 /** Ionic CSS Variables **/
 :root {
   /** primary **/

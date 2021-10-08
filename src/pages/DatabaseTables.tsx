@@ -1,9 +1,11 @@
 import {
+	IonButton,
 	IonButtons,
 	IonCol,
 	IonContent,
 	IonGrid,
 	IonHeader,
+	IonIcon,
 	IonMenuButton,
 	IonPage,
 	IonRow,
@@ -15,6 +17,7 @@ import { useHistory, useParams } from 'react-router'
 import './DatabaseTables.css'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { useEffect, useState } from 'react'
+import { add } from 'ionicons/icons'
 
 const DatabaseTables: React.FC = () => {
     const history = useHistory();
@@ -37,6 +40,9 @@ const DatabaseTables: React.FC = () => {
     useEffect(() => {
         // loadTables();
     },[]);
+	const addTable = () => {
+		history.push(`/database-table/public/NEW-TABLE`)
+	}
 	return (
 		<IonPage>
 			<IonHeader>
@@ -45,6 +51,11 @@ const DatabaseTables: React.FC = () => {
 						<IonMenuButton />
 					</IonButtons>
 					<IonTitle>Database Tables</IonTitle>
+					<IonButtons slot='end'>
+						<IonButton color='primary' onClick={addTable}>
+							<IonIcon size='large' icon={add}></IonIcon>
+						</IonButton>
+					</IonButtons>
 				</IonToolbar>
 			</IonHeader>
 

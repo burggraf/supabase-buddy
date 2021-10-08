@@ -32,7 +32,7 @@ const AuthUser: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton />
+            <IonBackButton defaultHref="/auth-users" />
           </IonButtons>
           <IonTitle>User Detail</IonTitle>
         </IonToolbar>
