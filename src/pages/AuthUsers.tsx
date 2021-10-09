@@ -131,6 +131,9 @@ const AuthUsers: React.FC = () => {
         <IonPopover
           isOpen={showPopover.open}
           event={showPopover.event}
+          backdropDismiss={true}
+          keyboardClose={true}
+          showBackdrop={true}
           onDidDismiss={e => setShowPopover({open: false, event: undefined, user: undefined})}>
           <IonList>
             <IonListHeader>
@@ -154,6 +157,9 @@ const AuthUsers: React.FC = () => {
         <IonPopover
           isOpen={showInvite.open}
           event={showInvite.event}
+          backdropDismiss={true}
+          keyboardClose={true}
+          showBackdrop={true}
           onDidDismiss={e => setShowInvite({open: false, event: undefined})}>
           <div className="ion-text-center">
             <br/>
