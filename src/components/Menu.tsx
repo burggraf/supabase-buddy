@@ -160,7 +160,6 @@ const Menu: React.FC = () => {
     console.log('selectImage() not implemented');
   }
   const getPhotoURL = () => {
-    console.log('getPhotoURL: _user', _user);
     return _user?.user_metadata?.avatar_url || './assets/img/profile160x160.png';
   }
 
@@ -169,7 +168,6 @@ const Menu: React.FC = () => {
     // Only run this one time!  No multiple subscriptions!
     supabaseAuthService.user.subscribe((user: User | null) => {
       _user = user;
-      console.log('menu.tsx subscribed: _user', _user);
       if (_user?.email) {
         setEmail(_user.email);
         setAvatar(_user?.user_metadata?.avatar_url || './assets/img/profile160x160.png')

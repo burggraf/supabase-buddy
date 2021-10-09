@@ -5,7 +5,6 @@ interface ContainerProps {
   results: any[]
 }
 const SqlResults: React.FC<ContainerProps> = ({ results }) => {
-  console.log('SqlResults got results', results);
   const outputArray = [];
   const getUniqueKey = () => {
       return Math.random().toString(36).substr(2, 9);
@@ -24,7 +23,6 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
         if (resultJson.length > 0) {
             // get keys and values of first element
             const keys = Object.keys(resultJson[0]);
-            console.log('keys', keys);
             outputArray.push(
                 <>
                 <IonLabel className="resultHeader"><strong>Result #{i+1}</strong></IonLabel>
@@ -71,9 +69,7 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
         )
 
     }
-    console.log('resultJson', typeof resultJson, resultJson);
   }
-  console.log('outputArray', outputArray);
   return (
     <>
     {outputArray}

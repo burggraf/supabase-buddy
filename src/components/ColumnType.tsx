@@ -7,7 +7,6 @@ interface ContainerProps {
 }
 
 const ColumnType: React.FC<ContainerProps> = ({ stateVariable, stateFunction }) => {
-    console.log('stateVariable', stateVariable);
     // const customPopoverOptions = {
     // header: 'Column Type',
     // subHeader: 'Select a column type',

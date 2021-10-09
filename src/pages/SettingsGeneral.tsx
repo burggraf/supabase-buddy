@@ -10,8 +10,6 @@ const SettingsGeneral: React.FC = () => {
     const loadSettings = async () => {
         const url = await localStorage.getItem('url');
         const anonkey = await localStorage.getItem('anonkey');
-        console.log('url', url);
-        console.log('anonkey', anonkey);
         //setUrl(url => localStorage.getItem('url') || '');
         //setAnonkey(anonkey => localStorage.getItem('anonkey') || '');
         const urlField = document.getElementById('url') as HTMLInputElement;
@@ -25,10 +23,7 @@ const SettingsGeneral: React.FC = () => {
     }, []);
 
     useIonViewDidEnter(async () => {
-        console.log('useIonViewDidEnter...');
         await loadSettings();
-        // console.log('url', url);
-        // console.log('anonkey', anonkey);
     });
 
     const { name } = useParams<{ name: string; }>();
@@ -37,16 +32,10 @@ const SettingsGeneral: React.FC = () => {
         // localStorage.setItem('anonkey', anonkey);
         // const url = localStorage.getItem('url');
         // const anonkey = localStorage.getItem('anonkey');
-        console.log('url', (document.getElementById('url') as HTMLInputElement).value);
-        console.log('anonkey', (document.getElementById('anonkey') as HTMLInputElement).value);        
         const url = (document.getElementById('url') as HTMLInputElement).value;
         const anonkey = (document.getElementById('anonkey') as HTMLInputElement).value;
-        console.log('url', url);
-        console.log('anonkey', anonkey);
         if (url) localStorage.setItem('url', (document.getElementById('url') as HTMLInputElement).value);
         if (anonkey) localStorage.setItem('anonkey', (document.getElementById('anonkey') as HTMLInputElement).value);
-        console.log('saved url', localStorage.getItem('url'));
-        console.log('saved anonkey', localStorage.getItem('anonkey'));
     }
   return (
     <IonPage>

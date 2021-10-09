@@ -56,14 +56,10 @@ const DatabaseFunction: React.FC = () => {
 
 
 	const loadFunction = async () => {
-        console.log('loadFunction');
-        console.log('function_schema', function_schema);
-        console.log('function_name', function_name);
 		const { data, error } = await supabaseDataService.getFunction(function_schema, function_name)
 		if (error) {
 			console.error(error)
 		} else {
-            console.log('f data', data![0]);
 			let definition = data![0].definition;
 			// extract a portion of the definition between two tokens
 			let start = definition.indexOf('$function$')
@@ -95,22 +91,17 @@ const DatabaseFunction: React.FC = () => {
 	}
 
 	function handleEditorDidMount(editor: any, monaco: any) {
-		console.log('onMount: the editor instance:', editor)
-		console.log('onMount: the monaco instance:', monaco)
 	}
 
 	function handleEditorWillMount(monaco: any) {
-		console.log('beforeMount: the monaco instance:', monaco)
 	}
 
 	function handleEditorValidation(markers: any) {
 		// model markers
-		console.log('handleEditorValidation', markers)
 		markers.forEach((marker: { message: any }) => console.log('onValidate:', marker.message))
 	}
 	const runSql = async () => {
 			const sql = sqlPrefix + '\n' + definition + '\n' +  sqlSuffix;
-			console.log('RUN THIS:', sql);
 			const { data, error } = await supabaseDataService.runSql(sql, ';;;')
 			if (error) {
 				if (error && error.message) {
@@ -125,7 +116,6 @@ const DatabaseFunction: React.FC = () => {
 		}
 	
 	const deleteFunction = async () => {
-		console.log('no implemented yet');
 		toast('not implemented yet');
 	}
 

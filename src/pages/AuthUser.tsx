@@ -7,7 +7,6 @@ import Moment from 'moment';
 
 const AuthUser: React.FC = () => {
     const { id } = useParams<{ id: string; }>();
-    console.log('user id is', id);
 
 	const supabaseDataService = new SupabaseDataService()
     const [user, setUser] = useState<any>({})
@@ -19,7 +18,6 @@ const AuthUser: React.FC = () => {
 		} else {
             if (data && data.length > 0 ) {
                 setUser(data![0]);
-                console.log('user', data![0]);
             }
 		}
 	}

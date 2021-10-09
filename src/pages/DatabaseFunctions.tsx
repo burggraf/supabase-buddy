@@ -24,14 +24,12 @@ const DatabaseFunctions: React.FC = () => {
     const loadFunctions = async () => {
         const { data, error } = await supabaseDataService.getFunctions();
         if (error) {
-            console.log(error);
+            console.error(error);
         } else {
-            console.log(data);
             setFunctions(data!);
         }
     }
 	useIonViewDidEnter(() => {
-		console.log('useIonViewDidEnter...')
         loadFunctions()
 	})
     useEffect(() => {

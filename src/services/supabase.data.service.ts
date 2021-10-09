@@ -17,8 +17,6 @@ export class SupabaseDataService {
   public connect = async () => {
       const url = localStorage.getItem('url');
       const anonkey = localStorage.getItem('anonkey');
-      console.log('url', url);
-      console.log('anonkey', anonkey);
       if (url && anonkey) {
         supabase = await createClient(url, anonkey);
         return true;
@@ -34,7 +32,7 @@ export class SupabaseDataService {
         data = JSON.parse(data![0]);
       }
     } catch(err) {
-      console.log('error parsing data', err);
+      console.error('error parsing data', err);
     }
     return { data, error };
   }
@@ -136,15 +134,6 @@ export class SupabaseDataService {
 
 
   public async getTables(exclude_schemas: string = "'pg_catalog', 'information_schema', 'extensions', 'auth', 'storage'") {
-    console.log('******');
-    console.log(`SELECT information_schema.tables.*,pg_description.description 
-    FROM information_schema.tables 
-    LEFT OUTER JOIN pg_description 
-    ON pg_description.objoid = (information_schema.tables.table_schema || '.' || information_schema.tables.table_name)::regclass
-    WHERE table_schema 
-    NOT IN (${exclude_schemas})
-    `);
-
     return this.runStatement(`SELECT information_schema.tables.*,pg_description.description 
     FROM information_schema.tables 
     LEFT OUTER JOIN pg_description 

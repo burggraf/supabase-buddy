@@ -45,7 +45,6 @@ const DatabaseView: React.FC = () => {
     }
 	const save = async () => {
         const sql = `DROP VIEW IF EXISTS ${view.table_schema}."${view.table_name}";;;CREATE OR REPLACE VIEW ${view.table_schema}."${view.table_name}" AS ${view.view_definition}`;
-        console.log('run:', sql);
         const { data, error } = await supabaseDataService.runSql(sql, ';;;')
         if (error) {
             if (error && error.message) {
@@ -75,14 +74,10 @@ const DatabaseView: React.FC = () => {
     }
 
 	const loadView = async () => {
-        console.log('loadFunction');
-        console.log('table_schema', table_schema);
-        console.log('table_name', table_name);
 		const { data, error } = await supabaseDataService.getView(table_schema, table_name)
 		if (error) {
 			console.error(error)
 		} else {
-            console.log('f data', data![0]);
             setView(data![0])
 		}
 	}
@@ -95,33 +90,26 @@ const DatabaseView: React.FC = () => {
                 view_definition: `SELECT * FROM <table>`,
             }
             // useEffect public NEW-VIEW false true false ***NEW-VIEW***
-            console.log('setting view to', new_view);
             setView(new_view)        
         } else {
             loadView()
         }
 	}, [])
     useEffect(() => {
-        console.log('view', view);
     }, [view]);
 	function handleEditorChange(value: any, event: any) {
 		// here is the current value
-		console.log('handleEditorChange', value)
         setView({...view, view_definition: value})
 	}
 
 	function handleEditorDidMount(editor: any, monaco: any) {
-		console.log('onMount: the editor instance:', editor)
-		console.log('onMount: the monaco instance:', monaco)
 	}
 
 	function handleEditorWillMount(monaco: any) {
-		console.log('beforeMount: the monaco instance:', monaco)
 	}
 
 	function handleEditorValidation(markers: any) {
 		// model markers
-		console.log('handleEditorValidation', markers)
 		markers.forEach((marker: { message: any }) => console.log('onValidate:', marker.message))
 	}
 

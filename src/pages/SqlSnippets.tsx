@@ -35,11 +35,9 @@ const SqlSnippets: React.FC = () => {
 		}
 	}
 	const editSnippet = (id: string) => {
-		console.log('editSnippet', id)
 		history.push(`/sql-editor/${id}`)
 	}
 	useIonViewDidEnter(() => {
-		console.log('useIonViewDidEnter...')
 		loadSnippets()
 	})
 

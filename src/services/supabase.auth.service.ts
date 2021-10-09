@@ -65,7 +65,6 @@ export class SupabaseAuthService {
       password: password,
     });
     if (!error) {
-      console.log('** supabase.auth.service.ts signInWithEmail successfull', user, session);
       this._user = user;
       this.user.next(user);
     }

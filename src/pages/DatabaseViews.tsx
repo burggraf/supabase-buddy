@@ -27,14 +27,12 @@ const DatabaseViews: React.FC = () => {
     const loadViews = async () => {
         const { data, error } = await supabaseDataService.getViews();
         if (error) {
-            console.log(error);
+            console.error(error);
         } else {
-            console.log(data);
             setViews(data!);
         }
     }
 	useIonViewDidEnter(() => {
-		console.log('useIonViewDidEnter...')
         loadViews()
 	})
     useEffect(() => {

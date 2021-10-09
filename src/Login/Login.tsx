@@ -20,8 +20,6 @@ const isConnected = () => {
 const connect = async () => {
     const url = localStorage.getItem('url');
     const anonkey = localStorage.getItem('anonkey');
-    console.log('url', url);
-    console.log('anonkey', anonkey);
     if (url && anonkey) {
       supabase = await createClient(url, anonkey);
       return true;

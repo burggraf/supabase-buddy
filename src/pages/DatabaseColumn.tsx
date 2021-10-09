@@ -24,16 +24,11 @@ const DatabaseColumn: React.FC = () => {
 
 	const supabaseDataService = new SupabaseDataService()
 	const loadColumn = async () => {
-        console.log('loadColumn');
-        console.log('table_schema', table_schema);
-        console.log('table_name', table_name);
-        console.log('column_name', column_name);
 		const { data, error } = await supabaseDataService.getColumn(table_schema, table_name, column_name)
 		if (error) {
 			console.error(error)
 		} else {
 			setAttributes(data![0])
-            console.log('attributes', data![0]);
 		}
 	}
 	useEffect(() => {

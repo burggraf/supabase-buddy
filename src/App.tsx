@@ -54,24 +54,10 @@ const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   
-  useIonViewWillEnter(() => {
-    console.log('ionViewWillEnter event fired');
-  });
-
-  const setupSubscription = async () => {
-  }
-
   useEffect(()=>{
     // Only run this one time!  No multiple subscriptions!
     supabaseAuthService.user.subscribe((user: User | null) => {
-      console.log('>>>>>>> user received:', user);
       setCurrentUser(user);
-      console.log('App.tsx subscribed to user:', user);
-      if (user === null) {
-        console.log('App.tsx ******* USER: null');
-      } else {
-        console.log('App.tsx ******* USER:', user);
-      }
     });
   }, []) // <-- empty dependency array
 

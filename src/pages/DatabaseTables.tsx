@@ -27,14 +27,12 @@ const DatabaseTables: React.FC = () => {
     const loadTables = async () => {
         const { data, error } = await supabaseDataService.getTables();
         if (error) {
-            console.log(error);
+            console.error(error);
         } else {
-            console.log(data);
             setTables(data!);
         }
     }
 	useIonViewDidEnter(() => {
-		console.log('useIonViewDidEnter...')
         loadTables()
 	})
     useEffect(() => {

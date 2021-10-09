@@ -12,12 +12,8 @@ interface ContainerProps {
 
 const supabaseAuthService = new SupabaseAuthService();
 const signInWithProvider = async (provider: Provider) => {
-    console.log('signInWithProvider', provider)
     const { user, session, error } = 
         await supabaseAuthService.signInWithProvider(provider);
-    console.log('user', user);
-    console.log('session', session);
-    console.log('error', error);
     return { user, session, error };
 }
 addIcons({

@@ -27,13 +27,10 @@ const AuthUsers: React.FC = () => {
 		if (error) {
 			console.error(error)
 		} else {
-      console.log('got data of type ', typeof data);
       setUsers(data!)
-      console.log('users', data!);
 		}
 	}
 	useIonViewDidEnter(() => {
-		console.log('useIonViewDidEnter...')
 		loadUsers()
 	})
 	useEffect(() => {

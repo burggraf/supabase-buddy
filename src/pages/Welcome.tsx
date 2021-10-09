@@ -21,10 +21,7 @@ const Welcome: React.FC = () => {
     setAnonkey(anonkey);
   }
   useIonViewDidEnter(async () => {
-    console.log('Welcome useIonViewDidEnter...');
     await loadSettings();
-    // console.log('url', url);
-    // console.log('anonkey', anonkey);
   });
 
   const saveChanges = () => {
@@ -32,16 +29,10 @@ const Welcome: React.FC = () => {
     // localStorage.setItem('anonkey', anonkey);
     // const url = localStorage.getItem('url');
     // const anonkey = localStorage.getItem('anonkey');
-    console.log('url', (document.getElementById('url') as HTMLInputElement).value);
-    console.log('anonkey', (document.getElementById('anonkey') as HTMLInputElement).value);        
     const url = (document.getElementById('url') as HTMLInputElement).value;
     const anonkey = (document.getElementById('anonkey') as HTMLInputElement).value;
-    console.log('url', url);
-    console.log('anonkey', anonkey);
     if (url) localStorage.setItem('url', (document.getElementById('url') as HTMLInputElement).value);
     if (anonkey) localStorage.setItem('anonkey', (document.getElementById('anonkey') as HTMLInputElement).value);
-    console.log('saved url', localStorage.getItem('url'));
-    console.log('saved anonkey', localStorage.getItem('anonkey'));
   }
   const [present, dismiss] = useIonToast();
   const [email, setEmail] = useState('');

@@ -39,63 +39,43 @@ const DatabaseTable: React.FC = () => {
 	const [ mode, setMode ] = useState<'schema' | 'data' | 'tls' | 'rls' | 'indexes'>('schema')
 	const supabaseDataService = new SupabaseDataService()
 	const loadColumns = async () => {
-        console.log('loadColumns');
-        console.log('table_schema', table_schema);
-        console.log('table_name', table_name);
 		const { data, error } = await supabaseDataService.getColumns(table_schema, table_name)
 		if (error) {
 			console.error(error)
 		} else {
 			setColumns(data!)
-            console.log('loadColumns', data);
 		}
 	}
 	const loadData = async () => {
-        console.log('loadData');
-        console.log('table_schema', table_schema);
-        console.log('table_name', table_name);
 		const { data, error } = await supabaseDataService.getTableRows(table_schema, table_name)
 		if (error) {
 			console.error(error)
 		} else {
 			setRows(data!)
-            console.log('loadData', data);
 		}
 	}
 	const loadIndexes = async () => {
-        console.log('loadIndexes');
-        console.log('table_schema', table_schema);
-        console.log('table_name', table_name);
 		const { data, error } = await supabaseDataService.getIndexes(table_schema, table_name)
 		if (error) {
 			console.error(error)
 		} else {
 			setIndexes(data!)
-            console.log('loadIndexxes', data);
 		}
 	}
 	const loadGrants = async () => {
-        console.log('loadGrants');
-        console.log('table_schema', table_schema);
-        console.log('table_name', table_name);
 		const { data, error } = await supabaseDataService.getGrants(table_schema, table_name)
 		if (error) {
 			console.error(error)
 		} else {
 			setGrants(data!)
-            console.log('loadGrants', data);
 		}
 	}
 	const loadPolicies = async () => {
-        console.log('loadPolicies');
-        console.log('table_schema', table_schema);
-        console.log('table_name', table_name);
 		const { data, error } = await supabaseDataService.getRLSPolicies(table_schema, table_name)
 		if (error) {
 			console.error(error)
 		} else {
 			setPolicies(data!)
-            console.log('loadPolicies', data);
 		}
 	}
 	const [presentToast, dismissToast] = useIonToast();
@@ -251,7 +231,7 @@ const DatabaseTable: React.FC = () => {
 					return (
 						<IonRow key={column.column_name}>
 							<IonCol onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}>{column.column_name}</IonCol>
-							<IonCol><ColumnType stateVariable={column.data_type} stateFunction={(e: any) => {console.log('woo hoo!  I got e', e)}} /></IonCol>
+							<IonCol><ColumnType stateVariable={column.data_type} stateFunction={(e: any) => {}} /></IonCol>
 							<IonCol>{column.column_default}</IonCol>
 							<IonCol>???</IonCol>
 							<IonCol>{column.is_nullable}</IonCol>
