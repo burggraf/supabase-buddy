@@ -43,10 +43,10 @@ const AuthUser: React.FC = () => {
               {Object.keys(user).map((key, index) => {
                   return (
                         <IonRow key={index}>
-                            <IonCol>
+                            <IonCol size="4">
                                 <IonLabel>{key}</IonLabel>
                             </IonCol>
-                            <IonCol>
+                            <IonCol size="8">
                                 <IonLabel>
                                     {typeof user[key] !== 'object' && user[key]}
                                     {typeof user[key] === 'object' && JSON.stringify(user[key])}

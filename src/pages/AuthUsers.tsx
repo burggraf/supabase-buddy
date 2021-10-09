@@ -1,10 +1,10 @@
-import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenuButton, IonPage, IonPopover, IonRow, IonTitle, IonToolbar, useIonToast, useIonViewDidEnter } from '@ionic/react';
+import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenuButton, IonPage, IonPopover, IonRow, IonTitle, IonToolbar, useIonToast, useIonViewDidEnter } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { SupabaseDataService } from '../services/supabase.data.service';
 import './AuthUsers.css';
 import Moment from 'moment';
-import { ellipsisHorizontal, mail } from 'ionicons/icons';
+import { add, ellipsisHorizontal, mail } from 'ionicons/icons';
 import { SupabaseAuthService } from '../services/supabase.auth.service';
 
 const AuthUsers: React.FC = () => {
@@ -12,10 +12,15 @@ const AuthUsers: React.FC = () => {
   const supabaseAuthService = new SupabaseAuthService();
     const history = useHistory();
     const [users, setUsers] = useState<any[]>([])
+    const [inviteEmail, setInviteEmail] = useState('');
     const [showPopover, setShowPopover] = useState<{open: boolean, event: Event | undefined, user: any}>({
       open: false,
       event: undefined,
       user: undefined
+    });
+    const [showInvite, setShowInvite] = useState<{open: boolean, event: Event | undefined}>({
+      open: false,
+      event: undefined
     });
 	const loadUsers = async () => {
 		const { data, error } = await supabaseDataService.getUsers()
@@ -62,6 +67,10 @@ const AuthUsers: React.FC = () => {
     } else {
       toast('Error: ' + error?.message, 'danger')
     }
+    setShowInvite({open: false, event: undefined});
+  }
+  const inviteUser = async () => {
+
   }
 
   return (
@@ -72,6 +81,11 @@ const AuthUsers: React.FC = () => {
             <IonMenuButton />
           </IonButtons>
           <IonTitle>Users</IonTitle>
+					<IonButtons slot='end'>
+						<IonButton fill="outline" color='primary' onClick={(e) => {setShowInvite({open: true, event: e.nativeEvent})}}>
+							<IonIcon size='small' icon={add} slot="start"></IonIcon> <b>Send Link</b>
+						</IonButton>
+					</IonButtons>
         </IonToolbar>
       </IonHeader>
 
@@ -98,13 +112,13 @@ const AuthUsers: React.FC = () => {
             {users.map((user: any) => (
                 <IonRow key={user.id} onClick={()=>{history.push(`/auth-user/${user.id}`)}}>
                     <IonCol>
-                        <IonLabel>{user.email}</IonLabel>
+                        <IonLabel>{user.email || '<no email>'}</IonLabel>
                     </IonCol>
                     <IonCol>
-                        <IonLabel>{user.phone}</IonLabel>
+                        <IonLabel>{user.phone || '-'}</IonLabel>
                     </IonCol>
                     <IonCol>
-                        <IonLabel>{Moment(user.last_sign_in_at).format('YYYY-MM-DD hh:mmA')}</IonLabel>
+                        <IonLabel>{user.last_sign_in_at ? Moment(user.last_sign_in_at).format('YYYY-MM-DD hh:mmA') : 'never'}</IonLabel>
                     </IonCol>
                     <IonCol className="ion-text-center">
                       <IonButton fill='outline' color="medium" onClick={(e) => {e.stopPropagation();setShowPopover({open: true, event: e.nativeEvent, user})}}>
@@ -139,6 +153,27 @@ const AuthUsers: React.FC = () => {
             </IonItem>
           </IonList>
         </IonPopover>
+
+        <IonPopover
+          isOpen={showInvite.open}
+          event={showInvite.event}
+          onDidDismiss={e => setShowInvite({open: false, event: undefined})}>
+          <div className="ion-text-center">
+            <br/>
+            <IonLabel>Email Address:</IonLabel>
+          </div>
+          <div className="ion-text-center ion-padding">
+            <IonInput style={{ border: '1px solid' }} 
+              type="email" placeholder="Email Address" 
+              onIonChange={e => setInviteEmail(e.detail.value!)}></IonInput>
+          </div>
+          <div className="ion-padding">
+              <IonButton strong expand="block" onClick={()=>{sendMagicLink(inviteEmail)}} color="primary">
+                Send Magic Link
+              </IonButton>
+          </div>
+        </IonPopover>
+
       </IonContent>
     </IonPage>
   );
