@@ -13,17 +13,11 @@ export class SupabaseAuthService {
   constructor() {
     this.connect();
     // Try to recover our user session
-    this.loadUser();
-    supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        this._user = session.user;
-        this.user.next(session.user);
-      } else {
-        this._user = null;
-        this.user.next(null);
-      }
-    });
+    if (this.isConnected)
+      this.loadUser();
   }
+
+  private authStateSubscription: any;
 
   public connect() {
     const url = localStorage.getItem('url') || '';
@@ -31,9 +25,21 @@ export class SupabaseAuthService {
     if (url !== '' && anonkey !== '') {
       supabase = createClient(url, anonkey);
       this.isConnected = true;
+      this.authStateSubscription = supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+          this._user = session.user;
+          this.user.next(session.user);
+        } else {
+          this._user = null;
+          this.user.next(null);
+        }
+      });  
     } else {
-      supabase = createClient('', '');
+      // supabase = createClient('', '');
       this.isConnected = false;
+      if (this.authStateSubscription) {
+        this.authStateSubscription.unsubscribe();
+      }
     }
   }
 
