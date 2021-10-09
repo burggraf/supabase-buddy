@@ -1,9 +1,10 @@
-import { IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react';
+import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { SupabaseDataService } from '../services/supabase.data.service';
 import './AuthUsers.css';
 import Moment from 'moment';
+import { ellipsisHorizontal } from 'ionicons/icons';
 
 const AuthUsers: React.FC = () => {
 	const supabaseDataService = new SupabaseDataService();
@@ -23,6 +24,9 @@ const AuthUsers: React.FC = () => {
 		console.log('useIonViewDidEnter...')
 		loadUsers()
 	})
+  const userContextMenu = (user: any) => {
+    console.log('not ready yet...user:', user);
+  }
 	useEffect(() => {
 		//loadUsers()
 	}, [])
@@ -52,9 +56,12 @@ const AuthUsers: React.FC = () => {
                 <IonCol>
                     <IonLabel>Last Sign In</IonLabel>
                </IonCol>
-                <IonCol>
-                    <IonLabel>User UID</IonLabel>
+               <IonCol>
+                 &nbsp;
                </IonCol>
+                {/* <IonCol>
+                    <IonLabel>User UID</IonLabel>
+               </IonCol> */}
             </IonRow>
             {users.map((user: any) => (
                 <IonRow key={user.id} onClick={()=>{history.push(`/auth-user/${user.id}`)}}>
@@ -67,9 +74,14 @@ const AuthUsers: React.FC = () => {
                     <IonCol>
                         <IonLabel>{Moment(user.last_sign_in_at).format('YYYY-MM-DD hh:mmA')}</IonLabel>
                     </IonCol>
-                        <IonCol>
-                            <IonLabel>{user.id}</IonLabel>
+                    <IonCol className="ion-text-center">
+                      <IonButton fill='outline' color="medium" onClick={(e) => {e.stopPropagation();userContextMenu(user)}}>
+	        							<IonIcon size="small" icon={ellipsisHorizontal}></IonIcon>
+					        		</IonButton>
                     </IonCol>
+                        {/* <IonCol>
+                            <IonLabel>{user.id}</IonLabel>
+                    </IonCol> */}
                 </IonRow>                        
             ))}         
         </IonGrid>
