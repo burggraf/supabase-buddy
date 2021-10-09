@@ -2,11 +2,13 @@ import {
     IonBackButton,
 	IonButton,
 	IonButtons,
+	IonCheckbox,
 	IonCol,
 	IonContent,
 	IonFooter,
 	IonGrid,
 	IonHeader,
+	IonInput,
 	IonMenuButton,
 	IonPage,
 	IonRow,
@@ -21,6 +23,7 @@ import { useHistory, useParams } from 'react-router'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import './DatabaseFunction.css'
 import { debounce } from 'ts-debounce'
+import { setMode } from 'ionicons/dist/types/stencil-public-runtime'
 
 const DatabaseFunction: React.FC = () => {
     const history = useHistory();
@@ -34,6 +37,8 @@ const DatabaseFunction: React.FC = () => {
     const [functionName, setFunctionName] = useState<string>("")
     const [functionSchema, setFunctionSchema] = useState<string>("")
     const [securityDefiner, setSecurityDefiner] = useState<boolean>(false)
+	const [sqlPrefix, setSqlPrefix] = useState<string>("")
+	const [sqlSuffix, setSqlSuffix] = useState<string>("$function$")
 	const supabaseDataService = new SupabaseDataService()
 
 	const [presentToast, dismissToast] = useIonToast();
@@ -59,7 +64,14 @@ const DatabaseFunction: React.FC = () => {
 			console.error(error)
 		} else {
             console.log('f data', data![0]);
-            setDefinition(data![0].definition);
+			let definition = data![0].definition;
+			// extract a portion of the definition between two tokens
+			let start = definition.indexOf('$function$')
+			let end = definition.indexOf('$function$', start + 1)
+			if (start > -1 && end > -1) {
+				definition = definition.substring(start + 11, end)
+			}
+			setDefinition(definition);
             setFunctionArguments(data![0].function_arguments);
             setFunctionLanguage(data![0].function_language);
             setReturnType(data![0].return_type);
@@ -68,9 +80,14 @@ const DatabaseFunction: React.FC = () => {
             setSecurityDefiner(data![0].security_definer);
 		}
 	}
+	useEffect(() => {
+		setSqlPrefix(`CREATE OR REPLACE FUNCTION ${functionSchema}.${functionName}(${functionArguments})
+  RETURNS ${returnType} LANGUAGE ${functionLanguage} ${securityDefiner?'SECURITY DEFINER':''} AS $function$`);
+
+	},[functionArguments, functionLanguage, returnType, functionName, functionSchema, securityDefiner]);
     useEffect(() => {
 		loadFunction()
-	}, [])
+	}, []);
 	function handleEditorChange(value: any, event: any) {
 		// here is the current value
 		console.log('handleEditorChange', value)
@@ -92,7 +109,9 @@ const DatabaseFunction: React.FC = () => {
 		markers.forEach((marker: { message: any }) => console.log('onValidate:', marker.message))
 	}
 	const runSql = async () => {
-			const { data, error } = await supabaseDataService.runSql(definition, ';;;')
+			const sql = sqlPrefix + '\n' + definition + '\n' +  sqlSuffix;
+			console.log('RUN THIS:', sql);
+			const { data, error } = await supabaseDataService.runSql(sql, ';;;')
 			if (error) {
 				if (error && error.message) {
 					toast(error.message, 'danger');
@@ -125,41 +144,64 @@ const DatabaseFunction: React.FC = () => {
 
 			<IonContent>
 				<IonGrid>
-                    {/* definition: "CREATE OR REPLACE FUNCTION public.execute_sql(sqlcode text, statement_delimiter text)\n RETURNS json\n LANGUAGE plv8\n SECURITY DEFINER\nAS $function$\n\nconst arr = sqlcode.split(statement_delimiter);\nconst results = [];\n\n// this handles \"TypeError: Do not know how to serialize a BigInt\"\nfunction toJson(data) {\n  if (data !== undefined) {\n    return JSON.stringify(data, (_, v) => typeof v === 'bigint' ? `${v}#bigint` : v)\n        .replace(/\"(-?\\d+)#bigint\"/g, (_, a) => a);\n  }\n}\n\nfor (let i = 0; i < arr.length; i++) {\n    if (arr[i].trim() !== '') {\n        const result = plv8.execute(arr[i]);\n        results.push(toJson(result));\n    }\n}\nreturn results;\n\n$function$\n"
-                    function_arguments: "sqlcode text, statement_delimiter text"
-                    function_language: "plv8"
-                    function_name: "execute_sql"
-                    function_schema: "public"
-                    return_type: "json"                     */}
-
-                    <IonRow key="schema">
-                        <IonCol size="2">Schema</IonCol>
-                        <IonCol>{functionSchema}</IonCol>
-                    </IonRow>
-                    <IonRow key="name">
-                        <IonCol size="2">Name</IonCol>
-                        <IonCol>{functionName}</IonCol>
-                    </IonRow>
-                    <IonRow key="language">
-                        <IonCol size="2">Language</IonCol>
-                        <IonCol>{functionLanguage}</IonCol>
-                    </IonRow>
-                    <IonRow key="arguments">
-                        <IonCol size="2">Arguments</IonCol>
-                        <IonCol>{functionArguments}</IonCol>
-                    </IonRow>
-                    <IonRow key="return_type">
-                        <IonCol size="2">Return Type</IonCol>
-                        <IonCol>{returnType}</IonCol>
-                    </IonRow>
-                    <IonRow key="security_definer">
-                        <IonCol size="2">SecDef</IonCol>
-                        <IonCol>{securityDefiner?'true':'false'}</IonCol>
-                    </IonRow>
-				</IonGrid>
+				<IonRow key="schema">
+					<IonCol className="ion-text-center">Schema</IonCol>
+					<IonCol>
+						<IonInput
+							value={functionSchema}
+							onIonChange={debounce((e) => setFunctionSchema(e.detail.value!), 750)}
+							type='text'
+							style={{ border: '1px solid' }}
+						/>
+					</IonCol>
+					<IonCol className="ion-text-center">Name</IonCol>
+					<IonCol>
+						<IonInput
+							value={functionName}
+							onIonChange={debounce((e) => setFunctionName(e.detail.value!), 750)}
+							type='text'
+							style={{ border: '1px solid' }}
+						/>
+					</IonCol>
+				</IonRow>
+				<IonRow key="language">
+					<IonCol className="ion-text-center">Lang</IonCol>
+					<IonCol>
+						<IonInput
+							value={functionLanguage}
+							onIonChange={debounce((e) => setFunctionLanguage(e.detail.value!), 750)}
+							type='text'
+							style={{ border: '1px solid' }}
+						/>
+					</IonCol>
+					<IonCol className="ion-text-center">Returns</IonCol>
+					<IonCol>
+						<IonInput
+							value={returnType}
+							onIonChange={debounce((e) => setReturnType(e.detail.value!), 750)}
+							type='text'
+							style={{ border: '1px solid' }}
+						/>
+						</IonCol>						
+				</IonRow>
+				<IonRow key="arguments">
+					<IonCol size="3" className="ion-text-center">Args</IonCol>
+					<IonCol size="6">
+						<IonInput
+							value={functionArguments}
+							onIonChange={debounce((e) => setFunctionArguments(e.detail.value!), 750)}
+							type='text'
+							style={{ border: '1px solid' }}
+						/>
+					</IonCol>
+					<IonCol size="3" className="ion-text-center">Sec Def <IonCheckbox checked={securityDefiner} onIonChange={e => setSecurityDefiner(e.detail.checked)} />
+					  </IonCol>
+				</IonRow>
+			</IonGrid>
+			<pre style={{paddingLeft:'10px'}}>{sqlPrefix}</pre>
                 <Editor
 								className='textarea'
-								height="60vh"
+								height="55vh"
 								defaultLanguage='sql'
 								defaultValue={definition}
 								value={definition}
@@ -176,7 +218,7 @@ const DatabaseFunction: React.FC = () => {
 									},
 								}}
 							/>
-
+						<pre style={{paddingLeft:'10px'}}>{sqlSuffix}</pre>
 			</IonContent>
 			<IonFooter>
 				<IonToolbar>
