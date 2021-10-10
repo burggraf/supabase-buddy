@@ -13,7 +13,7 @@ const AuthUsers: React.FC = () => {
     const history = useHistory();
     const [users, setUsers] = useState<any[]>([])
     const [inviteEmail, setInviteEmail] = useState('');
-    const [showPopover, setShowPopover] = useState<{open: boolean, event: Event | undefined, user: any}>({
+    const [showPopover, setShowPopover] = useState<{open: boolean, event: Event | undefined, user: any | undefined}>({
       open: false,
       event: undefined,
       user: undefined
@@ -129,32 +129,6 @@ const AuthUsers: React.FC = () => {
             ))}         
         </IonGrid>
         <IonPopover
-          isOpen={showPopover.open}
-          event={showPopover.event}
-          backdropDismiss={true}
-          keyboardClose={true}
-          showBackdrop={true}
-          onDidDismiss={e => setShowPopover({open: false, event: undefined, user: undefined})}>
-          <IonList>
-            <IonListHeader>
-              <IonLabel className="ion-text-center">{showPopover.user?.email}</IonLabel>
-            </IonListHeader>
-            <IonItem>
-              <IonButton fill="clear" onClick={()=>{sendPasswordResetEmail(showPopover.user?.email)}} color="dark">
-                <IonIcon slot="start" size="small" icon={mail}></IonIcon> 
-                Send Password Reset Email
-              </IonButton>
-            </IonItem>
-            <IonItem>
-              <IonButton fill="clear" onClick={()=>{sendMagicLink(showPopover.user?.email)}} color="dark">
-                <IonIcon slot="start" size="small" icon={mail}></IonIcon> 
-                Send Magic Link
-              </IonButton>
-            </IonItem>
-          </IonList>
-        </IonPopover>
-
-        <IonPopover
           isOpen={showInvite.open}
           event={showInvite.event}
           backdropDismiss={true}
@@ -176,7 +150,31 @@ const AuthUsers: React.FC = () => {
               </IonButton>
           </div>
         </IonPopover>
-
+        <IonPopover
+          isOpen={showPopover.open}
+          event={showPopover.event}
+          backdropDismiss={true}          
+          keyboardClose={true}
+          showBackdrop={true}
+          onDidDismiss={e => setShowPopover({open: false, event: undefined, user: undefined})}>
+          <IonList>
+            <IonListHeader>
+              <IonLabel className="ion-text-center">{showPopover.user?.email}</IonLabel>
+            </IonListHeader>
+            <IonItem>
+              <IonButton fill="clear" onClick={()=>{sendPasswordResetEmail(showPopover.user?.email)}} color="dark">
+                <IonIcon slot="start" size="small" icon={mail}></IonIcon> 
+                Send Password Reset Email
+              </IonButton>
+            </IonItem>
+            <IonItem>
+              <IonButton fill="clear" onClick={()=>{sendMagicLink(showPopover.user?.email)}} color="dark">
+                <IonIcon slot="start" size="small" icon={mail}></IonIcon> 
+                Send Magic Link
+              </IonButton>
+            </IonItem>
+          </IonList>
+        </IonPopover>
       </IonContent>
     </IonPage>
   );
