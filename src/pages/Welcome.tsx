@@ -55,7 +55,7 @@ const Welcome: React.FC = () => {
       if (error) { console.error(error); toast(error.message) }
       else { 
           // history.replace('/home-dashboard');
-          window.location.href = '/home-dashboard';
+          window.location.href = '/';
        }
   }
   const resetPassword = async () => {
