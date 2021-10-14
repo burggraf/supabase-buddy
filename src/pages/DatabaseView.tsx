@@ -30,6 +30,10 @@ const DatabaseView: React.FC = () => {
 	const [present] = useIonAlert();
     const [view, setView] = useState<any>({})
     const supabaseDataService = new SupabaseDataService()
+	const [darkMode, setDarkMode] = useState<boolean>(window.matchMedia('(prefers-color-scheme: dark)').matches)
+	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+		setDarkMode(e.matches)
+	});
 
 	const [presentToast, dismissToast] = useIonToast();
     const toast = (message: string, color: string = 'danger') => {
@@ -164,9 +168,7 @@ const DatabaseView: React.FC = () => {
 								defaultLanguage='sql'
 								defaultValue={view?.view_definition}
 								value={view?.view_definition}
-								theme={
-									window.matchMedia('(prefers-color-scheme: dark)').matches ? 'vs-dark' : 'vs-light'
-								}
+								theme={darkMode ? 'vs-dark' : 'vs-light'}
 								onChange={debounce(handleEditorChange, 750)}
 								onMount={handleEditorDidMount}
 								beforeMount={handleEditorWillMount}

@@ -1,29 +1,13 @@
-import {
-    IonBackButton,
-	IonButton,
-	IonButtons,
-	IonCheckbox,
-	IonCol,
-	IonContent,
-	IonFooter,
-	IonGrid,
-	IonHeader,
-	IonInput,
-	IonMenuButton,
-	IonPage,
-	IonRow,
-	IonTitle,
-	IonToolbar,
-	useIonAlert,
-	useIonToast,
-} from '@ionic/react'
+import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonInput, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonAlert, useIonToast } from '@ionic/react'
 import Editor from '@monaco-editor/react'
+import { setMode } from 'ionicons/dist/types/stencil-public-runtime'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
-import { SupabaseDataService } from '../services/supabase.data.service'
-import './DatabaseFunction.css'
 import { debounce } from 'ts-debounce'
-import { setMode } from 'ionicons/dist/types/stencil-public-runtime'
+
+import { SupabaseDataService } from '../services/supabase.data.service'
+
+import './DatabaseFunction.css'
 
 const DatabaseFunction: React.FC = () => {
     const history = useHistory();
@@ -40,7 +24,10 @@ const DatabaseFunction: React.FC = () => {
 	const [sqlPrefix, setSqlPrefix] = useState<string>("")
 	const [sqlSuffix, setSqlSuffix] = useState<string>("$function$")
 	const supabaseDataService = new SupabaseDataService()
-
+	const [darkMode, setDarkMode] = useState<boolean>(window.matchMedia('(prefers-color-scheme: dark)').matches)
+	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+		setDarkMode(e.matches)
+	});
 	const [presentToast, dismissToast] = useIonToast();
     const toast = (message: string, color: string = 'danger') => {
         presentToast({
@@ -53,6 +40,7 @@ const DatabaseFunction: React.FC = () => {
             //onWillDismiss: () => console.log('will dismiss'),
           })
     }
+
 
 
 	const loadFunction = async () => {
@@ -195,9 +183,7 @@ const DatabaseFunction: React.FC = () => {
 								defaultLanguage='sql'
 								defaultValue={definition}
 								value={definition}
-								theme={
-									window.matchMedia('(prefers-color-scheme: dark)').matches ? 'vs-dark' : 'vs-light'
-								}
+								theme={darkMode ? 'vs-dark' : 'vs-light'}
 								onChange={debounce(handleEditorChange, 750)}
 								onMount={handleEditorDidMount}
 								beforeMount={handleEditorWillMount}

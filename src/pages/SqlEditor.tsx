@@ -43,6 +43,10 @@ const SqlEditor: React.FC = () => {
 	const [description, setDescription] = useState<string>('')
 	const [statementDelimiter, setStatementDelimiter] = useState<string>(';')
 	const [results, setResults] = useState<any[]>([])
+	const [darkMode, setDarkMode] = useState<boolean>(window.matchMedia('(prefers-color-scheme: dark)').matches)
+	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+		setDarkMode(e.matches)
+	});
 	const supabaseDataService = new SupabaseDataService()
 
     async function save() {
@@ -165,9 +169,7 @@ const SqlEditor: React.FC = () => {
 								defaultLanguage='sql'
 								defaultValue={content}
 								value={content}
-								theme={
-									window.matchMedia('(prefers-color-scheme: dark)').matches ? 'vs-dark' : 'vs-light'
-								}
+								theme={darkMode ? 'vs-dark' : 'vs-light'}
 								onChange={debounce(handleEditorChange, 750)}
 								onMount={handleEditorDidMount}
 								beforeMount={handleEditorWillMount}
