@@ -10,15 +10,17 @@ import './Welcome.css';
 const Welcome: React.FC = () => {
   const history = useHistory();
   const supabaseAuthService = new SupabaseAuthService();
-  const { name } = useParams<{ name: string; }>();
   const [url, setUrl] = useState('');
   const [apikey, setApikey] = useState('');
+  const [name, setName] = useState('');
 
   const loadSettings = async () => {
     const url = await localStorage.getItem('url') || '';
     const apikey = await localStorage.getItem('apikey') || '';
+    const name = await localStorage.getItem('name') || '';
     setUrl(url);
     setApikey(apikey);
+    setName(name);
   }
   useIonViewDidEnter(async () => {
     await loadSettings();
@@ -29,8 +31,11 @@ const Welcome: React.FC = () => {
     // localStorage.setItem('apikey', apikey);
     // const url = localStorage.getItem('url');
     // const apikey = localStorage.getItem('apikey');
+    const name = (document.getElementById('name') as HTMLInputElement).value;
     const url = (document.getElementById('url') as HTMLInputElement).value;
     const apikey = (document.getElementById('apikey') as HTMLInputElement).value;
+    console.log('name is', name);
+    if (name) localStorage.setItem('name', (document.getElementById('name') as HTMLInputElement).value);
     if (url) localStorage.setItem('url', (document.getElementById('url') as HTMLInputElement).value);
     if (apikey) localStorage.setItem('apikey', (document.getElementById('apikey') as HTMLInputElement).value);
   }
@@ -102,7 +107,21 @@ const Welcome: React.FC = () => {
  */}
 
           <IonGrid class="ion-padding">
-            
+
+          <IonRow>
+                <IonCol>
+                    <IonLabel><b>Project Name</b></IonLabel>
+                </IonCol>
+          </IonRow>
+          <IonRow>
+                <IonCol>
+                    <IonInput id="name" name="name" 
+                    onIonChange={e => setName(e.detail.value!)}
+                    debounce={750} className="input" value={name} />
+                </IonCol>
+            </IonRow>
+
+
           <IonRow>
                 <IonCol>
                     <IonLabel><b>API URL</b></IonLabel>
@@ -119,7 +138,7 @@ const Welcome: React.FC = () => {
 
             <IonRow>
                 <IonCol>
-                    <IonLabel><b>Api Key</b></IonLabel>
+                    <IonLabel><b>API Key</b></IonLabel>
                 </IonCol>
           </IonRow>
           <IonRow>
