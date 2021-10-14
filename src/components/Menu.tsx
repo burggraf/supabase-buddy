@@ -122,7 +122,7 @@ const Menu: React.FC = () => {
       //.filter(route => !!route.path)
       .map((appChild, index) => (
         <IonMenuToggle autoHide={false} key={'AppChild' + index}>
-          <IonItem id={appChild.url} onClick={clickHandler} routerLink={appChild.url} lines="none" detail={false} routerDirection="root" className="appPageChildItem">
+          <IonItem id={appChild.url} onClick={clickHandler} routerLink={'/' + appChild.url} lines="none" detail={false} routerDirection="root" className="appPageChildItem">
             <IonIcon slot="start" ios="" md=""></IonIcon>
             <IonLabel>{appChild.title}</IonLabel>
           </IonItem>
