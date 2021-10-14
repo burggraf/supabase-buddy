@@ -1,24 +1,24 @@
 import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonToast, useIonViewDidEnter } from '@ionic/react';
+import { link, logIn, personAdd, refreshCircle } from 'ionicons/icons';
 import { useState } from 'react';
 import { useHistory, useParams } from 'react-router';
-import './Welcome.css';
+
 import { SupabaseAuthService } from '../services/supabase.auth.service';
-import { logIn, personAdd, refreshCircle, link } from 'ionicons/icons';
+
+import './Welcome.css';
 
 const Welcome: React.FC = () => {
   const history = useHistory();
   const supabaseAuthService = new SupabaseAuthService();
   const { name } = useParams<{ name: string; }>();
   const [url, setUrl] = useState('');
-  const [anonkey, setAnonkey] = useState('');
+  const [apikey, setApikey] = useState('');
 
-
-  
   const loadSettings = async () => {
     const url = await localStorage.getItem('url') || '';
-    const anonkey = await localStorage.getItem('anonkey') || '';
+    const apikey = await localStorage.getItem('apikey') || '';
     setUrl(url);
-    setAnonkey(anonkey);
+    setApikey(apikey);
   }
   useIonViewDidEnter(async () => {
     await loadSettings();
@@ -26,13 +26,13 @@ const Welcome: React.FC = () => {
 
   const saveChanges = () => {
     // localStorage.setItem('url', url);
-    // localStorage.setItem('anonkey', anonkey);
+    // localStorage.setItem('apikey', apikey);
     // const url = localStorage.getItem('url');
-    // const anonkey = localStorage.getItem('anonkey');
+    // const apikey = localStorage.getItem('apikey');
     const url = (document.getElementById('url') as HTMLInputElement).value;
-    const anonkey = (document.getElementById('anonkey') as HTMLInputElement).value;
+    const apikey = (document.getElementById('apikey') as HTMLInputElement).value;
     if (url) localStorage.setItem('url', (document.getElementById('url') as HTMLInputElement).value);
-    if (anonkey) localStorage.setItem('anonkey', (document.getElementById('anonkey') as HTMLInputElement).value);
+    if (apikey) localStorage.setItem('apikey', (document.getElementById('apikey') as HTMLInputElement).value);
   }
   const [present, dismiss] = useIonToast();
   const [email, setEmail] = useState('');
@@ -94,8 +94,8 @@ const Welcome: React.FC = () => {
                     <IonInput id="url" name="url" debounce={750} className="input" slot="end" value="" />
               </IonItem>
               <IonItem>
-                  <IonLabel slot="start">Anon Key</IonLabel>
-                    <IonInput id="anonkey" name="anonkey" debounce={750} className="input" slot="end" value="" />
+                  <IonLabel slot="start">Api Key</IonLabel>
+                    <IonInput id="apikey" name="apikey" debounce={750} className="input" slot="end" value="" />
               </IonItem>
           </IonList>
           <IonButton strong color="primary" onClick={saveChanges}>Save Changes</IonButton>
@@ -119,14 +119,14 @@ const Welcome: React.FC = () => {
 
             <IonRow>
                 <IonCol>
-                    <IonLabel><b>Anon Key</b></IonLabel>
+                    <IonLabel><b>Api Key</b></IonLabel>
                 </IonCol>
           </IonRow>
           <IonRow>
                 <IonCol>
-                <IonInput id="anonkey" name="anonkey" 
-                    onIonChange={e => setAnonkey(e.detail.value!)}
-                    debounce={750} className="input" value={anonkey} />
+                <IonInput id="apikey" name="apikey" 
+                    onIonChange={e => setApikey(e.detail.value!)}
+                    debounce={750} className="input" value={apikey} />
                 </IonCol>
           </IonRow>
 
