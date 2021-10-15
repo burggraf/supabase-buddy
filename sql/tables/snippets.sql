@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS snippets (
   id UUID UNIQUE PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user UUID DEFAULT auth.uid() REFERENCES users(id),
+  userid UUID DEFAULT auth.uid() REFERENCES users(id),
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   statement_delimiter TEXT NOT NULL DEFAULT ';',

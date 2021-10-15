@@ -1,35 +1,32 @@
-import {
-	IonButton,
-	IonButtons,
-	IonCol,
-	IonContent,
-	IonGrid,
-	IonHeader,
-	IonIcon,
-	IonMenuButton,
-	IonPage,
-	IonRow,
-	IonTitle,
-	IonToolbar,
-    useIonViewDidEnter,
-} from '@ionic/react'
+import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react'
 import { add } from 'ionicons/icons'
-import { useHistory, useParams } from 'react-router'
-import './SqlSnippets.css'
-import { SupabaseDataService } from '../services/supabase.data.service'
-import { useEffect, useState } from 'react'
-import { Snippet } from '../models/Snippet'
 import Moment from 'moment';
+import { useEffect, useState } from 'react'
+import { useHistory, useParams } from 'react-router'
+
+import { Snippet } from '../models/Snippet'
+import { SupabaseDataService } from '../services/supabase.data.service'
+import { UtilsService } from '../services/utils.service'
+
+import './SqlSnippets.css'
+
+const supabaseDataService = new SupabaseDataService()
+const utilsService = new UtilsService()
 
 const SqlSnippets: React.FC = () => {
 	const history = useHistory()
-	const supabaseDataService = new SupabaseDataService()
+	
 	const [snippets, setSnippets] = useState<Snippet[]>([])
 	const { name } = useParams<{ name: string }>()
 	const loadSnippets = async () => {
 		const { data, error } = await supabaseDataService.getSnippets()
 		if (error) {
-			console.error(error)
+			if (error.message === 'relation "public.snippets" does not exist') {
+				console.log('*** CREATE NEW SNIPPETS TABLE ***');
+				supabaseDataService.createSnippetsTable();
+			} else {
+				console.error(error)
+			}
 		} else {
 			setSnippets(data!)
 		}
@@ -44,17 +41,10 @@ const SqlSnippets: React.FC = () => {
 	useEffect(() => {
 		// loadSnippets(); //  moved to useIonViewDidEnter
 	}, [])
-	// generate a random uuid
-	const uuidv4 = () => {
-		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-			var r = (Math.random() * 16) | 0,
-				v = c == 'x' ? r : (r & 0x3) | 0x8
-			return v.toString(16)
-		})
-	}
 
 	const addSnippet = () => {
-		const id = uuidv4()
+		// generate a random uuid
+		const id = utilsService.uuidv4()
 		history.push(`/sql-editor/${id}`)
 	}
 

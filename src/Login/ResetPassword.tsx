@@ -1,15 +1,17 @@
-import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, 
-    IonHeader, IonIcon, IonInput, IonLabel, IonPage, IonRow, 
-    IonTitle, IonToolbar, useIonToast } from '@ionic/react';
+import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonPage, IonRow, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { checkmark, link, logIn, personAdd, refreshCircle } from 'ionicons/icons';
 import { useState } from 'react';
-import './ResetPassword.css';
+import { useParams } from 'react-router';
 import { useHistory } from "react-router-dom";
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { useParams } from 'react-router';
-
+import { ProjectsService } from '../services/projects.service';
 import { StartupService } from '../services/startup.service';
+
+import './ResetPassword.css';
+
+const projectsService: ProjectsService = new ProjectsService();
+
 const startupService = new StartupService();
 const defaultRoute = startupService.getDefaultRoute();
 
@@ -20,12 +22,12 @@ const isConnected = () => {
   return (typeof supabase !== 'undefined');
 }
 const connect = async () => {
-  const url = localStorage.getItem('url');
-  const anonkey = localStorage.getItem('anonkey');
+  const url = ProjectsService.project.url;
+  const apikey = ProjectsService.project.apikey;
   console.log('url', url);
-  console.log('anonkey', anonkey);
-  if (url && anonkey) {
-    supabase = await createClient(url, anonkey);
+  console.log('apikey', apikey);
+  if (url && apikey) {
+    supabase = await createClient(url, apikey);
     return true;
   } else {
     return false;

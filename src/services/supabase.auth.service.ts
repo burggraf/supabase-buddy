@@ -1,6 +1,10 @@
 import { createClient, Provider, SupabaseClient, User } from '@supabase/supabase-js';
 import { BehaviorSubject } from 'rxjs';
-//import { keys } from '../services/keys.service';
+
+//import { ProjectsService } from '../services/keys.service';
+import { ProjectsService } from '../services/projects.service';
+
+const projectsService: ProjectsService = new ProjectsService();
 
 let supabase: SupabaseClient;// = createClient('URL', 'ANON-KEY');
 
@@ -20,10 +24,12 @@ export class SupabaseAuthService {
   private authStateSubscription: any;
 
   public connect() {
-    const url = localStorage.getItem('url') || '';
-    const anonkey = localStorage.getItem('anonkey') || '';
-    if (url !== '' && anonkey !== '') {
-      supabase = createClient(url, anonkey);
+    console.log('connect: supabase auth service thinks projectsService.project is', ProjectsService.project);
+    const url = ProjectsService.project.url;
+    const apikey = ProjectsService.project.apikey;
+    console.log('supabase.auth.service connect url:', url, 'apikey:', apikey);
+    if (url !== '' && apikey !== '') {
+      supabase = createClient(url, apikey);
       this.isConnected = true;
       this.authStateSubscription = supabase.auth.onAuthStateChange(async (event, session) => {
         if (event === 'SIGNED_IN' && session) {

@@ -1,5 +1,9 @@
 import { createClient, Provider, SupabaseClient, User } from '@supabase/supabase-js';
+
 import { Snippet } from '../models/Snippet';
+import { ProjectsService } from '../services/projects.service';
+
+const projectsService: ProjectsService = new ProjectsService();
 
 // import { keys } from 'rxjs';
 // import { keys } from './keys.service';
@@ -15,10 +19,10 @@ export class SupabaseDataService {
   }
 
   public connect = async () => {
-      const url = localStorage.getItem('url');
-      const anonkey = localStorage.getItem('anonkey');
-      if (url && anonkey) {
-        supabase = await createClient(url, anonkey);
+      const url = ProjectsService.project.url;
+      const apikey = ProjectsService.project.apikey;
+      if (url && apikey) {
+        supabase = await createClient(url, apikey);
         return true;
       } else {
         return false;
@@ -208,5 +212,26 @@ export class SupabaseDataService {
     FROM information_schema.views
     WHERE table_schema NOT IN (${exclude_schemas})
     `);
+  }
+  public async createSnippetsTable() {
+    console.log('create table');
+    this.runSql(`CREATE TABLE IF NOT EXISTS snippets (
+      id UUID UNIQUE PRIMARY KEY DEFAULT uuid_generate_v4(),
+      userid UUID DEFAULT auth.uid() REFERENCES auth.users(id),
+      title TEXT NOT NULL,
+      description TEXT NOT NULL,
+      statement_delimiter TEXT NOT NULL DEFAULT ';',
+      content TEXT NOT NULL,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP WITH TIME ZONE NULL DEFAULT CURRENT_TIMESTAMP
+    );;
+    ALTER TABLE IF EXISTS public.snippets ENABLE ROW LEVEL SECURITY;;
+    DROP POLICY IF EXISTS "user can manipulate their own snippets" ON public.snippets;
+    CREATE POLICY "user can manipulate their own snippets" 
+      ON public.snippets FOR ALL 
+      USING (userid = auth.uid()) 
+      WITH CHECK (userid = auth.uid());;`, ';;').catch((err) => {
+        console.error('Error creating snippets table:', err);
+      });
   }
 }
