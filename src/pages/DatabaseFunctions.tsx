@@ -60,11 +60,11 @@ const DatabaseFunctions: React.FC = () => {
                     {functions.map((f: any) => {
                         return (
                             <IonRow key={f.function_schema + '.' + f.function_name} onClick={() => history.push(`/database-function/${f.function_schema}/${f.function_name}`)}>
-                                <IonCol>{f.function_schema}</IonCol>
-                                <IonCol>{f.function_name}</IonCol>
-                                <IonCol>{f.function_language}</IonCol>
-                                <IonCol>{f.function_arguments}</IonCol>
-                                <IonCol>{f.return_type}</IonCol>
+                                <IonCol className="breakItUp">{f.function_schema}</IonCol>
+                                <IonCol className="breakItUp">{f.function_name}</IonCol>
+                                <IonCol className="breakItUp">{f.function_language}</IonCol>
+                                <IonCol className="breakItUp">{f.function_arguments}</IonCol>
+                                <IonCol className="breakItUp">{f.return_type}</IonCol>
                             </IonRow>
                         );
                     })}

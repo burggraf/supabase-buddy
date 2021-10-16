@@ -253,9 +253,15 @@ const DatabaseTable: React.FC = () => {
 						return (
 							<IonRow key={row.id}>
 								{Object.keys(row).map((key, index) => {
-									return (
-										<IonCol key={key}>{row[key]}</IonCol>
-									)
+									if (typeof row[key] === 'object') {
+										return (
+											<IonCol className="breakItUp" key={key}>{JSON.stringify(row[key])}</IonCol>
+										)	
+									} else {
+										return (
+											<IonCol className="breakItUp" key={key}>{row[key]}</IonCol>
+										)	
+									}
 								})}
 							</IonRow>
 						)

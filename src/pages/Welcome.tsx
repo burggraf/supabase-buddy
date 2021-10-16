@@ -15,15 +15,31 @@ const supabaseAuthService: SupabaseAuthService = new SupabaseAuthService();
 const projectsService: ProjectsService = new ProjectsService();
 
 const Welcome: React.FC = () => {
-	const history = useHistory()
-	const [present] = useIonAlert()
     console.log('welcome, main loop fired');
-	const [url, setUrl] = useState('')
-	const [apikey, setApikey] = useState('')
-	const [name, setName] = useState('')
+
+    const [presentAlert] = useIonAlert()
+    const [presentToast, dismissToast] = useIonToast()
+    // const history = useHistory()
+    const [url, setUrl] = useState('')
+    const [apikey, setApikey] = useState('')
+    const [name, setName] = useState('')
     const [projects, setProjects] = useState<Project[]>([])
     const [currentProjectID, setCurrentProjectID] = useState('')
-	const loadSettings = async () => {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const toast = (message: string, color: string = 'danger') => {
+        presentToast({
+            color: color,
+            message: message,
+            cssClass: 'toast',
+            buttons: [{ icon: 'close', handler: () => dismissToast() }],
+            duration: 6000,
+            //onDidDismiss: () => console.log('dismissed'),
+            //onWillDismiss: () => console.log('will dismiss'),
+        })
+    }
+    
+    const loadSettings = async () => {
         setProjects(ProjectsService.projects);
         setCurrentProjectID(ProjectsService.currentProjectID);    
 	}
@@ -55,20 +71,6 @@ const Welcome: React.FC = () => {
             console.log('projectsService project is', ProjectsService.project);
         }
     }
-	const [presentToast, dismissToast] = useIonToast()
-	const [email, setEmail] = useState('')
-	const [password, setPassword] = useState('')
-	const toast = (message: string, color: string = 'danger') => {
-		presentToast({
-			color: color,
-			message: message,
-			cssClass: 'toast',
-			buttons: [{ icon: 'close', handler: () => dismissToast() }],
-			duration: 6000,
-			//onDidDismiss: () => console.log('dismissed'),
-			//onWillDismiss: () => console.log('will dismiss'),
-		})
-	}
 	const signInWithEmail = async () => {
 		saveChanges()
 		const { user, session, error } = await supabaseAuthService.signInWithEmail(email, password)
@@ -127,9 +129,6 @@ const Welcome: React.FC = () => {
 		<IonPage>
 			<IonHeader>
 				<IonToolbar>
-					{/* <IonButtons slot="start">
-            <IonMenuButton />
-          </IonButtons> */}
 					<IonTitle>Supabase Buddy</IonTitle>
 					<IonButtons slot='end'>
 						<IonButton color='primary' onClick={addProject}>
@@ -314,7 +313,7 @@ const Welcome: React.FC = () => {
 								color='danger'
 								fill='outline'
 								onClick={() =>
-									present({
+									presentAlert({
 										cssClass: 'my-css',
 										header: 'Delete',
 										message: 'Are you sure?',
