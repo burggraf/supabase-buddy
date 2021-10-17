@@ -1,7 +1,7 @@
 import { IonButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonAlert, useIonToast, useIonViewDidEnter } from '@ionic/react'
-import { add, link, logIn, personAdd, refreshCircle } from 'ionicons/icons'
+import { add, link, logIn, refreshCircle } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router'
+//import { useHistory, useParams } from 'react-router'
 
 import { Project } from '../../models/Project';
 import { ProjectsService } from '../services/projects.service';
@@ -19,12 +19,8 @@ const Welcome: React.FC = () => {
 
     const [presentAlert] = useIonAlert()
     const [presentToast, dismissToast] = useIonToast()
-    // const history = useHistory()
-    const [url, setUrl] = useState('')
-    const [apikey, setApikey] = useState('')
-    const [name, setName] = useState('')
+	const [project, setProject] = useState<Project>({ projectID: '', name: '', url: '', apikey: '' });
     const [projects, setProjects] = useState<Project[]>([])
-    const [currentProjectID, setCurrentProjectID] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const toast = (message: string, color: string = 'danger') => {
@@ -40,36 +36,17 @@ const Welcome: React.FC = () => {
     }
     
     const loadSettings = async () => {
-        setProjects(ProjectsService.projects);
-        setCurrentProjectID(ProjectsService.currentProjectID);    
+        setProjects(JSON.parse(localStorage.getItem('projects') || '[]'));
+		setProject(JSON.parse(localStorage.getItem('project') || '{projectID:"",name:"",url:"",apikey:""}'));
 	}
 	useIonViewDidEnter(async () => {    
 		await loadSettings()
 	})
-    useEffect(() => {
-        console.log('currentProjectID changed', currentProjectID, 'projectsService is', projectsService);
-        if (projectsService) {
-            const selectedProject: Project = projectsService.selectProject(currentProjectID);
-            if (selectedProject) {
-                setUrl(selectedProject.url)
-                setApikey(selectedProject.apikey)
-                setName(selectedProject.name)
-            }    
-        }
-    }, [currentProjectID]);
+    // useEffect(() => {
+    // }, [project]);
 
 	const saveChanges = () => {
-		console.log('saveChanges, currentProjectID', currentProjectID)
-        if (!currentProjectID) {
-            console.log('saveChanges is calling projectsService.addProject');
-            const newProjectID: string = projectsService.addProject(url, apikey, name);
-            setProjects(ProjectsService.projects);
-            setCurrentProjectID(newProjectID);
-        } else {
-            projectsService.selectProject(currentProjectID);
-            console.log('saveChanges isn\'t doing anthing');
-            console.log('projectsService project is', ProjectsService.project);
-        }
+		projectsService.selectProject(project);
     }
 	const signInWithEmail = async () => {
 		saveChanges()
@@ -104,26 +81,12 @@ const Welcome: React.FC = () => {
 			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 		return re.test(String(email).toLowerCase())
 	}
-    const loadProject = (id: string) => {
-        console.log('loadProject', id)
-        const project = projects.find((p) => p.projectID === id)
-        console.log('found project', project)
-        if (project) {
-            setUrl(project.url)
-            setApikey(project.apikey)
-            setName(project.name)
-            setCurrentProjectID(project.projectID)
-        }
-    }
-
-	const addProject = () => {
-        setUrl('')
-        setApikey('')
-        setName('')
-        setCurrentProjectID('')
+	const newProject = () => {
+		setProject({ projectID: '', name: '', url: '', apikey: '' })
 	}
 	const deleteProject = () => {
-        setProjects(projectsService.deleteProject(currentProjectID));
+		projectsService.deleteProject(project.projectID);
+		setProject({ projectID: '', name: '', url: '', apikey: '' })
 	}
 	return (
 		<IonPage>
@@ -131,7 +94,7 @@ const Welcome: React.FC = () => {
 				<IonToolbar>
 					<IonTitle>Supabase Buddy</IonTitle>
 					<IonButtons slot='end'>
-						<IonButton color='primary' onClick={addProject}>
+						<IonButton color='primary' onClick={newProject}>
 							<IonIcon size='large' icon={add}></IonIcon>
 						</IonButton>
 					</IonButtons>
@@ -146,7 +109,7 @@ const Welcome: React.FC = () => {
                         </IonListHeader>
                         { projects.map((project: Project) => {
                             return (
-                            <IonItem key={project.projectID} onClick={() => setCurrentProjectID(project.projectID)}>
+                            <IonItem key={project.projectID} onClick={() => setProject(project)}>
                                 <IonLabel>{project.name}</IonLabel>
                             </IonItem>
                         )})}
@@ -165,10 +128,10 @@ const Welcome: React.FC = () => {
 							<IonInput
 								id='name'
 								name='name'
-								onIonChange={(e) => setName(e.detail.value!)}
+								onIonChange={(e) => setProject(oldProject => ({...oldProject, name:e.detail.value!}))}
 								debounce={750}
 								className='input'
-								value={name}
+								value={project.name}
 							/>
 						</IonCol>
 					</IonRow>
@@ -185,10 +148,10 @@ const Welcome: React.FC = () => {
 							<IonInput
 								id='url'
 								name='url'
-								onIonChange={(e) => setUrl(e.detail.value!)}
+								onIonChange={(e) => setProject(oldProject => ({...oldProject, url:e.detail.value!}))}
 								debounce={750}
 								className='input'
-								value={url}
+								value={project.url}
 							/>
 						</IonCol>
 					</IonRow>
@@ -205,10 +168,10 @@ const Welcome: React.FC = () => {
 							<IonInput
 								id='apikey'
 								name='apikey'
-								onIonChange={(e) => setApikey(e.detail.value!)}
+								onIonChange={(e) => setProject(oldProject => ({...oldProject, apikey:e.detail.value!}))}
 								debounce={750}
 								className='input'
-								value={apikey}
+								value={project.apikey}
 							/>
 						</IonCol>
 					</IonRow>
@@ -305,7 +268,7 @@ const Welcome: React.FC = () => {
 					</IonRow>
 				</IonGrid>
 			</IonContent>
-			{(currentProjectID || true) && 
+			{(project?.projectID?.length > 0) && 
 				<IonFooter>
 					<IonToolbar>
 						<IonButtons slot='start'>
