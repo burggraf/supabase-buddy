@@ -24,7 +24,9 @@ import { useHistory, useParams } from 'react-router'
 import { debounce } from 'ts-debounce'
 import ColumnType from '../components/ColumnType'
 import { SupabaseDataService } from '../services/supabase.data.service'
+import { UtilsService } from '../services/utils.service'
 import './DatabaseTable.css'
+const utilsService = new UtilsService()
 
 const DatabaseTable: React.FC = () => {
     const history = useHistory();
@@ -173,7 +175,6 @@ const DatabaseTable: React.FC = () => {
 			</IonHeader>
 
 			<IonContent>
-
 			{ (table_schema === 'public' && table_name === 'NEW-TABLE') &&
 				<IonGrid>
 					<IonRow key="name-header" className="header">
@@ -229,12 +230,12 @@ const DatabaseTable: React.FC = () => {
 				</IonRow>
 				{columns.map((column: any) => {
 					return (
-						<IonRow key={column.column_name}>
-							<IonCol onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}>{column.column_name}</IonCol>
-							<IonCol><ColumnType stateVariable={column.data_type} stateFunction={(e: any) => {}} /></IonCol>
-							<IonCol>{column.column_default}</IonCol>
-							<IonCol>???</IonCol>
-							<IonCol>{column.is_nullable}</IonCol>
+						<IonRow key={utilsService.randomKey()}>
+							<IonCol className="breakItUp" onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}>{column.column_name}</IonCol>
+							<IonCol className="breakItUp"><ColumnType stateVariable={column.data_type} stateFunction={(e: any) => {}} /></IonCol>
+							<IonCol className="breakItUp">{column.column_default}</IonCol>
+							<IonCol className="breakItUp">???</IonCol>
+							<IonCol className="breakItUp">{column.is_nullable}</IonCol>
 						</IonRow>
 					)
 				})}
@@ -242,24 +243,24 @@ const DatabaseTable: React.FC = () => {
 			} 
 			{ mode === 'data' && rows?.length > 0 &&
 				<IonGrid>
-					<IonRow className="header">
+					<IonRow key="header.row" className="header">
 						{Object.keys(rows[0]).map((key, index) => {
 							return (
-									<IonCol key={key}>{key}</IonCol>
+									<IonCol className="breakItUp" key={utilsService.randomKey()}>{key}</IonCol>
 							)
 						})}
 					</IonRow>
 					{rows.map((row: any) => {
 						return (
-							<IonRow key={row.id}>
+							<IonRow key={utilsService.randomKey()}>
 								{Object.keys(row).map((key, index) => {
 									if (typeof row[key] === 'object') {
 										return (
-											<IonCol className="breakItUp" key={key}>{JSON.stringify(row[key])}</IonCol>
+											<IonCol className="breakItUp" key={utilsService.randomKey()}>{JSON.stringify(row[key])}</IonCol>
 										)	
 									} else {
 										return (
-											<IonCol className="breakItUp" key={key}>{row[key]}</IonCol>
+											<IonCol className="breakItUp" key={utilsService.randomKey()}>{row[key]}</IonCol>
 										)	
 									}
 								})}
@@ -273,16 +274,16 @@ const DatabaseTable: React.FC = () => {
 				<IonRow className="header">
 					{Object.keys(grants[0]).map((key, index) => {
 						return (
-								<IonCol key={key}>{key}</IonCol>
+								<IonCol className="breakItUp" key={utilsService.randomKey()}>{key}</IonCol>
 						)
 					})}
 				</IonRow>
 				{grants.map((grant: any) => {
 					return (
-						<IonRow key={grant.id}>
+						<IonRow key={utilsService.randomKey()}>
 							{Object.keys(grant).map((key, index) => {
 								return (
-									<IonCol key={key}>{grant[key]}</IonCol>
+									<IonCol className="breakItUp" key={utilsService.randomKey()}>{grant[key]}</IonCol>
 								)
 							})}
 						</IonRow>
@@ -295,16 +296,16 @@ const DatabaseTable: React.FC = () => {
 				<IonRow className="header">
 					{Object.keys(policies[0]).map((key, index) => {
 						return (
-								<IonCol key={key}>{key}</IonCol>
+								<IonCol className="breakItUp" key={utilsService.randomKey()}>{key}</IonCol>
 						)
 					})}
 				</IonRow>
 				{policies.map((policy: any) => {
 					return (
-						<IonRow key={policy.id}>
+						<IonRow key={utilsService.randomKey()}>
 							{Object.keys(policy).map((key, index) => {
 								return (
-									<IonCol key={key}>{policy[key]}</IonCol>
+									<IonCol className="breakItUp" key={utilsService.randomKey()}>{policy[key]}</IonCol>
 								)
 							})}
 						</IonRow>
@@ -314,19 +315,19 @@ const DatabaseTable: React.FC = () => {
 			}
 			{ mode === 'indexes' && indexes?.length > 0 &&
 				<IonGrid>
-					<IonRow className="header">
+					<IonRow key={utilsService.randomKey()} className="header">
 						{Object.keys(indexes[0]).map((key, index) => {
 							return (
-									<IonCol key={key}>{key}</IonCol>
+									<IonCol className="breakItUp" key={utilsService.randomKey()}>{key}</IonCol>
 							)
 						})}
 					</IonRow>
 					{indexes.map((idx: any) => {
 						return (
-							<IonRow key={idx.id}>
+							<IonRow key={utilsService.randomKey()}>
 								{Object.keys(idx).map((key, index) => {
 									return (
-										<IonCol key={key}>{idx[key]}</IonCol>
+										<IonCol className="breakItUp" key={utilsService.randomKey()}>{idx[key]}</IonCol>
 									)
 								})}
 							</IonRow>
