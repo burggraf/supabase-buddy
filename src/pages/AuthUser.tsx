@@ -4,6 +4,8 @@ import { useParams } from 'react-router';
 import { SupabaseDataService } from '../services/supabase.data.service';
 import './AuthUser.css';
 import Moment from 'moment';
+import { UtilsService } from '../services/utils.service';
+const utilsService = new UtilsService();
 
 const AuthUser: React.FC = () => {
     const { id } = useParams<{ id: string; }>();
@@ -40,7 +42,7 @@ const AuthUser: React.FC = () => {
           <IonGrid>
               {Object.keys(user).map((key, index) => {
                   return (
-                        <IonRow key={index}>
+                        <IonRow key={utilsService.randomKey()}>
                             <IonCol size="4">
                                 <IonLabel>{key}</IonLabel>
                             </IonCol>
@@ -57,7 +59,7 @@ const AuthUser: React.FC = () => {
 
         {Object.keys(user).map((key, index) => {
                         return (
-                            <IonRow key={key}>
+                            <IonRow key={utilsService.randomKey()}>
                                 <IonCol>{key}</IonCol>
                                 <IonCol>{user[key]}</IonCol>
                             </IonRow>

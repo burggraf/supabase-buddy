@@ -15,6 +15,8 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import './DatabaseColumn.css'
+import { UtilsService } from '../services/utils.service'
+const utilsService = new UtilsService()
 
 const DatabaseColumn: React.FC = () => {
 	const { table_schema } = useParams<{ table_schema: string }>()
@@ -51,7 +53,7 @@ const DatabaseColumn: React.FC = () => {
 				<IonGrid>
                     {Object.keys(attributes).map((key, index) => {
                         return (
-                            <IonRow key={key}>
+                            <IonRow key={utilsService.randomKey()}>
                                 <IonCol>{key}</IonCol>
                                 <IonCol>{attributes[key]}</IonCol>
                             </IonRow>

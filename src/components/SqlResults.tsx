@@ -1,14 +1,12 @@
 import { IonGrid, IonRow, IonCol, IonLabel } from '@ionic/react';
 import './SqlResults.css'
-
+import { UtilsService } from '../services/UtilsService';
+const utilsService = new UtilsService();
 interface ContainerProps {
   results: any[]
 }
 const SqlResults: React.FC<ContainerProps> = ({ results }) => {
   const outputArray = [];
-  const getUniqueKey = () => {
-      return Math.random().toString(36).substr(2, 9);
-  }
   for (let i = 0; i < results.length; i++) {
     const result = results[i];
     let resultJson;
@@ -26,22 +24,22 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
             outputArray.push(
                 <>
                 <IonLabel className="resultHeader"><strong>Result #{i+1}</strong></IonLabel>
-                <IonGrid key={getUniqueKey()}>
-                    <IonRow key={getUniqueKey()}>
+                <IonGrid key={utilsService.randomKey()}>
+                    <IonRow key={utilsService.randomKey()}>
                         {keys.map((key, index) => (                            
-                            <IonCol key={getUniqueKey()}><strong>{key}</strong></IonCol>
+                            <IonCol key={utilsService.randomKey()}><strong>{key}</strong></IonCol>
                         ))}
                     </IonRow>
                     {resultJson.map((row, index) => (
-                        <IonRow key={getUniqueKey()}>
+                        <IonRow key={utilsService.randomKey()}>
                             {keys.map((key, index) => {
                                 if (!Array.isArray(row[key])) {
                                     return (
-                                        <IonCol key={getUniqueKey()} className="boxed">{row[key]}</IonCol>
+                                        <IonCol key={utilsService.randomKey()} className="boxed">{row[key]}</IonCol>
                                         )
                                 } else {
                                     return (
-                                        <IonCol key={getUniqueKey()} className="boxed">{JSON.stringify(row[key])}</IonCol>
+                                        <IonCol key={utilsService.randomKey()} className="boxed">{JSON.stringify(row[key])}</IonCol>
                                         )
 
                                 }
@@ -56,13 +54,13 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
         }
     } else {
         outputArray.push(
-            <IonGrid key={getUniqueKey()}>
-                <IonRow className="resultHeader" key={getUniqueKey()}>
-                    <IonCol key={getUniqueKey()}><strong>Result #{i+1}</strong></IonCol>
+            <IonGrid key={utilsService.randomKey()}>
+                <IonRow className="resultHeader" key={utilsService.randomKey()}>
+                    <IonCol key={utilsService.randomKey()}><strong>Result #{i+1}</strong></IonCol>
                 </IonRow>
-                <IonRow key={getUniqueKey()}>
-                    <IonCol key={getUniqueKey()}>
-                        <IonLabel key={getUniqueKey()} className="error" color={parseInt(resultJson) === resultJson ? 'dark':'danger'}>{resultJson}</IonLabel>
+                <IonRow key={utilsService.randomKey()}>
+                    <IonCol key={utilsService.randomKey()}>
+                        <IonLabel key={utilsService.randomKey()} className="error" color={parseInt(resultJson) === resultJson ? 'dark':'danger'}>{resultJson}</IonLabel>
                     </IonCol>
                 </IonRow>
             </IonGrid>

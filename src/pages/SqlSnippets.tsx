@@ -74,7 +74,7 @@ const SqlSnippets: React.FC = () => {
 
 					{snippets.map((snippet) => (
 						<IonRow
-							key={snippet.id}
+							key={utilsService.randomKey()}
 							onClick={() => {
 								editSnippet(snippet.id)
 							}}>

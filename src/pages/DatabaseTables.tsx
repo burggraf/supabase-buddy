@@ -18,6 +18,8 @@ import './DatabaseTables.css'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { useEffect, useState } from 'react'
 import { add } from 'ionicons/icons'
+import { UtilsService } from '../services/utils.service'
+const utilsService = new UtilsService()
 
 const DatabaseTables: React.FC = () => {
     const history = useHistory();
@@ -66,7 +68,7 @@ const DatabaseTables: React.FC = () => {
 					</IonRow>
                     {tables.map((table: any) => {
                         return (
-                            <IonRow key={table.table_name} onClick={() => history.push(`/database-table/${table.table_schema}/${table.table_name}`)}>
+                            <IonRow key={utilsService.randomKey()} onClick={() => history.push(`/database-table/${table.table_schema}/${table.table_name}`)}>
                                 <IonCol>{table.table_name}</IonCol>
                                 <IonCol>{table.description}</IonCol>
                                 <IonCol>{table.table_schema}</IonCol>

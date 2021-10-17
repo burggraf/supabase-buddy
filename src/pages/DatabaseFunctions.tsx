@@ -15,6 +15,8 @@ import { useHistory, useParams } from 'react-router'
 import './DatabaseFunctions.css'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { useEffect, useState } from 'react'
+import { UtilsService } from '../services/utils.service'
+const utilsService = new UtilsService()
 
 const DatabaseFunctions: React.FC = () => {
     const history = useHistory();
@@ -59,7 +61,7 @@ const DatabaseFunctions: React.FC = () => {
 
                     {functions.map((f: any) => {
                         return (
-                            <IonRow key={f.function_schema + '.' + f.function_name} onClick={() => history.push(`/database-function/${f.function_schema}/${f.function_name}`)}>
+                            <IonRow key={utilsService.randomKey()} onClick={() => history.push(`/database-function/${f.function_schema}/${f.function_name}`)}>
                                 <IonCol className="breakItUp">{f.function_schema}</IonCol>
                                 <IonCol className="breakItUp">{f.function_name}</IonCol>
                                 <IonCol className="breakItUp">{f.function_language}</IonCol>
