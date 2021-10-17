@@ -24,10 +24,8 @@ export class SupabaseAuthService {
   private authStateSubscription: any;
 
   public connect() {
-    console.log('connect: supabase auth service thinks projectsService.project is', ProjectsService.project);
     const url = ProjectsService.project.url;
     const apikey = ProjectsService.project.apikey;
-    console.log('supabase.auth.service connect url:', url, 'apikey:', apikey);
     if (url !== '' && apikey !== '') {
       supabase = createClient(url, apikey);
       this.isConnected = true;

@@ -167,7 +167,6 @@ const Menu: React.FC = () => {
   useEffect(()=>{
     // Only run this one time!  No multiple subscriptions!
     supabaseAuthService.user.subscribe((user: User | null) => {
-      console.log('MENU: supabaseAuthService.user', user);
       _user = user;
       if (_user?.email) {
         setEmail(_user.email);

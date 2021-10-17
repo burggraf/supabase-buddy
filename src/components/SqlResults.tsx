@@ -1,6 +1,6 @@
 import { IonGrid, IonRow, IonCol, IonLabel } from '@ionic/react';
 import './SqlResults.css'
-import { UtilsService } from '../services/UtilsService';
+import { UtilsService } from '../services/utils.service';
 const utilsService = new UtilsService();
 interface ContainerProps {
   results: any[]

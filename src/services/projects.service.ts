@@ -16,24 +16,14 @@ export class ProjectsService {
 			return;
 		}
 		try {
-			console.log('*** 1');
 			ProjectsService.projects = JSON.parse(localStorage.getItem('projects') || '[]');
-			console.log('*** 2');
 			ProjectsService.project = JSON.parse(localStorage.getItem('project') || '{projectID:"",name:"",url:"",apikey:""}');
-			console.log('*** 3');
-			console.log('ProjectsService init: this.projects', ProjectsService.projects)
-			console.log('ProjectsService init: this.project', ProjectsService.project)	
 			ProjectsService.initialized = true;
 		} catch (error) {
 			console.error('*** ProjectsService init: error', error)
-			console.log('projects has', localStorage.getItem('projects'))
-			console.log('project has', localStorage.getItem('project'))
-			console.log('ProjectsService init: this.projects', ProjectsService.projects)
-			console.log('ProjectsService init: this.project', ProjectsService.project)	
 		}
 	}
     constructor() {
-		console.log('ProjectsService constructor() calling this.init()')
 		this.init();
 	}
 	public selectProject(project: Project) {
