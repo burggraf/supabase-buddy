@@ -9,5 +9,8 @@ export class UtilsService {
 			return v.toString(16)
 		})
 	}
+	public randomKey = () => {
+		return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+	}
 
 }
