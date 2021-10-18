@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router';
 import { SupabaseDataService } from '../services/supabase.data.service';
 import './AuthUsers.css';
 import Moment from 'moment';
-import { add, ellipsisHorizontal, mail } from 'ionicons/icons';
+import { add, closeOutline, ellipsisHorizontal, mail } from 'ionicons/icons';
 import { SupabaseAuthService } from '../services/supabase.auth.service';
 
 const AuthUsers: React.FC = () => {
@@ -149,6 +149,11 @@ const AuthUsers: React.FC = () => {
                 Send Magic Link
               </IonButton>
           </div>
+          <div className="ion-padding">
+              <IonButton expand="block" onClick={()=>{setShowInvite({open: false, event: undefined})}} color="light">
+                Cancel
+              </IonButton>
+          </div>
         </IonPopover>
         <IonPopover
           isOpen={showPopover.open}
@@ -171,6 +176,12 @@ const AuthUsers: React.FC = () => {
               <IonButton fill="clear" onClick={()=>{sendMagicLink(showPopover.user?.email)}} color="dark">
                 <IonIcon slot="start" size="small" icon={mail}></IonIcon> 
                 Send Magic Link
+              </IonButton>
+            </IonItem>
+            <IonItem>
+              <IonButton fill="clear" onClick={()=>{setShowPopover({open: false, event: undefined, user: undefined})}} color="dark">
+                <IonIcon slot="start" size="small" icon={closeOutline}></IonIcon> 
+                Cancel
               </IonButton>
             </IonItem>
           </IonList>

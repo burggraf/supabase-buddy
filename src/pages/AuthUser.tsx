@@ -14,15 +14,15 @@ const AuthUser: React.FC = () => {
     const [user, setUser] = useState<any>({})
 
     const loadUser = async () => {
-		const { data, error } = await supabaseDataService.getUser(id)
-		if (error) {
-			console.error(error)
-		} else {
-            if (data && data.length > 0 ) {
-                setUser(data![0]);
-            }
-		}
-	}
+      const { data, error } = await supabaseDataService.getUser(id)
+      if (error) {
+        console.error(error)
+      } else {
+              if (data && data.length > 0 ) {
+                  setUser(data![0]);
+              }
+      }
+	  }
 	useEffect(() => {
 		loadUser()
 	}, [])
@@ -55,18 +55,6 @@ const AuthUser: React.FC = () => {
                         </IonRow>
                   )})}
           </IonGrid>
-        {/* <IonGrid>
-
-        {Object.keys(user).map((key, index) => {
-                        return (
-                            <IonRow key={utilsService.randomKey()}>
-                                <IonCol>{key}</IonCol>
-                                <IonCol>{user[key]}</IonCol>
-                            </IonRow>
-                        )
-                    })}
-
-        </IonGrid> */}
 
       </IonContent>
     </IonPage>
