@@ -23,11 +23,11 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
             const keys = Object.keys(resultJson[0]);
             outputArray.push(
                 <>
-                <IonLabel className="resultHeader"><strong>Result #{i+1}</strong></IonLabel>
+                <IonLabel key={utilsService.randomKey()} className="resultHeader"><strong>Result #{i+1}</strong></IonLabel>
                 <IonGrid key={utilsService.randomKey()}>
                     <IonRow key={utilsService.randomKey()}>
                         {keys.map((key, index) => (                            
-                            <IonCol key={utilsService.randomKey()}><strong>{key}</strong></IonCol>
+                            <IonCol className="breakItUp" key={utilsService.randomKey()}><strong>{key}</strong></IonCol>
                         ))}
                     </IonRow>
                     {resultJson.map((row, index) => (
@@ -35,11 +35,11 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
                             {keys.map((key, index) => {
                                 if (!Array.isArray(row[key])) {
                                     return (
-                                        <IonCol key={utilsService.randomKey()} className="boxed">{row[key]}</IonCol>
+                                        <IonCol className="breakItUp boxed" key={utilsService.randomKey()}>{row[key]}</IonCol>
                                         )
                                 } else {
                                     return (
-                                        <IonCol key={utilsService.randomKey()} className="boxed">{JSON.stringify(row[key])}</IonCol>
+                                        <IonCol className="breakItUp boxed" key={utilsService.randomKey()}>{JSON.stringify(row[key])}</IonCol>
                                         )
 
                                 }

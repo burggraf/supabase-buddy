@@ -45,6 +45,7 @@ import { User } from '@supabase/supabase-js';
 import { SupabaseAuthService } from './services/supabase.auth.service';
 import DatabaseViews from './pages/DatabaseViews';
 import DatabaseView from './pages/DatabaseView';
+import DatabaseExtensions from './pages/DatabaseExtensions';
 
 const startupService = new StartupService();
 const startupRoute = startupService.getStartupRoute();
@@ -90,6 +91,7 @@ const App: React.FC = () => {
             <Route path="/home" component={Home} />
             <Route path="/welcome" component={Welcome} />
             <Route path="/home-dashboard" component={HomeDashboard} />
+            <Route path="/database-extensions" component={DatabaseExtensions} />
             <Route path="/database-functions" component={DatabaseFunctions} />
             <Route path="/database-function/:function_schema/:function_name" component={DatabaseFunction} />
             <Route path="/database-tables" component={DatabaseTables} />

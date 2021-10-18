@@ -136,6 +136,11 @@ export class SupabaseDataService {
      `);
   }
 
+  public async getExtensions() {
+    return this.runStatement(
+    `select * from pg_available_extensions 
+    order by case when installed_version is null then 2 else 1 end, name`);
+  }
 
   public async getTables(exclude_schemas: string = "'pg_catalog', 'information_schema', 'extensions', 'auth', 'storage'") {
     return this.runStatement(`SELECT information_schema.tables.*,pg_description.description 
