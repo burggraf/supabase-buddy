@@ -1,4 +1,6 @@
-import { IonSelect, IonSelectOption, IonPopover, PopoverOptions } from '@ionic/react';
+import { IonSelect, IonSelectOption, IonPopover, PopoverOptions, IonButton, IonModal, IonList, IonItem, IonLabel, IonContent, IonHeader, IonToolbar, IonButtons, IonIcon, IonTitle } from '@ionic/react';
+import { closeOutline } from 'ionicons/icons';
+import { useEffect, useState } from 'react';
 import './ColumnType.css';
 
 interface ContainerProps {
@@ -6,58 +8,128 @@ interface ContainerProps {
     stateFunction: Function;
 }
 
+const options = [
+  { value: "text", text: "text - variable unlimited length text" },
+  { value: "numeric", text: "numeric - any numeric entry" },
+  { value: "int2", text: "int2 - signed two-byte integer" },
+  { value: "int4", text: "int4 - signed four-byte integer" },
+  { value: "int8", text: "int8 - signed eight-byte integer" },
+  { value: "float4", text: "float4 - single precision floating point number 4-bytes" },
+  { value: "float8", text: "float8 - double precision floating point number 8-bytes" },
+  { value: "json", text: "json - textual JSON data" },
+  { value: "jsonb", text: "jsonb - binary JSON data, decomposed" },
+  { value: "varchar", text: "varchar - variable length character string" },
+  { value: "uuid", text: "uuid - universally unique identifier" },
+  { value: "date", text: "date - calendar date (year, month, day)" },
+  { value: "time", text: "time - time of day (no time zone)" },
+  { value: "timetz", text: "timetz - time of day (including time zone)" },
+  { value: "timestamp", text: "timestamp - date and time (no time zone)" },
+  { value: "timestamptz", text: "timestamptz - date and time (including time zone)" },
+  { value: "bool", text: "bool - logical boolean (true/false)" }, 
+];
+
+
 const ColumnType: React.FC<ContainerProps> = ({ stateVariable, stateFunction }) => {
     // const customPopoverOptions = {
     // header: 'Column Type',
     // subHeader: 'Select a column type',
     // message: 'choose from available PostgreSQL data types'
     // };
-  return (
-    <IonSelect
-    // interfaceOptions={customPopoverOptions}
-    // interface="popover"
-    // see https://ionicframework.com/docs/api/alert#alertoptions
-    interfaceOptions={{header: 'Column Type'/*, subHeader: 'subHeader', message: 'message'*/}}
-    placeholder="Select Type"
-    cancelText="Cancel"
-    okText="OK"
-    onIonChange={e => stateFunction(e.detail.value)}
-    value={stateVariable}>
-    <IonSelectOption value="text">text</IonSelectOption>
-    <IonSelectOption value="numeric">numeric</IonSelectOption>
-    <IonSelectOption value="int2">int2</IonSelectOption>
-    <IonSelectOption value="int4">int4</IonSelectOption>
-    <IonSelectOption value="int8">int8</IonSelectOption>
-    <IonSelectOption value="float4">float4</IonSelectOption>
-    <IonSelectOption value="float8">float8</IonSelectOption>
-    <IonSelectOption value="json">json</IonSelectOption>
-    <IonSelectOption value="jsonb">jsonb</IonSelectOption>
-    <IonSelectOption value="varchar">varchar</IonSelectOption>
-    <IonSelectOption value="uuid">uuid</IonSelectOption>
-    <IonSelectOption value="date">date</IonSelectOption>
-    <IonSelectOption value="time">time</IonSelectOption>
-    <IonSelectOption value="timetz">timetz</IonSelectOption>
-    <IonSelectOption value="timestamp">timestamp</IonSelectOption>
-    <IonSelectOption value="timestamptz">timestamptz</IonSelectOption>
-    <IonSelectOption value="bool">bool</IonSelectOption>
-    {/* <IonSelectOption value="text">text - variable unlimited length text</IonSelectOption>
-    <IonSelectOption value="numeric">numeric - any numeric entry</IonSelectOption>
-    <IonSelectOption value="int2">int2 - signed two-byte integer</IonSelectOption>
-    <IonSelectOption value="int4">int4 - signed four-byte integer</IonSelectOption>
-    <IonSelectOption value="int8">int8 - signed eight-byte integer</IonSelectOption>
-    <IonSelectOption value="float4">float4 - single precision floating point number 4-bytes</IonSelectOption>
-    <IonSelectOption value="float8">float8 - double precision floating point number 8-bytes</IonSelectOption>
-    <IonSelectOption value="json">json - textual JSON data</IonSelectOption>
-    <IonSelectOption value="jsonb">jsonb - binary JSON data, decomposed</IonSelectOption>
-    <IonSelectOption value="varchar">varchar - variable length character string</IonSelectOption>
-    <IonSelectOption value="uuid">uuid - universally unique identifier</IonSelectOption>
-    <IonSelectOption value="date">date - calendar date (year, month, day)</IonSelectOption>
-    <IonSelectOption value="time">time - time of day (no time zone)</IonSelectOption>
-    <IonSelectOption value="timetz">timetz - time of day (including time zone)</IonSelectOption>
-    <IonSelectOption value="timestamp">timestamp - date and time (no time zone)</IonSelectOption>
-    <IonSelectOption value="timestamptz">timestamptz - date and time (including time zone)</IonSelectOption>
-    <IonSelectOption value="bool">bool - logical boolean (true/false)</IonSelectOption> */}
-  </IonSelect>
+    // const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState({ isOpen: false });
+    const chooseValue = (e: any) => {
+      console.log('chooseValue', e);
+      setShowModal({ isOpen: false });
+      setTimeout(() => {
+        stateFunction(e);
+      }, 500);
+    }
+    
+    return (
+    <>
+        <IonModal 
+          isOpen={showModal.isOpen} 
+          animated={true} 
+          // onDidDismiss={() => setShowModal({ isOpen: false })} 
+          className="my-custom-class">
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Column Type</IonTitle>
+            <IonButtons slot='end'>
+              <IonButton color='primary' onClick={() => setShowModal({ isOpen: false })}>
+                <IonIcon size='large' icon={closeOutline}></IonIcon>
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <IonList>
+
+          {/* {data.map((e, i) => {
+            return <IonItem onClick={() => onClose(i)}>{e + i}</IonItem>;
+          })} */}
+
+              {options.map((option) => {
+                return (
+                  <IonItem key={option.value} onClick={() => chooseValue(option.value) }>
+                  <IonLabel>{option.text}</IonLabel>
+                  </IonItem>                  
+                )
+                }
+
+              )}     
+          </IonList>
+          <IonButton onClick={() => setShowModal({ isOpen: false })}>{ stateVariable }</IonButton>
+        </IonContent>
+        </IonModal>
+        <IonButton strong expand="block" color="medium" onClick={() => setShowModal({ isOpen: true })}>{stateVariable}</IonButton>
+    </>
+
+    // <IonSelect
+    // interfaceOptions={{header: 'Column Type'/*, subHeader: 'subHeader', message: 'message'*/}}
+    // placeholder="Select Type"
+    // cancelText="Cancel"
+    // interface="action-sheet"
+    // okText="OK"
+    // onIonChange={e => stateFunction(e.detail.value)}
+    // value={stateVariable}>
+    // { value: "text", text: "text" },
+    // { value: "numeric", text: "numeric" },
+    // { value: "int2", text: "int2" },
+    // { value: "int4", text: "int4" },
+    // { value: "int8", text: "int8" },
+    // { value: "float4", text: "float4" },
+    // { value: "float8", text: "float8" },
+    // { value: "json", text: "json" },
+    // { value: "jsonb", text: "jsonb" },
+    // { value: "varchar", text: "varchar" },
+    // { value: "uuid", text: "uuid" },
+    // { value: "date", text: "date" },
+    // { value: "time", text: "time" },
+    // { value: "timetz", text: "timetz" },
+    // { value: "timestamp", text: "timestamp" },
+    // { value: "timestamptz", text: "timestamptz" },
+    // { value: "bool", text: "bool" },
+    /* 
+    { value: "text", text: "text - variable unlimited length text" },
+    { value: "numeric", text: "numeric - any numeric entry" },
+    { value: "int2", text: "int2 - signed two-byte integer" },
+    { value: "int4", text: "int4 - signed four-byte integer" },
+    { value: "int8", text: "int8 - signed eight-byte integer" },
+    { value: "float4", text: "float4 - single precision floating point number 4-bytes" },
+    { value: "float8", text: "float8 - double precision floating point number 8-bytes" },
+    { value: "json", text: "json - textual JSON data" },
+    { value: "jsonb", text: "jsonb - binary JSON data, decomposed" },
+    { value: "varchar", text: "varchar - variable length character string" },
+    { value: "uuid", text: "uuid - universally unique identifier" },
+    { value: "date", text: "date - calendar date (year, month, day)" },
+    { value: "time", text: "time - time of day (no time zone)" },
+    { value: "timetz", text: "timetz - time of day (including time zone)" },
+    { value: "timestamp", text: "timestamp - date and time (no time zone)" },
+    { value: "timestamptz", text: "timestamptz - date and time (including time zone)" },
+    { value: "bool", text: "bool - logical boolean (true/false)" }, 
+    */
+  //</IonSelect>
 
 );
 };

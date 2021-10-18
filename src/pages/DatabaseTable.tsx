@@ -154,6 +154,11 @@ const DatabaseTable: React.FC = () => {
 	const save = async () => {
 		toast('not implemented yet', 'danger');
 	}
+	const updateColumnType = (index: any, e: any) => {
+		let newColumnsArray = [...columns]; // copying the old array
+		newColumnsArray[index].data_type = e;
+		setColumns(newColumnsArray);	
+	}
 	return (
 		<IonPage>
 			<IonHeader>
@@ -228,11 +233,17 @@ const DatabaseTable: React.FC = () => {
 					<IonCol>Key</IonCol>
 					<IonCol>Null</IonCol>
 				</IonRow>
-				{columns.map((column: any) => {
+				{columns.map((column: any, index) => {
 					return (
 						<IonRow key={utilsService.randomKey()}>
+
 							<IonCol className="breakItUp" onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}>{column.column_name}</IonCol>
-							<IonCol className="breakItUp"><ColumnType stateVariable={column.data_type} stateFunction={(e: any) => {}} /></IonCol>
+							<IonCol className="breakItUp">
+								<ColumnType 
+									stateVariable={column.data_type} 									
+									stateFunction={ (e: any) => {updateColumnType(index, e)} } 
+								/>
+							</IonCol>
 							<IonCol className="breakItUp">{column.column_default}</IonCol>
 							<IonCol className="breakItUp">???</IonCol>
 							<IonCol className="breakItUp">{column.is_nullable}</IonCol>
