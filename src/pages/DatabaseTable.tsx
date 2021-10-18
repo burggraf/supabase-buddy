@@ -242,6 +242,7 @@ const DatabaseTable: React.FC = () => {
 								<ColumnType 
 									stateVariable={column.data_type} 									
 									stateFunction={ (e: any) => {updateColumnType(index, e)} } 
+									initialValue={column.data_type}
 								/>
 							</IonCol>
 							<IonCol className="breakItUp">{column.column_default}</IonCol>

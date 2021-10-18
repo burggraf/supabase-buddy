@@ -6,6 +6,7 @@ import './ColumnType.css';
 interface ContainerProps {
     stateVariable: object;
     stateFunction: Function;
+    initialValue: string;
 }
 
 const options = [
@@ -29,7 +30,7 @@ const options = [
 ];
 
 
-const ColumnType: React.FC<ContainerProps> = ({ stateVariable, stateFunction }) => {
+const ColumnType: React.FC<ContainerProps> = ({ stateVariable, stateFunction, initialValue }) => {
     // const customPopoverOptions = {
     // header: 'Column Type',
     // subHeader: 'Select a column type',
@@ -44,7 +45,6 @@ const ColumnType: React.FC<ContainerProps> = ({ stateVariable, stateFunction }) 
         stateFunction(e);
       }, 500);
     }
-    
     return (
     <>
         <IonModal 
@@ -72,7 +72,7 @@ const ColumnType: React.FC<ContainerProps> = ({ stateVariable, stateFunction }) 
               {options.map((option) => {
                 return (
                   <IonItem key={option.value} onClick={() => chooseValue(option.value) }>
-                  <IonLabel>{option.text}</IonLabel>
+                  <IonLabel className={option.value===initialValue ? 'chosenLabel':'unchosenLabel'}>{option.text}</IonLabel>
                   </IonItem>                  
                 )
                 }
