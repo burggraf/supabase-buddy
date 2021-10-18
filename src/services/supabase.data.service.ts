@@ -141,6 +141,14 @@ export class SupabaseDataService {
     `select * from pg_available_extensions 
     order by case when installed_version is null then 2 else 1 end, name`);
   }
+  public async installExtension(name: string) {
+    return this.runStatement(
+    `CREATE EXTENSION IF NOT EXISTS "${name}"`);
+  }
+  public async unInstallExtension(name: string) {
+    return this.runStatement(
+    `DROP EXTENSION IF EXISTS "${name}"`);
+  }
 
   public async getTables(exclude_schemas: string = "'pg_catalog', 'information_schema', 'extensions', 'auth', 'storage'") {
     return this.runStatement(`SELECT information_schema.tables.*,pg_description.description 
