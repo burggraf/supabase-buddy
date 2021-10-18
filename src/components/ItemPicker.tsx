@@ -1,36 +1,21 @@
 import { IonSelect, IonSelectOption, IonPopover, PopoverOptions, IonButton, IonModal, IonList, IonItem, IonLabel, IonContent, IonHeader, IonToolbar, IonButtons, IonIcon, IonTitle } from '@ionic/react';
 import { closeOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
-import './ColumnType.css';
+import './ItemPicker.css';
 
+interface Option {
+  value: string;
+  text: string;
+}
 interface ContainerProps {
     stateVariable: object;
     stateFunction: Function;
     initialValue: string;
+    options: Option[];
+    title: string;
 }
 
-const options = [
-  { value: "text", text: "text - variable unlimited length text" },
-  { value: "numeric", text: "numeric - any numeric entry" },
-  { value: "int2", text: "int2 - signed two-byte integer" },
-  { value: "int4", text: "int4 - signed four-byte integer" },
-  { value: "int8", text: "int8 - signed eight-byte integer" },
-  { value: "float4", text: "float4 - single precision floating point number 4-bytes" },
-  { value: "float8", text: "float8 - double precision floating point number 8-bytes" },
-  { value: "json", text: "json - textual JSON data" },
-  { value: "jsonb", text: "jsonb - binary JSON data, decomposed" },
-  { value: "varchar", text: "varchar - variable length character string" },
-  { value: "uuid", text: "uuid - universally unique identifier" },
-  { value: "date", text: "date - calendar date (year, month, day)" },
-  { value: "time", text: "time - time of day (no time zone)" },
-  { value: "timetz", text: "timetz - time of day (including time zone)" },
-  { value: "timestamp", text: "timestamp - date and time (no time zone)" },
-  { value: "timestamptz", text: "timestamptz - date and time (including time zone)" },
-  { value: "bool", text: "bool - logical boolean (true/false)" }, 
-];
-
-
-const ColumnType: React.FC<ContainerProps> = ({ stateVariable, stateFunction, initialValue }) => {
+const ItemPicker: React.FC<ContainerProps> = ({ stateVariable, stateFunction, initialValue, options, title }) => {
     // const customPopoverOptions = {
     // header: 'Column Type',
     // subHeader: 'Select a column type',
@@ -54,7 +39,7 @@ const ColumnType: React.FC<ContainerProps> = ({ stateVariable, stateFunction, in
           className="my-custom-class">
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Column Type</IonTitle>
+            <IonTitle>{ title }</IonTitle>
             <IonButtons slot='end'>
               <IonButton color='primary' onClick={() => setShowModal({ isOpen: false })}>
                 <IonIcon size='large' icon={closeOutline}></IonIcon>
@@ -134,4 +119,4 @@ const ColumnType: React.FC<ContainerProps> = ({ stateVariable, stateFunction, in
 );
 };
 
-export default ColumnType;
+export default ItemPicker;

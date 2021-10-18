@@ -23,11 +23,31 @@ import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { debounce } from 'ts-debounce'
 import ColumnType from '../components/ColumnType'
+import ItemPicker from '../components/ItemPicker'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { UtilsService } from '../services/utils.service'
 import './DatabaseTable.css'
 const utilsService = new UtilsService()
 
+const columnOptions = [
+	{ value: "text", text: "text - variable unlimited length text" },
+	{ value: "numeric", text: "numeric - any numeric entry" },
+	{ value: "int2", text: "int2 - signed two-byte integer" },
+	{ value: "int4", text: "int4 - signed four-byte integer" },
+	{ value: "int8", text: "int8 - signed eight-byte integer" },
+	{ value: "float4", text: "float4 - single precision floating point number 4-bytes" },
+	{ value: "float8", text: "float8 - double precision floating point number 8-bytes" },
+	{ value: "json", text: "json - textual JSON data" },
+	{ value: "jsonb", text: "jsonb - binary JSON data, decomposed" },
+	{ value: "varchar", text: "varchar - variable length character string" },
+	{ value: "uuid", text: "uuid - universally unique identifier" },
+	{ value: "date", text: "date - calendar date (year, month, day)" },
+	{ value: "time", text: "time - time of day (no time zone)" },
+	{ value: "timetz", text: "timetz - time of day (including time zone)" },
+	{ value: "timestamp", text: "timestamp - date and time (no time zone)" },
+	{ value: "timestamptz", text: "timestamptz - date and time (including time zone)" },
+	{ value: "bool", text: "bool - logical boolean (true/false)" }, 
+  ];
 const DatabaseTable: React.FC = () => {
     const history = useHistory();
 	const { table_schema } = useParams<{ table_schema: string }>()
@@ -239,10 +259,12 @@ const DatabaseTable: React.FC = () => {
 
 							<IonCol className="breakItUp" onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}>{column.column_name}</IonCol>
 							<IonCol className="breakItUp">
-								<ColumnType 
+								<ItemPicker 
 									stateVariable={column.data_type} 									
 									stateFunction={ (e: any) => {updateColumnType(index, e)} } 
 									initialValue={column.data_type}
+									options={columnOptions}
+									title="Column Type"
 								/>
 							</IonCol>
 							<IonCol className="breakItUp">{column.column_default}</IonCol>
