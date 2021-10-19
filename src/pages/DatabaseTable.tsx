@@ -1,31 +1,15 @@
-import {
-    IonBackButton,
-	IonButton,
-	IonButtons,
-	IonCol,
-	IonContent,
-	IonGrid,
-	IonHeader,
-	IonIcon,
-	IonInput,
-	IonLabel,
-	IonMenuButton,
-	IonPage,
-	IonRow,
-	IonSegment,
-	IonSegmentButton,
-	IonTitle,
-	IonToolbar,
-	useIonToast,
-} from '@ionic/react'
+import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonMenuButton, IonPage, IonRow, IonSegment, IonSegmentButton, IonTitle, IonToolbar, useIonToast } from '@ionic/react'
 import { checkmark } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { debounce } from 'ts-debounce'
+
 import ItemPicker from '../components/ItemPicker'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { UtilsService } from '../services/utils.service'
+
 import './DatabaseTable.css'
+
 const utilsService = new UtilsService()
 
 const columnOptions = [
@@ -66,7 +50,7 @@ const DatabaseTable: React.FC = () => {
 		} else {
 			setColumns(data!)
 		}
-	}
+	}	
 	const loadData = async () => {
 		const { data, error } = await supabaseDataService.getTableRows(table_schema, table_name)
 		if (error) {
@@ -216,7 +200,7 @@ const DatabaseTable: React.FC = () => {
 				</IonGrid>
 			}
 			{ !(table_schema === 'public' && table_name === 'NEW-TABLE') &&
-				<IonSegment value={mode} onIonChange={e => {
+				<IonSegment mode="ios" scrollable={true} value={mode} onIonChange={e => {
 					if (e.detail.value === 'data' || 
 						e.detail.value === 'schema' ||
 						e.detail.value === 'tls' ||
@@ -246,18 +230,18 @@ const DatabaseTable: React.FC = () => {
 			{ ((mode === 'schema') || (table_schema === 'public' && table_name === 'NEW-TABLE')) &&
 				<IonGrid>
 				<IonRow className="header">
-					<IonCol>Name</IonCol>
-					<IonCol>Type</IonCol>
-					<IonCol>Default</IonCol>
-					<IonCol>Key</IonCol>
-					<IonCol>Null</IonCol>
+					<IonCol size="3">Name</IonCol>
+					<IonCol size="3">Type</IonCol>
+					<IonCol size="4">Default</IonCol>
+					<IonCol size="1">Key</IonCol>
+					<IonCol size="1">Null</IonCol>
 				</IonRow>
 				{columns.map((column: any, index) => {
 					return (
 						<IonRow key={utilsService.randomKey()}>
 
-							<IonCol className="breakItUp" onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}>{column.column_name}</IonCol>
-							<IonCol className="breakItUp">
+							<IonCol size="3" className="breakItUp" onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}>{column.column_name}</IonCol>
+							<IonCol size="3" className="breakItUp">
 								<ItemPicker 
 									stateVariable={column.data_type} 									
 									stateFunction={ (e: any) => {updateColumnType(index, e)} } 
@@ -266,9 +250,9 @@ const DatabaseTable: React.FC = () => {
 									title="Column Type"
 								/>
 							</IonCol>
-							<IonCol className="breakItUp">{column.column_default}</IonCol>
-							<IonCol className="breakItUp">???</IonCol>
-							<IonCol className="breakItUp">{column.is_nullable}</IonCol>
+							<IonCol size="4" className="breakItUp">{column.column_default}</IonCol>
+							<IonCol size="1" className="breakItUp">???</IonCol>
+							<IonCol size="1" className="breakItUp"><IonCheckbox checked={column.is_nullable}></IonCheckbox></IonCol>
 						</IonRow>
 					)
 				})}

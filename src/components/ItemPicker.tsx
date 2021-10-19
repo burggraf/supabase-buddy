@@ -40,7 +40,7 @@ const ItemPicker: React.FC<ContainerProps> = ({
 		setShowModal({ isOpen: false })
 		setTimeout(() => {
 			stateFunction(e)
-		}, 500)
+		}, 1000)
 	}
 	return (
 		<>
