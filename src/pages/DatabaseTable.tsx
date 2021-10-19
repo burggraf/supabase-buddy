@@ -43,8 +43,8 @@ const DatabaseTable: React.FC = () => {
 	const [grants, setGrants] = useState<any[]>([])
 	const [policies, setPolicies] = useState<any[]>([])
 	const [ mode, setMode ] = useState<'schema' | 'data' | 'tls' | 'rls' | 'indexes'>('schema')
-    const [record, setRecord] = useState({});
 
+	const [record, setRecord] = useState({});
 	const DetailBody: React.FC<{
 		record: any;
 		onDismiss: () => void;
@@ -75,7 +75,6 @@ const DatabaseTable: React.FC = () => {
                 </IonContent>     
         </>
 		);
-
     const [presentDetail, dismissDetail] = useIonModal(DetailBody, {record});
 
 	const loadColumns = async () => {
@@ -334,7 +333,9 @@ const DatabaseTable: React.FC = () => {
 				</IonRow>
 				{grants.map((grant: any) => {
 					return (
-						<IonRow key={utilsService.randomKey()}>
+						<IonRow key={utilsService.randomKey()}
+							onClick={()=>{setRecord(grants[0]);presentDetail({})}}
+						>
 							{Object.keys(grant).map((key, index) => {
 								return (
 									<IonCol className="breakItUp" key={utilsService.randomKey()}>{grant[key]}</IonCol>
@@ -356,7 +357,9 @@ const DatabaseTable: React.FC = () => {
 				</IonRow>
 				{policies.map((policy: any) => {
 					return (
-						<IonRow key={utilsService.randomKey()}>
+						<IonRow key={utilsService.randomKey()}
+							onClick={()=>{setRecord(policy);presentDetail({})}}
+						>
 							{Object.keys(policy).map((key, index) => {
 								return (
 									<IonCol className="breakItUp" key={utilsService.randomKey()}>{policy[key]}</IonCol>
@@ -378,7 +381,9 @@ const DatabaseTable: React.FC = () => {
 					</IonRow>
 					{indexes.map((idx: any) => {
 						return (
-							<IonRow key={utilsService.randomKey()}>
+							<IonRow key={utilsService.randomKey()}
+	                            onClick={()=>{setRecord(idx);presentDetail({})}}
+							>
 								{Object.keys(idx).map((key, index) => {
 									return (
 										<IonCol className="breakItUp" key={utilsService.randomKey()}>{idx[key]}</IonCol>
