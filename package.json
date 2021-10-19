@@ -1,6 +1,6 @@
 {
   "name": "supabase-buddy",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "private": false,
   "dependencies": {
     "@capacitor/app": "1.0.3",
