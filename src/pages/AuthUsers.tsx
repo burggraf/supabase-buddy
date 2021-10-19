@@ -1,17 +1,20 @@
 import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenuButton, IonPage, IonPopover, IonRow, IonTitle, IonToolbar, useIonToast, useIonViewDidEnter } from '@ionic/react';
+import { add, closeOutline, ellipsisHorizontal, mail } from 'ionicons/icons';
+import Moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
-import { SupabaseDataService } from '../services/supabase.data.service';
-import './AuthUsers.css';
-import Moment from 'moment';
-import { add, closeOutline, ellipsisHorizontal, mail } from 'ionicons/icons';
+
 import { SupabaseAuthService } from '../services/supabase.auth.service';
+import { SupabaseDataService } from '../services/supabase.data.service';
+
+import './AuthUsers.css';
 
 const AuthUsers: React.FC = () => {
 	const supabaseDataService = new SupabaseDataService();
   const supabaseAuthService = new SupabaseAuthService();
     const history = useHistory();
     const [users, setUsers] = useState<any[]>([])
+    const [total, setTotal] = useState<number>(0)
     const [inviteEmail, setInviteEmail] = useState('');
     const [showPopover, setShowPopover] = useState<{open: boolean, event: Event | undefined, user: any | undefined}>({
       open: false,
@@ -25,10 +28,16 @@ const AuthUsers: React.FC = () => {
 	const loadUsers = async () => {
 		const { data, error } = await supabaseDataService.getUsers()
 		if (error) {
-			console.error(error)
+			console.error('getUsers error', error)
 		} else {
       setUsers(data!)
 		}
+    const { data: userCount, error: errorUserCount } = await supabaseDataService.getUserCount()
+    if (errorUserCount) {
+      console.error('getUserCount error', errorUserCount)
+    } else {
+      setTotal(userCount![0].total);
+    }
 	}
 	useIonViewDidEnter(() => {
 		loadUsers()
@@ -77,7 +86,7 @@ const AuthUsers: React.FC = () => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>Users</IonTitle>
+          <IonTitle>Users ({total})</IonTitle>
 					<IonButtons slot='end'>
 						<IonButton fill="outline" color='primary' onClick={(e) => {setShowInvite({open: true, event: e.nativeEvent})}}>
 							<IonIcon size='small' icon={add} slot="start"></IonIcon> <b>Send Link</b>
@@ -90,16 +99,16 @@ const AuthUsers: React.FC = () => {
         <IonGrid>
 
             <IonRow className="header">
-                <IonCol>
+                <IonCol size="4" className="breakItUp">
                     <IonLabel>Email</IonLabel>
                 </IonCol>
-                <IonCol>
+                <IonCol size="3" className="breakItUp">
                     <IonLabel>Phone</IonLabel>
                 </IonCol>
-                <IonCol>
+                <IonCol size="3" className="breakItUp">
                     <IonLabel>Last Sign In</IonLabel>
                </IonCol>
-               <IonCol>
+               <IonCol size="2" className="breakItUp">
                  &nbsp;
                </IonCol>
                 {/* <IonCol>
@@ -108,17 +117,17 @@ const AuthUsers: React.FC = () => {
             </IonRow>
             {users.map((user: any) => (
                 <IonRow key={user.id} onClick={()=>{history.push(`/auth-user/${user.id}`)}}>
-                    <IonCol>
+                    <IonCol size="4" className="breakItUp">
                         <IonLabel>{user.email || '<no email>'}</IonLabel>
                     </IonCol>
-                    <IonCol>
+                    <IonCol size="3" className="breakItUp">
                         <IonLabel>{user.phone || '-'}</IonLabel>
                     </IonCol>
-                    <IonCol>
+                    <IonCol size="3" className="breakItUp">
                         <IonLabel>{user.last_sign_in_at ? Moment(user.last_sign_in_at).format('YYYY-MM-DD hh:mmA') : 'never'}</IonLabel>
                     </IonCol>
-                    <IonCol className="ion-text-center">
-                      <IonButton fill='outline' color="medium" onClick={(e) => {e.stopPropagation();setShowPopover({open: true, event: e.nativeEvent, user})}}>
+                    <IonCol size="2" className="ion-text-center breakItUp">
+                      <IonButton fill='clear' color="medium" onClick={(e) => {e.stopPropagation();setShowPopover({open: true, event: e.nativeEvent, user})}}>
 	        							<IonIcon size="small" icon={ellipsisHorizontal}></IonIcon>                        
 					        		</IonButton>
                     </IonCol>

@@ -182,9 +182,15 @@ export class SupabaseDataService {
     AND column_name = '${column_name}'
     `);
   }
+  public async getSchemas() {
+    return this.runStatement(`SELECT schema_name FROM information_schema.schemata order by schema_name`);
+  }
 
   public async getUsers() {
     return this.runStatement(`SELECT id, email, phone, last_sign_in_at FROM auth.users`);
+  }
+  public async getUserCount() {
+    return  this.runStatement(`SELECT count(*) as total FROM auth.users`);
   }
   public async getUser(id: string) {
     return this.runStatement(`SELECT *

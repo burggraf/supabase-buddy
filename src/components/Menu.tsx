@@ -43,16 +43,16 @@ const appPages: AppPage[] = [
 
   { title: 'Home', url: 'home', icon: 'home',
     children: [
-      { title: 'Welcome', url: 'welcome', icon: 'search' },
+      // { title: 'Welcome', url: 'welcome', icon: 'search' },
       { title: 'Dashboard', url: 'home-dashboard', icon: 'search' },
-      { title: 'Client Libraries', url: 'home-client-libs', icon: 'search' },
-      { title: 'Example Projects', url: 'home-examples', icon: 'search' },
+      { title: 'Security', url: 'home-security', icon: 'search' },
     ] 
   },
   { title: 'Database', url: 'database', icon: 'analytics',
     children: [
+      { title: 'Schemas', url: 'database-schemas', icon: 'map' },
       { title: 'Tables', url: 'database-tables', icon: 'map' },
-      { title: 'Views', url: 'database-views', icon: 'search' },
+      { title: 'Views', url: 'database-views', icon: 'map' },
       { title: 'Functions', url: 'database-functions', icon: 'map' },
       { title: 'Triggers', url: 'database-triggers', icon: 'map' },
       { title: 'Extensions', url: 'database-extensions', icon: 'map' },
@@ -72,21 +72,21 @@ const appPages: AppPage[] = [
       { title: 'Usage', url: 'storage-usage', icon: 'list' },
     ] 
   },
-  { title: 'Reports', url: 'reports', icon: 'document-text',
-    children: [
-      { title: 'Dashboard', url: 'reports-dashboard', icon: 'map' },
-      { title: 'Add/Remove', url: 'reports-add-remove', icon: 'map' },
-    ]
-  },
-  { title: 'API', url: 'api', icon: 'link', 
-    children: [
-      { title: 'Introduction', url: 'api-intro', icon: 'map' },
-      { title: 'Authentication', url: 'api-auth', icon: 'map' },
-      { title: 'User Management', url: 'api-users', icon: 'map' },
-      { title: 'Tables & Views', url: 'api-tables', icon: 'map' },
-      { title: 'Functions', url: 'api-functions', icon: 'map' },
-    ] 
-  },
+  // { title: 'Reports', url: 'reports', icon: 'document-text',
+  //   children: [
+  //     { title: 'Dashboard', url: 'reports-dashboard', icon: 'map' },
+  //     { title: 'Add/Remove', url: 'reports-add-remove', icon: 'map' },
+  //   ]
+  // },
+  // { title: 'API', url: 'api', icon: 'link', 
+  //   children: [
+  //     { title: 'Introduction', url: 'api-intro', icon: 'map' },
+  //     { title: 'Authentication', url: 'api-auth', icon: 'map' },
+  //     { title: 'User Management', url: 'api-users', icon: 'map' },
+  //     { title: 'Tables & Views', url: 'api-tables', icon: 'map' },
+  //     { title: 'Functions', url: 'api-functions', icon: 'map' },
+  //   ] 
+  // },
   { title: 'Settings', url: 'settings', icon: 'settings', 
     children: [
       { title: 'General', url: 'settings-general', icon: 'map' },

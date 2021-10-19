@@ -1,7 +1,8 @@
-import { IonButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonAlert, useIonToast, useIonViewDidEnter } from '@ionic/react'
+import { IonButton, IonButtons, IonChip, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonAlert, useIonToast, useIonViewDidEnter } from '@ionic/react'
 import { add, link, logIn, refreshCircle } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
-//import { useHistory, useParams } from 'react-router'
+
+//import { Project } from 'react-router'
 
 import { Project } from '../../models/Project';
 import { ProjectsService } from '../services/projects.service';
@@ -57,7 +58,7 @@ const Welcome: React.FC = () => {
 		} else {
 			// localStorage.setItem('currentProjectID', currentProjectID)
             console.log('signInWithEmail returned user', user);
-			window.location.href = '/'
+			window.location.href = '/home-dashboard'
 		}
 	}
 	const resetPassword = async () => {
@@ -101,19 +102,16 @@ const Welcome: React.FC = () => {
 				</IonToolbar>
 			</IonHeader>
 
-			<IonContent>
+			<IonContent class="ion-padding">
                 { projects && 
-                    <IonList>
-                        <IonListHeader>
-                            <IonLabel><b>Projects</b></IonLabel>
-                        </IonListHeader>
-                        { projects.map((project: Project) => {
+					<><IonLabel style={{paddingLeft: '18px'}}><b>Projects: </b></IonLabel>
+                        { projects.map((p: Project) => {
                             return (
-                            <IonItem key={project.projectID} onClick={() => setProject(project)}>
-                                <IonLabel>{project.name}</IonLabel>
-                            </IonItem>
+                            <IonChip key={p.projectID} onClick={() => setProject(p)}>
+                                <IonLabel style={{fontWeight: project.name===p.name ? 'bold' : 'normal'}}>{p.name}</IonLabel>
+                            </IonChip>
                         )})}
-                    </IonList>
+					</>
                 }
 				<IonGrid class='ion-padding'>
 					<IonRow>
