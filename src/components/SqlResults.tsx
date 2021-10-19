@@ -1,11 +1,46 @@
-import { IonGrid, IonRow, IonCol, IonLabel } from '@ionic/react';
+import { IonGrid, IonRow, IonCol, IonLabel, useIonModal, IonButton, IonButtons, IonHeader, IonIcon, IonTitle, IonToolbar, IonContent } from '@ionic/react';
 import './SqlResults.css'
 import { UtilsService } from '../services/utils.service';
+import { useState } from 'react';
+import { closeOutline } from 'ionicons/icons';
 const utilsService = new UtilsService();
 interface ContainerProps {
   results: any[]
 }
+
+  
 const SqlResults: React.FC<ContainerProps> = ({ results }) => {
+    const [record, setRecord] = useState({});
+    const [present, dismiss] = useIonModal((
+        <>
+        		<IonHeader>
+					<IonToolbar>
+						<IonTitle>Record Details</IonTitle>
+						<IonButtons slot='end'>
+							<IonButton color='primary' onClick={() => dismiss()}>
+								<IonIcon size='large' icon={closeOutline}></IonIcon>
+							</IonButton>
+						</IonButtons>
+					</IonToolbar>
+				</IonHeader>   
+                <IonContent className="ion-padding">
+                    <IonGrid>
+                    {
+                     Object.keys(record as any).map((key, index) => {
+                        return (
+                            <IonRow>
+                                <IonCol size="3" className="breakItUp">{key}</IonCol>
+                                <IonCol size="9" className="breakItUp">{(record as any)[key]}</IonCol>
+                            </IonRow>)
+                    })}
+                    </IonGrid>
+                </IonContent>     
+        </>
+    ), {
+        onDismiss: () => {
+          console.log('dismissed');
+        }
+      });
   const outputArray = [];
   for (let i = 0; i < results.length; i++) {
     const result = results[i];
@@ -31,7 +66,10 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
                         ))}
                     </IonRow>
                     {resultJson.map((row, index) => (
-                        <IonRow key={utilsService.randomKey()}>
+                        <IonRow key={utilsService.randomKey()} 
+                            onClick={()=>{setRecord(row);present({
+
+                            })}}>
                             {keys.map((key, index) => {
                                 if (!Array.isArray(row[key])) {
                                     return (
