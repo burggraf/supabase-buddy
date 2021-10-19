@@ -64,12 +64,12 @@ const SqlSnippets: React.FC = () => {
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
-				<IonGrid>
-					<IonRow key='header' className="header">
-						<IonCol>Title</IonCol>
-						<IonCol>Description</IonCol>
-						<IonCol>Created</IonCol>
-						<IonCol>Updated</IonCol>
+				<IonGrid key={utilsService.randomKey()}>
+					<IonRow key={utilsService.randomKey()} className="header">
+						<IonCol key={utilsService.randomKey()}>Title</IonCol>
+						<IonCol key={utilsService.randomKey()}>Description</IonCol>
+						<IonCol key={utilsService.randomKey()}>Created</IonCol>
+						<IonCol key={utilsService.randomKey()}>Updated</IonCol>
 					</IonRow>
 
 					{snippets.map((snippet) => (
@@ -78,15 +78,15 @@ const SqlSnippets: React.FC = () => {
 							onClick={() => {
 								editSnippet(snippet.id)
 							}}>
-							<IonCol>{snippet.title}</IonCol>
-							<IonCol>{snippet.description}</IonCol>
-							<IonCol>{Moment(snippet.created_at).format('YYYY-MM-DD hh:mmA')}</IonCol>
-							<IonCol>{Moment(snippet.updated_at).format('YYYY-MM-DD hh:mmA')}</IonCol>
+							<IonCol key={utilsService.randomKey()}>{snippet.title}</IonCol>
+							<IonCol key={utilsService.randomKey()}>{snippet.description}</IonCol>
+							<IonCol key={utilsService.randomKey()}>{Moment(snippet.created_at).format('YYYY-MM-DD hh:mmA')}</IonCol>
+							<IonCol key={utilsService.randomKey()}>{Moment(snippet.updated_at).format('YYYY-MM-DD hh:mmA')}</IonCol>
 						</IonRow>
 					))}
-					<IonRow>
+					{/* <IonRow>
 						<IonCol></IonCol>
-					</IonRow>
+					</IonRow> */}
 				</IonGrid>
 			</IonContent>
 		</IonPage>

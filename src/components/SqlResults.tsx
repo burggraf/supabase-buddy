@@ -24,13 +24,13 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 					</IonToolbar>
 				</IonHeader>   
                 <IonContent className="ion-padding">
-                    <IonGrid>
+                    <IonGrid key={utilsService.randomKey()}>
                     {
                      Object.keys(record as any).map((key, index) => {
                         return (
-                            <IonRow>
-                                <IonCol size="3" className="breakItUp">{key}</IonCol>
-                                <IonCol size="9" className="breakItUp">{(record as any)[key]}</IonCol>
+                            <IonRow key={utilsService.randomKey()}>
+                                <IonCol key={utilsService.randomKey()} size="3" className="breakItUp">{key}</IonCol>
+                                <IonCol key={utilsService.randomKey()} size="9" className="breakItUp">{(record as any)[key]}</IonCol>
                             </IonRow>)
                     })}
                     </IonGrid>
@@ -57,7 +57,7 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
             // get keys and values of first element
             const keys = Object.keys(resultJson[0]);
             outputArray.push(
-                <>
+                <div key={utilsService.randomKey()}>
                 <IonLabel key={utilsService.randomKey()} className="resultHeader"><strong>Result #{i+1}</strong></IonLabel>
                 <IonGrid key={utilsService.randomKey()}>
                     <IonRow key={utilsService.randomKey()}>
@@ -86,7 +86,7 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
                         </IonRow>
                     ))}
                 </IonGrid>
-                </>
+                </div>
             )
             // resultJson[0]
         }
@@ -110,9 +110,6 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
     <>
     {outputArray}
     </>
-    // <div className='container'>
-    //   <strong>{results}</strong>
-    // </div>
   )
 }
 
