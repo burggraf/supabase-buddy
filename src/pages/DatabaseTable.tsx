@@ -1,5 +1,5 @@
-import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonMenuButton, IonPage, IonRow, IonSegment, IonSegmentButton, IonTitle, IonToolbar, useIonToast } from '@ionic/react'
-import { checkmark } from 'ionicons/icons'
+import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonMenuButton, IonPage, IonRow, IonSegment, IonSegmentButton, IonTitle, IonToolbar, useIonModal, useIonToast } from '@ionic/react'
+import { checkmark, closeOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { debounce } from 'ts-debounce'
@@ -11,6 +11,7 @@ import { UtilsService } from '../services/utils.service'
 import './DatabaseTable.css'
 
 const utilsService = new UtilsService()
+const supabaseDataService = new SupabaseDataService()
 
 const columnOptions = [
 	{ value: "text", text: "text - variable unlimited length text" },
@@ -42,7 +43,41 @@ const DatabaseTable: React.FC = () => {
 	const [grants, setGrants] = useState<any[]>([])
 	const [policies, setPolicies] = useState<any[]>([])
 	const [ mode, setMode ] = useState<'schema' | 'data' | 'tls' | 'rls' | 'indexes'>('schema')
-	const supabaseDataService = new SupabaseDataService()
+    const [record, setRecord] = useState({});
+
+	const DetailBody: React.FC<{
+		record: any;
+		onDismiss: () => void;
+		onIncrement: () => void;
+	  }> = ({ record }) => (
+        <>
+        		<IonHeader>
+					<IonToolbar>
+						<IonTitle>Record Details</IonTitle>
+						<IonButtons slot='end'>
+							<IonButton color='primary' onClick={() => dismissDetail()}>
+								<IonIcon size='large' icon={closeOutline}></IonIcon>
+							</IonButton>
+						</IonButtons>
+					</IonToolbar>
+				</IonHeader>   
+                <IonContent className="ion-padding">
+                    <IonGrid key={utilsService.randomKey()}>
+                    {
+                     Object.keys(record as any).map((key, index) => {
+                        return (
+                            <IonRow key={utilsService.randomKey()}>
+                                <IonCol key={utilsService.randomKey()} size="3" className="breakItUp">{key}</IonCol>
+                                <IonCol key={utilsService.randomKey()} size="9" className="breakItUp">{(record as any)[key]}</IonCol>
+                            </IonRow>)
+                    })}
+                    </IonGrid>
+                </IonContent>     
+        </>
+		);
+
+    const [presentDetail, dismissDetail] = useIonModal(DetailBody, {record});
+
 	const loadColumns = async () => {
 		const { data, error } = await supabaseDataService.getColumns(table_schema, table_name)
 		if (error) {
@@ -269,7 +304,9 @@ const DatabaseTable: React.FC = () => {
 					</IonRow>
 					{rows.map((row: any) => {
 						return (
-							<IonRow key={utilsService.randomKey()}>
+							<IonRow key={utilsService.randomKey()} 
+                            onClick={()=>{setRecord(row);presentDetail({})}}
+							>
 								{Object.keys(row).map((key, index) => {
 									if (typeof row[key] === 'object') {
 										return (

@@ -1,8 +1,11 @@
-import { IonGrid, IonRow, IonCol, IonLabel, useIonModal, IonButton, IonButtons, IonHeader, IonIcon, IonTitle, IonToolbar, IonContent } from '@ionic/react';
-import './SqlResults.css'
-import { UtilsService } from '../services/utils.service';
-import { useState } from 'react';
+import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonLabel, IonRow, IonTitle, IonToolbar, useIonModal } from '@ionic/react';
 import { closeOutline } from 'ionicons/icons';
+import { useState } from 'react';
+
+import { UtilsService } from '../services/utils.service';
+
+import './SqlResults.css'
+
 const utilsService = new UtilsService();
 interface ContainerProps {
   results: any[]
@@ -11,13 +14,13 @@ interface ContainerProps {
   
 const SqlResults: React.FC<ContainerProps> = ({ results }) => {
     const [record, setRecord] = useState({});
-    const [present, dismiss] = useIonModal((
+    const [presentDetail, dismissDetail] = useIonModal((
         <>
         		<IonHeader>
 					<IonToolbar>
 						<IonTitle>Record Details</IonTitle>
 						<IonButtons slot='end'>
-							<IonButton color='primary' onClick={() => dismiss()}>
+							<IonButton color='primary' onClick={() => dismissDetail()}>
 								<IonIcon size='large' icon={closeOutline}></IonIcon>
 							</IonButton>
 						</IonButtons>
@@ -67,9 +70,7 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
                     </IonRow>
                     {resultJson.map((row, index) => (
                         <IonRow key={utilsService.randomKey()} 
-                            onClick={()=>{setRecord(row);present({
-
-                            })}}>
+                            onClick={()=>{setRecord(row);presentDetail({})}}>
                             {keys.map((key, index) => {
                                 if (!Array.isArray(row[key])) {
                                     return (
