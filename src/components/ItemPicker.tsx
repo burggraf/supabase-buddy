@@ -1,18 +1,7 @@
-import {
-	IonButton,
-	IonModal,
-	IonList,
-	IonItem,
-	IonLabel,
-	IonContent,
-	IonHeader,
-	IonToolbar,
-	IonButtons,
-	IonIcon,
-	IonTitle,
-} from '@ionic/react'
+import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonModal, IonTitle, IonToolbar } from '@ionic/react'
 import { closeOutline } from 'ionicons/icons'
 import { useState } from 'react'
+
 import './ItemPicker.css'
 
 interface Option {
