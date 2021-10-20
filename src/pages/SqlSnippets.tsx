@@ -12,7 +12,7 @@ import './SqlSnippets.css'
 
 const supabaseDataService = new SupabaseDataService()
 const utilsService = new UtilsService()
-
+let isMounted = false;
 const SqlSnippets: React.FC = () => {
 	const history = useHistory()
 	
@@ -35,12 +35,12 @@ const SqlSnippets: React.FC = () => {
 		history.push(`/sql-editor/${id}`)
 	}
 	useIonViewDidEnter(() => {
-		loadSnippets()
+		if (isMounted) loadSnippets();
 	})
-
 	useEffect(() => {
-		// loadSnippets(); //  moved to useIonViewDidEnter
-	}, [])
+		loadSnippets();
+		isMounted = true;
+	}, []);                               
 
 	const addSnippet = () => {
 		// generate a random uuid
