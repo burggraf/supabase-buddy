@@ -9,7 +9,7 @@ interface Option {
 	text: string
 }
 interface ContainerProps {
-	stateVariable: object
+	stateVariable: string //object
 	stateFunction: Function
 	initialValue: string
 	options: Option[]
@@ -61,7 +61,8 @@ const ItemPicker: React.FC<ContainerProps> = ({
 							)
 						})}
 					</IonList>
-					<IonButton onClick={() => setShowModal({ isOpen: false })}>{stateVariable}</IonButton>
+					<br/><br/><br/>
+					{/* <IonButton onClick={() => setShowModal({ isOpen: false })}>{stateVariable}</IonButton> */}
 				</IonContent>
 			</IonModal>
 			<IonButton

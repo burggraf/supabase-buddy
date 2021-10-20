@@ -5,9 +5,22 @@ import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { debounce } from 'ts-debounce'
 
+import ItemPicker from '../components/ItemPicker'
 import { SupabaseDataService } from '../services/supabase.data.service'
 
 import './DatabaseFunction.css'
+
+const languageOptions = [
+	{ value: "sql", text: "SQL" },
+	{ value: "plpgsql", text: "PL/pgSQL" },
+	{ value: "plv8", text: "PLV8 (Javascript)" },
+  ];
+
+const editorLanguageSetting: { [key: string]: string } = {
+	sql: "sql",
+	plpgsql: "sql",
+	plv8: "javascript"
+}
 
 const DatabaseFunction: React.FC = () => {
     const history = useHistory();
@@ -23,6 +36,7 @@ const DatabaseFunction: React.FC = () => {
     const [securityDefiner, setSecurityDefiner] = useState<boolean>(false)
 	const [sqlPrefix, setSqlPrefix] = useState<string>("")
 	const [sqlSuffix, setSqlSuffix] = useState<string>("$function$")
+	const [editorLanguage, setEditorLanguage] = useState<string>(editorLanguageSetting[functionLanguage])
 	const supabaseDataService = new SupabaseDataService()
 	const [darkMode, setDarkMode] = useState<boolean>(window.matchMedia('(prefers-color-scheme: dark)').matches)
 	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
@@ -40,7 +54,6 @@ const DatabaseFunction: React.FC = () => {
             //onWillDismiss: () => console.log('will dismiss'),
           })
     }
-
 
 
 	const loadFunction = async () => {
@@ -64,6 +77,9 @@ const DatabaseFunction: React.FC = () => {
             setSecurityDefiner(data![0].security_definer);
 		}
 	}
+	useEffect(() => {
+		setEditorLanguage(editorLanguageSetting[functionLanguage])
+	},[functionLanguage]);
 	useEffect(() => {
 		setSqlPrefix(`CREATE OR REPLACE FUNCTION ${functionSchema}.${functionName}(${functionArguments})
   RETURNS ${returnType} LANGUAGE ${functionLanguage} ${securityDefiner?'SECURITY DEFINER':''} AS $function$`);
@@ -145,12 +161,15 @@ const DatabaseFunction: React.FC = () => {
 				<IonRow key="language">
 					<IonCol className="ion-text-center">Lang</IonCol>
 					<IonCol>
-						<IonInput
-							value={functionLanguage}
-							onIonChange={debounce((e) => setFunctionLanguage(e.detail.value!), 750)}
-							type='text'
-							style={{ border: '1px solid' }}
+
+						<ItemPicker 
+							stateVariable={functionLanguage} 									
+							stateFunction={ (e: any) => {setFunctionLanguage(e!)} } 
+							initialValue={functionLanguage}
+							options={languageOptions}
+							title="Column Type"
 						/>
+
 					</IonCol>
 					<IonCol className="ion-text-center">Returns</IonCol>
 					<IonCol>
@@ -176,11 +195,12 @@ const DatabaseFunction: React.FC = () => {
 					  </IonCol>
 				</IonRow>
 			</IonGrid>
-			<pre style={{paddingLeft:'10px'}}>{sqlPrefix}</pre>
+			<pre style={{paddingLeft:'10px'}}>{editorLanguage} -- {sqlPrefix}</pre>
                 <Editor
 								className='textarea'
 								height="55vh"
 								defaultLanguage='sql'
+								language={editorLanguage}//'sql'
 								defaultValue={definition}
 								value={definition}
 								theme={darkMode ? 'vs-dark' : 'vs-light'}
