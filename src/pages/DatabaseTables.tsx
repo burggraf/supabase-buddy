@@ -1,27 +1,17 @@
-import {
-	IonButton,
-	IonButtons,
-	IonCol,
-	IonContent,
-	IonGrid,
-	IonHeader,
-	IonIcon,
-	IonMenuButton,
-	IonPage,
-	IonRow,
-	IonTitle,
-	IonToolbar,
-    useIonViewDidEnter
-} from '@ionic/react'
-import { useHistory, useParams } from 'react-router'
-import './DatabaseTables.css'
-import { SupabaseDataService } from '../services/supabase.data.service'
-import { useEffect, useState } from 'react'
+import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react'
 import { add } from 'ionicons/icons'
+import { useEffect, useState } from 'react'
+import { useHistory, useParams } from 'react-router'
+
+import { SupabaseDataService } from '../services/supabase.data.service'
 import { UtilsService } from '../services/utils.service'
+
+import './DatabaseTables.css'
+
 const utilsService = new UtilsService()
 
 const DatabaseTables: React.FC = () => {
+	let isMounted = false;
     const history = useHistory();
 	const supabaseDataService = new SupabaseDataService()
 	const { name } = useParams<{ name: string }>()
@@ -35,11 +25,13 @@ const DatabaseTables: React.FC = () => {
         }
     }
 	useIonViewDidEnter(() => {
-        loadTables()
+		console.log('useIonViewDidEnter, isMounted', isMounted);
+		if (isMounted) loadTables();
 	})
-    useEffect(() => {
-        // loadTables();
-    },[]);
+	useEffect(() => {
+		loadTables();
+		isMounted = true;
+	}, []);                               
 	const addTable = () => {
 		history.push(`/database-table/public/NEW-TABLE`)
 	}
