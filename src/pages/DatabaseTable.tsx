@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router'
 import { debounce } from 'ts-debounce'
 
 import ItemPicker from '../components/ItemPicker'
+import TableApi from '../components/TableApi'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { UtilsService } from '../services/utils.service'
 
@@ -42,7 +43,7 @@ const DatabaseTable: React.FC = () => {
 	const [indexes, setIndexes] = useState<any[]>([])
 	const [grants, setGrants] = useState<any[]>([])
 	const [policies, setPolicies] = useState<any[]>([])
-	const [ mode, setMode ] = useState<'schema' | 'data' | 'tls' | 'rls' | 'indexes'>('schema')
+	const [ mode, setMode ] = useState<'schema' | 'data' | 'tls' | 'rls' | 'indexes' | 'api'>('schema')
 
 	const [record, setRecord] = useState({});
 	const DetailBody: React.FC<{
@@ -239,7 +240,8 @@ const DatabaseTable: React.FC = () => {
 						e.detail.value === 'schema' ||
 						e.detail.value === 'tls' ||
 						e.detail.value === 'rls' ||
-						e.detail.value === 'indexes') {
+						e.detail.value === 'indexes' || 
+						e.detail.value === 'api') {
 						setMode(e.detail.value)
 					}
 				}}>
@@ -257,6 +259,9 @@ const DatabaseTable: React.FC = () => {
 					</IonSegmentButton>
 					<IonSegmentButton value="indexes">
 						<IonLabel>Indexes</IonLabel>
+					</IonSegmentButton>
+					<IonSegmentButton value="api">
+						<IonLabel>API</IonLabel>
 					</IonSegmentButton>
 				</IonSegment>
 			}
@@ -393,6 +398,11 @@ const DatabaseTable: React.FC = () => {
 						)
 					})}
 				</IonGrid>
+			}
+			{ mode === 'api' &&
+				<div>
+					<TableApi columns={columns} />
+				</div>
 			}
 			</IonContent>
 		</IonPage>

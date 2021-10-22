@@ -54,16 +54,16 @@ const DatabaseTables: React.FC = () => {
 			<IonContent>
 				<IonGrid>
 					<IonRow className="header">
-						<IonCol>Name</IonCol>
-						<IonCol>Description</IonCol>
-						<IonCol>Schema</IonCol>
+						<IonCol className="breakItUp">Name</IonCol>
+						<IonCol className="breakItUp">Description</IonCol>
+						<IonCol className="breakItUp">Schema</IonCol>
 					</IonRow>
                     {tables.map((table: any) => {
                         return (
                             <IonRow key={utilsService.randomKey()} onClick={() => history.push(`/database-table/${table.table_schema}/${table.table_name}`)}>
-                                <IonCol>{table.table_name}</IonCol>
-                                <IonCol>{table.description}</IonCol>
-                                <IonCol>{table.table_schema}</IonCol>
+                                <IonCol className="breakItUp">{table.table_name}</IonCol>
+                                <IonCol className="breakItUp">{table.description}</IonCol>
+                                <IonCol className="breakItUp">{table.table_schema}</IonCol>
                             </IonRow>
                         );
                     })}
