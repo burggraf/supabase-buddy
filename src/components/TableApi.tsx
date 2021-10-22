@@ -6,6 +6,7 @@ import { atomOneDark as dark, docco, atomOneLight as light } from 'react-syntax-
 import { atomDark, duotoneDark, duotoneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 import { Column } from '../../models/Column'
+import ItemMultiPicker from './ItemMultiPicker'
 import ItemPicker from './ItemPicker'
 
 import './TableApi.css'
@@ -35,13 +36,20 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
         }
     },[allColumns,columnList])
 
-    console.log('columns', columns);
     const insertColumnList = columns.map((c) => { 
         if (c.numeric_scale !== null)
             return `${c.column_name}: ${c.data_type.replace(/ /g,'_')}Value`
         else
             return `${c.column_name}: '${c.data_type.replace(/ /g,'_')}Value'`
     }).join(',\n\t\t\t')
+    const columnsArray = []
+    for (let i = 0; i < columns.length; i++) {
+        columnsArray.push({
+            value: columns[i].column_name,
+            text: columns[i].column_name,
+            checked: false
+        })
+    }
 
 	return (
 		<>
@@ -51,6 +59,7 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
 					<IonCol size='10'>
 						Columns (ALL? {' '}
 						<IonCheckbox
+                            color='medium'
 							checked={allColumns}
 							onIonChange={(e) => setAllColumns(e.detail.checked)}
 						/>)
@@ -77,14 +86,25 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
 					<IonCol size='10'>
 						{allColumns && <IonLabel>*</IonLabel>}
 						{!allColumns && (
-							<IonInput
-								value={columnList}
-								onIonChange={(e: any) => { 
-									setColumnList(e.detail.value)
-								}}
-								type='text'
-								style={{ border: '1px solid' }}
-							/>
+                            <ItemMultiPicker
+                                stateVariable={statementType}
+                                stateFunction={(e: any) => {
+                                    console.log('setStateFunction', e)
+                                }}
+                                initialValue={statementType}
+                                options={columnsArray}
+                                title='Select Columns'
+                            />
+
+
+                            // <IonInput
+							// 	value={columnList}
+							// 	onIonChange={(e: any) => { 
+							// 		setColumnList(e.detail.value)
+							// 	}}
+							// 	type='text'
+							// 	style={{ border: '1px solid' }}
+							// />
 						)}
 					</IonCol>
 				</IonRow>
