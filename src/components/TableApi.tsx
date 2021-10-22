@@ -11,6 +11,12 @@ import ItemPicker from './ItemPicker'
 
 import './TableApi.css'
 
+interface Option {
+	value: string
+	text: string
+	checked: boolean
+}
+
 interface ContainerProps {
 	columns: Column[]
 }
@@ -21,20 +27,19 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
 		window.matchMedia('(prefers-color-scheme: dark)').matches
 	)
 	const [statementType, setStatementType] = useState<string>('select')
-	const [columnList, setColumnList] = useState<string>(columns.map((c) => c.column_name).join(', '))
-	const [allColumns, setAllColumns] = useState<boolean>(true)
     const [computedColumnsList, setComputedColumnsList] = useState<string>('')
+    const [optArr, setOptArr] = useState<Option[]>([])
 	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
 		setDarkMode(e.matches)
 	})
 
     useEffect(() => {
-        if (allColumns) {
+        if (optArr.filter(item => item.checked).length === optArr.length) {
             setComputedColumnsList('*')
         } else {
-            setComputedColumnsList(columnList)
+            setComputedColumnsList(optArr.filter(item => item.checked).map(item => item.text).join(', '))
         }
-    },[allColumns,columnList])
+    },[optArr])
 
     const insertColumnList = columns.map((c) => { 
         if (c.numeric_scale !== null)
@@ -47,7 +52,7 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
         columnsArray.push({
             value: columns[i].column_name,
             text: columns[i].column_name,
-            checked: false
+            checked: true
         })
     }
 
@@ -56,14 +61,7 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
 			<IonGrid class='ion-padding'>
 				<IonRow>
 					<IonCol size='2'>Operation</IonCol>
-					<IonCol size='10'>
-						Columns (ALL? {' '}
-						<IonCheckbox
-                            color='medium'
-							checked={allColumns}
-							onIonChange={(e) => setAllColumns(e.detail.checked)}
-						/>)
-					</IonCol>
+					<IonCol size='10'>Columns</IonCol>
 				</IonRow>
 				<IonRow>
 					<IonCol size='2'>
@@ -84,28 +82,14 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
 						/>
 					</IonCol>
 					<IonCol size='10'>
-						{allColumns && <IonLabel>*</IonLabel>}
-						{!allColumns && (
-                            <ItemMultiPicker
-                                stateVariable={statementType}
-                                stateFunction={(e: any) => {
-                                    console.log('setStateFunction', e)
-                                }}
-                                initialValue={statementType}
-                                options={columnsArray}
-                                title='Select Columns'
-                            />
-
-
-                            // <IonInput
-							// 	value={columnList}
-							// 	onIonChange={(e: any) => { 
-							// 		setColumnList(e.detail.value)
-							// 	}}
-							// 	type='text'
-							// 	style={{ border: '1px solid' }}
-							// />
-						)}
+                        <ItemMultiPicker
+                            stateFunction={(e: any) => {
+                                setOptArr(e);
+                            }}
+                            //initialValue={statementType}
+                            options={columnsArray}
+                            title='Select Columns'
+                        />
 					</IonCol>
 				</IonRow>
 			</IonGrid>

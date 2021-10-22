@@ -10,24 +10,19 @@ interface Option {
 	checked: boolean
 }
 interface ContainerProps {
-	stateVariable: string //object
 	stateFunction: Function
-	initialValue: string
 	options: Option[]
 	title: string
 }
 
 const ItemMultiPicker: React.FC<ContainerProps> = ({
-	stateVariable,
 	stateFunction,
-	initialValue,
 	options,
 	title,
 }) => {
 	const [showModal, setShowModal] = useState({ isOpen: false })
 	const [o, setO] = useState(options)
 	const chooseValue = (e: any) => {
-		console.log('chooseValue', e)
 		setShowModal({ isOpen: false })
 		setTimeout(() => {
 			stateFunction(e)
@@ -62,21 +57,10 @@ const ItemMultiPicker: React.FC<ContainerProps> = ({
 										color='medium'
 										checked={o[index].checked}
 										onIonChange={(e) => {
-											console.log('**************************************');
-											console.log('ionChange', (e.target as any).checked);
-											console.log('option', option);
-											console.log('options', options); 
-											console.log('o1', o); 
-
 											let newArr = [...o]; // copying the old datas array
-											console.log('newArr[index]', newArr[index]);
 											newArr[index].checked = (e.target as any).checked; // replace e.target.value with whatever you want to change it to
-											console.log('newArr[index]', newArr[index]);
 											setO(newArr);
-											console.log('o2', o); 
-											console.log('newArr', newArr); 
-											//option.checked = e.detail.checked;
-											console.log('**************************************');
+											stateFunction(newArr);
 										}}
 									/>&nbsp;&nbsp;
 									<IonLabel
@@ -88,22 +72,22 @@ const ItemMultiPicker: React.FC<ContainerProps> = ({
 							)
 						})}
 					</IonList>
-					<pre>
-					{ JSON.stringify(o,null,2)}
-					</pre>
 					<br />
 					<br />
 					<br />
-					{/* <IonButton onClick={() => setShowModal({ isOpen: false })}>{stateVariable}</IonButton> */}
 				</IonContent>
 			</IonModal>
-			<IonButton
+			<div style={{height: '100%', width: '100%'}} onClick={() => setShowModal({ isOpen: true })}>
+			<IonLabel><b>{
+				o.filter(item => item.checked).map(item => item.text).join(', ')}</b></IonLabel>
+			</div>
+			{/* <IonButton
 				strong
 				expand='block'
 				color='medium'
 				onClick={() => setShowModal({ isOpen: true })}>
-				{stateVariable}
-			</IonButton>
+				{'???'}
+			</IonButton> */}
 		</>
 	)
 }
