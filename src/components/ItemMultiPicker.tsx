@@ -1,6 +1,6 @@
 import { IonButton, IonButtons, IonCheckbox, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonModal, IonTitle, IonToolbar } from '@ionic/react'
 import { checkmarkOutline, closeOutline } from 'ionicons/icons'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import './ItemMultiPicker.css'
 
@@ -22,12 +22,21 @@ const ItemMultiPicker: React.FC<ContainerProps> = ({
 }) => {
 	const [showModal, setShowModal] = useState({ isOpen: false })
 	const [o, setO] = useState(options)
+	const [checkAllColumns, setCheckAllColumns] = useState(true)
 	const chooseValue = (e: any) => {
 		setShowModal({ isOpen: false })
 		setTimeout(() => {
 			stateFunction(e)
 		}, 1000)
 	}
+	useEffect(() => {
+		let newArr = [...o]; // copying the old datas array
+		for (let index = 0; index < newArr.length; index++) {
+			newArr[index].checked = checkAllColumns; // replace e.target.value with whatever you want to change it to
+		}
+		setO(newArr);
+		stateFunction(newArr);
+	},[checkAllColumns])
 	return (
 		<>
 			<IonModal
@@ -37,7 +46,23 @@ const ItemMultiPicker: React.FC<ContainerProps> = ({
 				className='my-custom-class'>
 				<IonHeader>
 					<IonToolbar>
-						<IonTitle>{title}</IonTitle>
+						<IonTitle>
+							<IonCheckbox
+										color='medium'
+										checked={checkAllColumns}
+										onIonChange={((e: any) => {setCheckAllColumns(!checkAllColumns)	})}
+										// onIonChange={(e) => {
+										// 	const checkOrUncheck = e.detail.checked;
+										// 	let newArr = [...o]; // copying the old datas array
+										// 	for (let index = 0; index < newArr.length; index++) {
+										// 		newArr[index].checked = checkOrUncheck; // replace e.target.value with whatever you want to change it to
+										// 	}
+										// 	setO(newArr);
+										// 	stateFunction(newArr);
+										// }}
+									/>&nbsp;&nbsp;
+							{title}
+						</IonTitle>
 						<IonButtons slot='end'>
 							<IonButton color='primary' onClick={() => setShowModal({ isOpen: false })}>
 								<IonIcon size='large' icon={closeOutline}></IonIcon>
@@ -65,7 +90,7 @@ const ItemMultiPicker: React.FC<ContainerProps> = ({
 									/>&nbsp;&nbsp;
 									<IonLabel
 										className={o[index].checked ? 'chosenLabel' : 'unchosenLabel'}>
-										{o[index].text} {o[index].checked ? '✓' : ''}										
+										{o[index].text} 									
 									</IonLabel>
 								</IonItem>
 								
