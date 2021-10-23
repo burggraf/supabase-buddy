@@ -1,4 +1,4 @@
-import { IonCheckbox, IonCol, IonGrid, IonInput, IonLabel, IonRow } from '@ionic/react'
+import { IonCheckbox, IonCol, IonGrid, IonInput, IonLabel, IonRow, IonSegment, IonSegmentButton } from '@ionic/react'
 import { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import SyntaxHighlighter from 'react-syntax-highlighter'
@@ -26,76 +26,185 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
 	const [darkMode, setDarkMode] = useState<boolean>(
 		window.matchMedia('(prefers-color-scheme: dark)').matches
 	)
-	const [statementType, setStatementType] = useState<string>('select')
-    const [computedColumnsList, setComputedColumnsList] = useState<string>('')
-    const [optArr, setOptArr] = useState<Option[]>([])
+
+	const [operation, setOperation] = useState<'select' | 'insert' | 'update' | 'delete' | 'subscribe'>('select')
+	const [optArr, setOptArr] = useState<Option[]>([])
 	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
 		setDarkMode(e.matches)
 	})
 
-    useEffect(() => {
-        if (optArr.filter(item => item.checked).length === optArr.length) {
-            setComputedColumnsList('*')
-        } else {
-            setComputedColumnsList(optArr.filter(item => item.checked).map(item => item.text).join(', '))
-        }
-    },[optArr])
-
-    const insertColumnList = columns.map((c) => { 
-        if (c.numeric_scale !== null)
-            return `${c.column_name}: ${c.data_type.replace(/ /g,'_')}Value`
-        else
-            return `${c.column_name}: '${c.data_type.replace(/ /g,'_')}Value'`
-    }).join(',\n\t\t\t')
-    const columnsArray = []
-    for (let i = 0; i < columns.length; i++) {
-        columnsArray.push({
-            value: columns[i].column_name,
-            text: columns[i].column_name,
-            checked: true
-        })
-    }
+	const columnsArray = []
+	for (let i = 0; i < columns.length; i++) {
+		columnsArray.push({
+			value: columns[i].column_name,
+			text: columns[i].column_name,
+			checked: true,
+		})
+	}
 
 	return (
 		<>
 			<IonGrid class='ion-padding'>
+                <IonRow>
+                    <IonCol>
+                        <IonLabel>Select an operation:</IonLabel><br/>
+                        <IonSegment mode="ios" scrollable={true} value={operation} onIonChange={e => {
+                        if (e.detail.value === 'select' || 
+                            e.detail.value === 'insert' ||
+                            e.detail.value === 'update' ||
+                            e.detail.value === 'delete' ||
+                            e.detail.value === 'subscribe') {
+                            setOperation(e.detail.value)
+                        }
+                    }}>
+                            <IonSegmentButton value="select">
+                                <IonLabel>Select</IonLabel>
+                            </IonSegmentButton>
+                            <IonSegmentButton value="insert">
+                                <IonLabel>Insert</IonLabel>
+                            </IonSegmentButton>
+                            <IonSegmentButton value="update">
+                                <IonLabel>Update</IonLabel>
+                            </IonSegmentButton>
+                            <IonSegmentButton value="delete">
+                                <IonLabel>Delete</IonLabel>
+                            </IonSegmentButton>
+                            <IonSegmentButton value="subscribe">
+                                <IonLabel>Subscribe</IonLabel>
+                            </IonSegmentButton>
+                        </IonSegment>
+
+                    </IonCol>
+                </IonRow>
 				<IonRow>
-					<IonCol size='2'>Operation</IonCol>
-					<IonCol size='10'>Columns</IonCol>
-				</IonRow>
-				<IonRow>
-					<IonCol size='2'>
-						<ItemPicker
-							stateVariable={statementType}
+					<IonCol size='12' className="ion-padding">
+                        <IonLabel>Tap to select columns to include:</IonLabel><br/>
+						<ItemMultiPicker
 							stateFunction={(e: any) => {
-								setStatementType(e)
+								setOptArr(e)
 							}}
-							initialValue={statementType}
-							options={[
-								{ value: 'select', text: 'Select' },
-								{ value: 'insert', text: 'Insert' },
-								{ value: 'update', text: 'Update' },
-								{ value: 'delete', text: 'Delete' },
-								{ value: 'subscribe', text: 'Subscribe / Realtime' },
-							]}
-							title='Statement Type'
+							//initialValue={operation}
+							options={columnsArray}
+							title='Select Columns'
 						/>
-					</IonCol>
-					<IonCol size='10'>
-                        <ItemMultiPicker
-                            stateFunction={(e: any) => {
-                                setOptArr(e);
-                            }}
-                            //initialValue={statementType}
-                            options={columnsArray}
-                            title='Select Columns'
-                        />
 					</IonCol>
 				</IonRow>
 			</IonGrid>
 
 			<SyntaxHighlighter language='javascript' style={darkMode ? dark : light}>
-				{` 
+			{ getTextHere(operation, columns, optArr) }
+			</SyntaxHighlighter>
+            <pre>{JSON.stringify(optArr,null,2)}</pre>
+            <pre>{JSON.stringify(columns,null,2)}</pre>
+		</>
+	)
+}
+const getTextHere = (operation: 'select' | 'insert' | 'update' | 'delete' | 'subscribe', 
+    columns: Column[], optArr: Option[]) => {
+        const table_name = columns[0].table_name;
+        const allColumnsSelected = (optArr.filter((item) => item.checked).length === optArr.length);
+        const computedColumnsList = 
+            allColumnsSelected ? '*' :
+                optArr
+                .filter((item) => item.checked)
+                .map((item) => item.text)
+                .join(', ');
+
+        const insertColumnList = 
+            columns
+            .filter((item) => optArr.find((opt) => opt.value === item.column_name && opt.checked))
+            .map((c) => {
+                if (c.numeric_scale !== null)
+                    return `${c.column_name}: ${c.data_type.replace(/ /g, '_')}Value`
+                else return `${c.column_name}: '${c.data_type.replace(/ /g, '_')}Value'`
+            })
+            .join(',\n\t\t\t')
+    
+
+        switch (operation) {
+            case 'select':
+                return ` 
+                let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
+                .from('${table_name}')
+                .select('${computedColumnsList}')
+    
+    
+                let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
+                .from('${table_name}')
+                .select(\`
+                some_column,
+                other_table (
+                    foreign_key
+                )
+                    \`)
+    
+                let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
+                .from('${table_name}')
+                .select('${computedColumnsList}')
+                .range(0, 9)
+    
+                let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
+                .from('${table_name}')
+                .select("${computedColumnsList}")
+                // Filters
+                .eq('column', 'Equal to')
+                .gt('column', 'Greater than')
+                .lt('column', 'Less than')
+                .gte('column', 'Greater than or equal to')
+                .lte('column', 'Less than or equal to')
+                .like('column', '%CaseSensitive%')
+                .ilike('column', '%CaseInsensitive%')
+                .is('column', null)
+                .in('column', ['Array', 'Values'])
+                .neq('column', 'Not equal to')
+                // Arrays
+                .cs('array_column', ['array', 'contains'])
+                .cd('array_column', ['contained', 'by'])
+                    `
+            case 'insert':
+                return `
+                // INSERT A ROW
+                let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
+                  .from('${table_name}')
+                  .insert([
+                    {                      
+                    \t${insertColumnList}
+                    },
+                  ])
+                // INSERT MANY ROWS
+                let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
+                  .from('${table_name}')
+                  .insert([
+                    {                      
+                    \t${insertColumnList}
+                    },
+                  ])
+                // UPSERT MATCHING ROWS
+                let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
+                  .from('${table_name}')
+                  .insert([
+                    {                      
+                    \t${insertColumnList}
+                    },
+                  ], { upsert: true })
+                `    
+                break;
+            case 'update':
+                return ''
+                break;
+            case 'delete':
+                return ''
+                break;
+            case 'subscribe':
+                return ''
+                break;
+        }
+    }
+export default TableApi
+
+/*
+
+            ` 
             let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
             .from('${table_name}')
             .select('${computedColumnsList}')
@@ -133,6 +242,7 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
             .cs('array_column', ['array', 'contains'])
             .cd('array_column', ['contained', 'by'])
 
+
             // INSERT A ROW
             let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
               .from('${table_name}')
@@ -152,12 +262,7 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
             let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
               .from('${table_name}')
               .insert([{ some_column: 'someValue' }], { upsert: true })
+        `
 
 
-        `}
-			</SyntaxHighlighter>
-		</>
-	)
-}
-
-export default TableApi
+*/

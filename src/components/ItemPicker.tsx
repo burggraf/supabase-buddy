@@ -28,6 +28,7 @@ const ItemPicker: React.FC<ContainerProps> = ({
 		console.log('chooseValue', e)
 		setShowModal({ isOpen: false })
 		setTimeout(() => {
+			console.log('calling stateFunction with', e, typeof e)
 			stateFunction(e)
 		}, 1000)
 	}
