@@ -66,10 +66,18 @@ const DatabaseTable: React.FC = () => {
                     <IonGrid key={utilsService.randomKey()}>
                     {
                      Object.keys(record as any).map((key, index) => {
+						 const theItem = record[key];
+						 const isText = typeof theItem === 'string' || theItem instanceof String;
                         return (
                             <IonRow key={utilsService.randomKey()}>
                                 <IonCol key={utilsService.randomKey()} size="3" className="breakItUp">{key}</IonCol>
-                                <IonCol key={utilsService.randomKey()} size="9" className="breakItUp">{(record as any)[key]}</IonCol>
+								{ isText &&
+    	                            <IonCol key={utilsService.randomKey()} size="9" className="breakItUp">{theItem}</IonCol>
+								}
+								{ !isText &&
+    	                            <IonCol key={utilsService.randomKey()} size="9" className="breakItUp">{JSON.stringify(theItem)}</IonCol>
+								}
+
                             </IonRow>)
                     })}
                     </IonGrid>
@@ -309,7 +317,7 @@ const DatabaseTable: React.FC = () => {
 					{rows.map((row: any) => {
 						return (
 							<IonRow key={utilsService.randomKey()} 
-                            onClick={()=>{setRecord(row);presentDetail({})}}
+							onClick={()=>{setRecord(row);presentDetail({})}}
 							>
 								{Object.keys(row).map((key, index) => {
 									if (typeof row[key] === 'object') {
