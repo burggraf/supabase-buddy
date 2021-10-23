@@ -38,12 +38,6 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
 			checked: true,
 		})
 	}
-    useEffect(() => {
-        console.log('optArr', optArr);
-        if (optArr.filter((opt) => opt.checked).length === 0) {
-            console.log('nothing selected!')
-        }
-    }, [optArr]);
 
 	return (
 		<>
@@ -132,7 +126,7 @@ const getTextHere = (operation: 'select' | 'insert' | 'update' | 'delete' | 'sub
                     return `${c.column_name}: ${c.data_type.replace(/ /g, '_')}Value`
                 else return `${c.column_name}: '${c.data_type.replace(/ /g, '_')}Value'`
             })
-            .join(',\n\t\t\t')
+            .join(',\n\t\t')
     
 
         switch (operation) {
@@ -196,7 +190,7 @@ const getTextHere = (operation: 'select' | 'insert' | 'update' | 'delete' | 'sub
                             .from('${table_name}')
                             .insert([
                                 {                      
-                                \t${insertColumnList}
+                                    \t${insertColumnList}
                                 },
                             ])
                     `} darkMode={darkMode}/>
@@ -215,7 +209,7 @@ const getTextHere = (operation: 'select' | 'insert' | 'update' | 'delete' | 'sub
                                 {                      
                                     \t${insertColumnList}
                                 },
-                                ])
+                            ])
                      `} darkMode={darkMode}/>
                     <CodeBlock code={`
                         // UPSERT MATCHING ROWS
@@ -224,7 +218,7 @@ const getTextHere = (operation: 'select' | 'insert' | 'update' | 'delete' | 'sub
                             .from('${table_name}')
                             .insert([
                                 {                      
-                                \t${insertColumnList}
+                                    \t${insertColumnList}
                                 },
                             ], { upsert: true })
 
