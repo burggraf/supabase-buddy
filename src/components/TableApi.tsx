@@ -1,13 +1,10 @@
 import { IonCheckbox, IonCol, IonGrid, IonInput, IonLabel, IonRow, IonSegment, IonSegmentButton } from '@ionic/react'
 import { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
-import SyntaxHighlighter from 'react-syntax-highlighter'
-import { atomOneDark as dark, docco, atomOneLight as light } from 'react-syntax-highlighter/dist/esm/styles/hljs'
-import { atomDark, duotoneDark, duotoneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 import { Column } from '../../models/Column'
+import CodeBlock from './CodeBlock'
 import ItemMultiPicker from './ItemMultiPicker'
-import ItemPicker from './ItemPicker'
 
 import './TableApi.css'
 
@@ -105,17 +102,19 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
 					</IonCol>
 				</IonRow>
 			</IonGrid>
+            { getTextHere(operation, columns, optArr, darkMode) }
 
-			<SyntaxHighlighter language='javascript' style={darkMode ? dark : light}>
+			{/* <SyntaxHighlighter 
+                wrapLongLines={true}
+                language='javascript' 
+                style={darkMode ? dark : light}>
 			{ getTextHere(operation, columns, optArr) }
-			</SyntaxHighlighter>
-            <pre>{JSON.stringify(optArr,null,2)}</pre>
-            <pre>{JSON.stringify(columns,null,2)}</pre>
+			</SyntaxHighlighter> */}
 		</>
 	)
 }
 const getTextHere = (operation: 'select' | 'insert' | 'update' | 'delete' | 'subscribe', 
-    columns: Column[], optArr: Option[]) => {
+    columns: Column[], optArr: Option[], darkMode: boolean) => {
         const table_name = columns[0].table_name;
         const allColumnsSelected = (optArr.filter((item) => item.checked).length === optArr.length);
         const computedColumnsList = 
@@ -138,71 +137,100 @@ const getTextHere = (operation: 'select' | 'insert' | 'update' | 'delete' | 'sub
 
         switch (operation) {
             case 'select':
-                return ` 
-                let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
-                .from('${table_name}')
-                .select('${computedColumnsList}')
-    
-    
-                let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
-                .from('${table_name}')
-                .select(\`
-                some_column,
-                other_table (
-                    foreign_key
-                )
-                    \`)
-    
-                let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
-                .from('${table_name}')
-                .select('${computedColumnsList}')
-                .range(0, 9)
-    
-                let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
-                .from('${table_name}')
-                .select("${computedColumnsList}")
-                // Filters
-                .eq('column', 'Equal to')
-                .gt('column', 'Greater than')
-                .lt('column', 'Less than')
-                .gte('column', 'Greater than or equal to')
-                .lte('column', 'Less than or equal to')
-                .like('column', '%CaseSensitive%')
-                .ilike('column', '%CaseInsensitive%')
-                .is('column', null)
-                .in('column', ['Array', 'Values'])
-                .neq('column', 'Not equal to')
-                // Arrays
-                .cs('array_column', ['array', 'contains'])
-                .cd('array_column', ['contained', 'by'])
-                    `
+                return (
+                    <>
+                    <CodeBlock code={`
+                        let { data: ${table_name}_data, error: ${table_name}_error } = 
+                            await supabase
+                            .from('${table_name}')
+                            .select('${computedColumnsList}')
+                    `} darkMode={darkMode}/>
+                    <CodeBlock code={`
+                        let { data: ${table_name}_data, error: ${table_name}_error } = 
+                            await supabase
+                            .from('${table_name}')
+                            .select(\`
+                            some_column,
+                            other_table (
+                                foreign_key
+                            )
+                                \`)
+                    `} darkMode={darkMode}/>
+                    <CodeBlock code={`
+                        let { data: ${table_name}_data, error: ${table_name}_error } = 
+                            await supabase
+                            .from('${table_name}')
+                            .select('${computedColumnsList}')
+                            .range(0, 9)
+                    `} darkMode={darkMode}/>
+                    <CodeBlock code={`
+                        let { data: ${table_name}_data, error: ${table_name}_error } = 
+                            await supabase
+                            .from('${table_name}')
+                            .select("${computedColumnsList}")
+                            // Filters
+                            .eq('column', 'Equal to')
+                            .gt('column', 'Greater than')
+                            .lt('column', 'Less than')
+                            .gte('column', 'Greater than or equal to')
+                            .lte('column', 'Less than or equal to')
+                            .like('column', '%CaseSensitive%')
+                            .ilike('column', '%CaseInsensitive%')
+                            .is('column', null)
+                            .in('column', ['Array', 'Values'])
+                            .neq('column', 'Not equal to')
+                            // Arrays
+                            .cs('array_column', ['array', 'contains'])
+                            .cd('array_column', ['contained', 'by'])
+                    `} darkMode={darkMode}/>
+                     </>
+                    )
+                    break;
             case 'insert':
-                return `
-                // INSERT A ROW
-                let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
-                  .from('${table_name}')
-                  .insert([
-                    {                      
-                    \t${insertColumnList}
-                    },
-                  ])
-                // INSERT MANY ROWS
-                let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
-                  .from('${table_name}')
-                  .insert([
-                    {                      
-                    \t${insertColumnList}
-                    },
-                  ])
-                // UPSERT MATCHING ROWS
-                let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
-                  .from('${table_name}')
-                  .insert([
-                    {                      
-                    \t${insertColumnList}
-                    },
-                  ], { upsert: true })
-                `    
+                return (
+                    <>
+                    <CodeBlock code={`
+                        // INSERT A ROW
+                        let { data: ${table_name}_data, error: ${table_name}_error } = 
+                            await supabase
+                            .from('${table_name}')
+                            .insert([
+                                {                      
+                                \t${insertColumnList}
+                                },
+                            ])
+                    `} darkMode={darkMode}/>
+                    <CodeBlock code={`
+                        // INSERT MANY ROWS
+                        let { data: ${table_name}_data, error: ${table_name}_error } = 
+                            await supabase
+                            .from('${table_name}')
+                            .insert([
+                                {                      
+                                    \t${insertColumnList}
+                                },
+                                {                      
+                                    \t${insertColumnList}
+                                },
+                                {                      
+                                    \t${insertColumnList}
+                                },
+                                ])
+                     `} darkMode={darkMode}/>
+                    <CodeBlock code={`
+                        // UPSERT MATCHING ROWS
+                        let { data: ${table_name}_data, error: ${table_name}_error } = 
+                            await supabase
+                            .from('${table_name}')
+                            .insert([
+                                {                      
+                                \t${insertColumnList}
+                                },
+                            ], { upsert: true })
+
+                    `} darkMode={darkMode}/>
+                    </>
+                )
                 break;
             case 'update':
                 return ''
