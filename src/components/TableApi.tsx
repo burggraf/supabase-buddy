@@ -33,7 +33,7 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
 		setDarkMode(e.matches)
 	})
 
-	const columnsArray = []
+	const columnsArray: Option[] = []
 	for (let i = 0; i < columns.length; i++) {
 		columnsArray.push({
 			value: columns[i].column_name,
@@ -41,6 +41,12 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
 			checked: true,
 		})
 	}
+    useEffect(() => {
+        console.log('optArr', optArr);
+        if (optArr.filter((opt) => opt.checked).length === 0) {
+            console.log('nothing selected!')
+        }
+    }, [optArr]);
 
 	return (
 		<>
@@ -80,9 +86,18 @@ const TableApi: React.FC<ContainerProps> = ({ columns }) => {
 					<IonCol size='12' className="ion-padding">
                         <IonLabel>Tap to select columns to include:</IonLabel><br/>
 						<ItemMultiPicker
-							stateFunction={(e: any) => {
-								setOptArr(e)
+							stateFunction={(e: Option[]) => {
+                                setOptArr(e)
 							}}
+                            willDismiss={(e: Option[]) => {
+                                console.log('willDismiss from TableApi', e);
+                                if (e.filter((opt) => opt.checked).length === 0) {
+                                    let newArr = [...optArr]; // copying the old datas array
+                                    newArr[0].checked = true;
+                                    setOptArr(newArr);
+
+                                }
+                            }}
 							//initialValue={operation}
 							options={columnsArray}
 							title='Select Columns'

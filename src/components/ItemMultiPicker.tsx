@@ -13,12 +13,14 @@ interface ContainerProps {
 	stateFunction: Function
 	options: Option[]
 	title: string
+	willDismiss?: Function
 }
 
 const ItemMultiPicker: React.FC<ContainerProps> = ({
 	stateFunction,
 	options,
 	title,
+	willDismiss = null
 }) => {
 	const [showModal, setShowModal] = useState({ isOpen: false })
 	const [o, setO] = useState(options)
@@ -37,12 +39,17 @@ const ItemMultiPicker: React.FC<ContainerProps> = ({
 		setO(newArr);
 		stateFunction(newArr);
 	},[checkAllColumns])
+	const ionModalWillDismiss = (e: any) => {
+		console.log('ionModalWillDismiss', e);
+		if (willDismiss) willDismiss(o);		
+	}
 	return (
 		<>
 			<IonModal
 				isOpen={showModal.isOpen}
 				animated={true}
 				// onDidDismiss={() => setShowModal({ isOpen: false })}
+				onWillDismiss={ionModalWillDismiss}
 				className='my-custom-class'>
 				<IonHeader>
 					<IonToolbar>
