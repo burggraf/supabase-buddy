@@ -1,5 +1,5 @@
 import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonMenuButton, IonPage, IonRow, IonSegment, IonSegmentButton, IonTitle, IonToolbar, useIonModal, useIonToast } from '@ionic/react'
-import { checkmark, closeOutline, keyOutline } from 'ionicons/icons'
+import { checkmark, checkmarkOutline, closeOutline, createOutline, keyOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { debounce } from 'ts-debounce'
@@ -47,16 +47,34 @@ const DatabaseTable: React.FC = () => {
 	const [ mode, setMode ] = useState<'schema' | 'data' | 'tls' | 'rls' | 'indexes' | 'api'>('schema')
 
 	const [record, setRecord] = useState({});
+	const [editMode, setEditMode] = useState({ editMode: false });
+	const handleDetailDismiss = (e?: any) => {
+		console.log('handleDetailDismiss', e);
+	}
 	const DetailBody: React.FC<{
 		record: any;
-		onDismiss: () => void;
-		onIncrement: () => void;
-	  }> = ({ record }) => (
+	  }> = ({ record }) => { 
+		return (
         <>
         		<IonHeader>
 					<IonToolbar>
-						<IonTitle>Record Details</IonTitle>
+						<IonTitle>Record Details <b>{editMode.editMode ? '[EDIT MODE]' : ''}</b></IonTitle>
 						<IonButtons slot='end'>
+							{ mode === 'data' && 
+								<IonButton color={primaryKeys.length > 0 ? 'primary' : 'light'} onClick={() => 
+									{
+										if (primaryKeys.length > 0) {
+											if (editMode.editMode) 
+												setEditMode({ editMode: false });
+											else 
+												setEditMode({ editMode: true });
+										} else {
+											toast('No primary key defined for this table.');
+										}
+									}}>
+									<IonIcon size='large' icon={editMode.editMode ? checkmarkOutline : createOutline  }></IonIcon>
+								</IonButton>
+							}
 							<IonButton color='primary' onClick={() => dismissDetail()}>
 								<IonIcon size='large' icon={closeOutline}></IonIcon>
 							</IonButton>
@@ -72,10 +90,21 @@ const DatabaseTable: React.FC = () => {
                         return (
                             <IonRow key={utilsService.randomKey()}>
                                 <IonCol key={utilsService.randomKey()} size="3" className="breakItUp">{key}</IonCol>
-								{ isText &&
+								{ (editMode.editMode)  && 
+									<IonCol key={utilsService.randomKey()} size="9">
+									<IonInput className="inputBox" key={utilsService.randomKey()} 
+									value={isText ? record[key] : JSON.stringify(record[key])} 
+									onIonChange={(e) => {
+										// const newRecord = { ...record };
+										// newRecord[key] = e.detail.value;
+										// setRecord(newRecord);
+									}}/>
+									</IonCol>
+								}
+								{ (!editMode.editMode && isText) &&
     	                            <IonCol key={utilsService.randomKey()} size="9" className="breakItUp">{theItem}</IonCol>
 								}
-								{ !isText &&
+								{ (!editMode.editMode && !isText) &&
     	                            <IonCol key={utilsService.randomKey()} size="9" className="breakItUp">{JSON.stringify(theItem)}</IonCol>
 								}
 
@@ -84,8 +113,10 @@ const DatabaseTable: React.FC = () => {
                     </IonGrid>
                 </IonContent>     
         </>
-		);
-    const [presentDetail, dismissDetail] = useIonModal(DetailBody, {record});
+		)};
+    const [presentDetail, dismissDetail] = useIonModal(DetailBody, {
+		record
+	});
 
 	const loadColumns = async () => {
 		const { data, error } = await supabaseDataService.getColumns(table_schema, table_name)
@@ -328,7 +359,9 @@ const DatabaseTable: React.FC = () => {
 					{rows.map((row: any) => {
 						return (
 							<IonRow key={utilsService.randomKey()} 
-							onClick={()=>{setRecord(row);presentDetail({})}}
+							onClick={()=>{setRecord(row);presentDetail({
+								onDidDismiss: () => { setEditMode({editMode: false}); },
+							})}}
 							>
 								{Object.keys(row).map((key, index) => {
 									if (typeof row[key] === 'object') {
