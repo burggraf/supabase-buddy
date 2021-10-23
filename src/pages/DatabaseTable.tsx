@@ -1,5 +1,5 @@
 import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonMenuButton, IonPage, IonRow, IonSegment, IonSegmentButton, IonTitle, IonToolbar, useIonModal, useIonToast } from '@ionic/react'
-import { checkmark, closeOutline } from 'ionicons/icons'
+import { checkmark, closeOutline, keyOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { debounce } from 'ts-debounce'
@@ -42,6 +42,7 @@ const DatabaseTable: React.FC = () => {
 	const [rows, setRows] = useState<any[]>([])
 	const [indexes, setIndexes] = useState<any[]>([])
 	const [grants, setGrants] = useState<any[]>([])
+	const [primaryKeys, setPrimaryKeys] = useState<any[]>([])
 	const [policies, setPolicies] = useState<any[]>([])
 	const [ mode, setMode ] = useState<'schema' | 'data' | 'tls' | 'rls' | 'indexes' | 'api'>('schema')
 
@@ -108,6 +109,14 @@ const DatabaseTable: React.FC = () => {
 			console.error(error)
 		} else {
 			setIndexes(data!)
+		}
+	}
+	const loadPrimaryKeys = async () => {
+		const { data, error } = await supabaseDataService.getPrimaryKeys(table_schema, table_name)
+		if (error) {
+			console.error(error)
+		} else {
+			setPrimaryKeys(data!)
 		}
 	}
 	const loadGrants = async () => {
@@ -191,6 +200,7 @@ const DatabaseTable: React.FC = () => {
 			setColumns(newColumns);
 		} else {
 			loadColumns();
+			loadPrimaryKeys();
 			loadData();
 			loadIndexes();
 			loadGrants();
@@ -277,17 +287,19 @@ const DatabaseTable: React.FC = () => {
 			{ ((mode === 'schema') || (table_schema === 'public' && table_name === 'NEW-TABLE')) &&
 				<IonGrid>
 				<IonRow className="header">
-					<IonCol size="3">Name</IonCol>
+					<IonCol size="4">Name</IonCol>
 					<IonCol size="3">Type</IonCol>
 					<IonCol size="4">Default</IonCol>
-					<IonCol size="1">Key</IonCol>
-					<IonCol size="1">Null</IonCol>
+					<IonCol className="ion-text-center" size="1">Null?</IonCol>
 				</IonRow>
 				{columns.map((column: any, index) => {
+					// search primaryKeys for this column
+					let primaryKey = (primaryKeys.find((pk: any) => pk.attname === column.column_name) !== undefined);
 					return (
 						<IonRow key={utilsService.randomKey()}>
-
-							<IonCol size="3" className="breakItUp" onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}>{column.column_name}</IonCol>
+							<IonCol size="4" className="breakItUp" onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}>
+								{column.column_name} {primaryKey && <IonIcon icon={keyOutline}></IonIcon>}
+							</IonCol>
 							<IonCol size="3" className="breakItUp">
 								<ItemPicker 
 									stateVariable={column.data_type} 									
@@ -298,8 +310,7 @@ const DatabaseTable: React.FC = () => {
 								/>
 							</IonCol>
 							<IonCol size="4" className="breakItUp">{column.column_default}</IonCol>
-							<IonCol size="1" className="breakItUp">???</IonCol>
-							<IonCol size="1" className="breakItUp"><IonCheckbox checked={column.is_nullable}></IonCheckbox></IonCol>
+							<IonCol size="1" className="breakItUp ion-text-center">{column.is_nullable === 'YES' && <IonIcon icon={checkmark}></IonIcon>}</IonCol>
 						</IonRow>
 					)
 				})}

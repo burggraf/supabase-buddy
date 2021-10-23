@@ -253,4 +253,19 @@ export class SupabaseDataService {
         console.error('Error creating snippets table:', err);
       });
   }
+  public async getPrimaryKeys(table_schema: string, table_name: string) {
+    return this.runStatement(`SELECT               
+    pg_attribute.attname, 
+    format_type(pg_attribute.atttypid, pg_attribute.atttypmod) 
+  FROM pg_index, pg_class, pg_attribute, pg_namespace 
+  WHERE 
+    pg_class.oid = '${table_name}'::regclass AND 
+    indrelid = pg_class.oid AND 
+    nspname = '${table_schema}' AND 
+    pg_class.relnamespace = pg_namespace.oid AND 
+    pg_attribute.attrelid = pg_class.oid AND 
+    pg_attribute.attnum = any(pg_index.indkey)
+   AND indisprimary
+    `);
+  }
 }
