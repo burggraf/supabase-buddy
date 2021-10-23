@@ -227,19 +227,53 @@ const getTextHere = (operation: 'select' | 'insert' | 'update' | 'delete' | 'sub
                 )
                 break;
             case 'update':
-                return ''
+                return (
+                    <>
+                    <CodeBlock code={`
+                        // UPDATE MATCHING ROWS
+                        const { data, error } = 
+                            await supabase
+                            .from('${table_name}')
+                            .update(
+                                {                      
+                                    \t${insertColumnList}
+                                }                                
+                            )
+                            .eq('some_column', 'someValue')
+                    `} darkMode={darkMode}/>
+                    </>
+                )
                 break;
             case 'delete':
-                return ''
+                return (
+                    <>
+                    <CodeBlock code={`
+                        // DELETE MATCHING ROWS
+                        const { data, error } = 
+                            await supabase
+                            .from('${table_name}')
+                            .delete()
+                            .eq('some_column', 'someValue')
+                    `} darkMode={darkMode}/>
+                    </>
+                )
                 break;
             case 'subscribe':
-                return ''
+                return (
+                    <>
+                    <CodeBlock code={`
+                    // coming soon
+                    `} darkMode={darkMode}/>
+                    </>
+                )
                 break;
         }
     }
 export default TableApi
 
 /*
+
+
 
             ` 
             let { data: ${table_name}_data, error: ${table_name}_error } = await supabase
