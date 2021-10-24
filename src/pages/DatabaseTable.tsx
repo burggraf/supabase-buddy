@@ -2,7 +2,6 @@ import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, 
 import { arrowBackOutline, arrowForwardOutline, checkmark, checkmarkOutline, closeOutline, createOutline, keyOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
-import { debounce } from 'ts-debounce'
 
 import ItemPicker from '../components/ItemPicker'
 import TableApi from '../components/TableApi'
@@ -55,6 +54,8 @@ const DatabaseTable: React.FC = () => {
 	const DetailBody: React.FC<{
 		record: any;
 	  }> = ({ record }) => { 
+		  // create a copy of the record
+		const recordCopy = { ...record }
 		return (
         <IonPage>
         		<IonHeader>
@@ -70,9 +71,11 @@ const DatabaseTable: React.FC = () => {
 												toast('Cannot update records in a non-public schema', 'danger');
 												return;
 											} else {
-												const { data, error} = await supabaseDataService.upsertRecord('public', table_name, record);
+												const { data, error} = await supabaseDataService.upsertRecord('public', table_name, recordCopy);
 												if (error) {
 													toast(error.message, 'danger');
+												} else {
+													setRecord(recordCopy);
 												}
 											}
 											setEditMode({ editMode: false })
@@ -99,8 +102,8 @@ const DatabaseTable: React.FC = () => {
                 <IonContent className="ion-padding">
                     <IonGrid key={utilsService.randomKey()}>
                     {
-                     Object.keys(record as any).map((key, index) => {
-						 const theItem = record[key];
+                     Object.keys(recordCopy as any).map((key, index) => {
+						 const theItem = recordCopy[key];
 						 const isText = typeof theItem === 'string' || theItem instanceof String;
                         return (
                             <IonRow key={utilsService.randomKey()}>
@@ -108,14 +111,14 @@ const DatabaseTable: React.FC = () => {
 								{ (editMode.editMode)  && 
 									<IonCol key={utilsService.randomKey()} size="9">
 									<IonInput className="inputBox" key={utilsService.randomKey()} 
-									value={isText ? record[key] : JSON.stringify(record[key])} 
-									// {debounce((e) => setName(e.detail.value!), 750)}
+									value={isText ? recordCopy[key] : JSON.stringify(recordCopy[key])} 
 									debounce={750}
 									onIonChange={(e) => {
-										const newRecord = { ...record };
-										newRecord[key] = e.detail.value;
-										setRecord(newRecord);
-										console.log('newRecord', newRecord);
+										recordCopy[key] = e.detail.value;
+										// const newRecord = { ...record };
+										// newRecord[key] = e.detail.value;
+										// setRecord(newRecord);
+										// console.log('newRecord', newRecord);
 									}}/>
 									</IonCol>
 								}
@@ -322,7 +325,8 @@ const DatabaseTable: React.FC = () => {
 						<IonInput
 							value={name}
 							placeholder="Enter table name"
-							onIonChange={debounce((e) => setName(e.detail.value!), 750)}
+							debounce={750}
+							onIonChange={(e) => setName(e.detail.value!)}
 							type='text'
 							style={{ border: '1px solid' }}
 						/>
