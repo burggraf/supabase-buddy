@@ -268,4 +268,12 @@ export class SupabaseDataService {
    AND indisprimary
     `);
   }
+  public async upsertRecord(table_schema: string, table_name: string, record: any) {
+    if (!this.isConnected()) {
+      await this.connect();
+    }
+    const { data, error } = await supabase.from(table_name)
+    .upsert(record);
+    return { data, error };
+  }
 }

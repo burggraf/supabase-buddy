@@ -59,18 +59,32 @@ const DatabaseTable: React.FC = () => {
         <IonPage>
         		<IonHeader>
 					<IonToolbar>
-						<IonTitle>Record Details <b>{editMode.editMode ? '[EDIT MODE]' : ''}</b></IonTitle>
+						<IonTitle>Record Details <b>{editMode.editMode ? '**' : ''}</b></IonTitle>
 						<IonButtons slot='end'>
 							{ mode === 'data' && 
-								<IonButton color={primaryKeys.length > 0 ? 'primary' : 'light'} onClick={() => 
+								<IonButton color={primaryKeys.length > 0 ? 'primary' : 'light'} onClick={async () => 
 									{
-										if (primaryKeys.length > 0) {
-											if (editMode.editMode) 
-												setEditMode({ editMode: false });
-											else 
-												setEditMode({ editMode: true });
+										if (editMode.editMode) {
+											// save record
+											if (table_schema !== 'public') {
+												toast('Cannot update records in a non-public schema', 'danger');
+												return;
+											} else {
+												const { data, error} = await supabaseDataService.upsertRecord('public', table_name, record);
+												if (error) {
+													toast(error.message, 'danger');
+												}
+											}
+											setEditMode({ editMode: false })
 										} else {
-											toast('No primary key defined for this table.');
+											if (primaryKeys.length > 0) {
+												if (editMode.editMode) 
+													setEditMode({ editMode: false });
+												else 
+													setEditMode({ editMode: true });
+											} else {
+												toast('No primary key defined for this table.');
+											}	
 										}
 									}}>
 									<IonIcon size='large' icon={editMode.editMode ? checkmarkOutline : createOutline  }></IonIcon>
@@ -96,6 +110,7 @@ const DatabaseTable: React.FC = () => {
 									<IonInput className="inputBox" key={utilsService.randomKey()} 
 									value={isText ? record[key] : JSON.stringify(record[key])} 
 									// {debounce((e) => setName(e.detail.value!), 750)}
+									debounce={750}
 									onIonChange={(e) => {
 										const newRecord = { ...record };
 										newRecord[key] = e.detail.value;
