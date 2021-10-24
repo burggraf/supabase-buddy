@@ -76,6 +76,10 @@ const DatabaseTable: React.FC = () => {
 													toast(error.message, 'danger');
 												} else {
 													setRecord(recordCopy);
+													// copy rows to rowsCopy
+													const rowsCopy = [...rows];
+													rowsCopy[currentIndex] = recordCopy;
+													setRows(rowsCopy);
 												}
 											}
 											setEditMode({ editMode: false })
