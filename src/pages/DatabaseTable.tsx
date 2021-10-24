@@ -1,5 +1,5 @@
-import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonMenuButton, IonPage, IonRow, IonSegment, IonSegmentButton, IonTitle, IonToolbar, useIonModal, useIonToast } from '@ionic/react'
-import { checkmark, checkmarkOutline, closeOutline, createOutline, keyOutline } from 'ionicons/icons'
+import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonMenuButton, IonPage, IonRow, IonSegment, IonSegmentButton, IonTitle, IonToolbar, useIonModal, useIonToast } from '@ionic/react'
+import { arrowBackOutline, arrowForwardOutline, checkmark, checkmarkOutline, closeOutline, createOutline, keyOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { debounce } from 'ts-debounce'
@@ -40,6 +40,7 @@ const DatabaseTable: React.FC = () => {
 	const [name, setName] = useState(table_name === 'NEW-TABLE' ? '' : table_name)
 	const [columns, setColumns] = useState<any[]>([])
 	const [rows, setRows] = useState<any[]>([])
+	const [currentIndex, setCurrentIndex] = useState(0)
 	const [indexes, setIndexes] = useState<any[]>([])
 	const [grants, setGrants] = useState<any[]>([])
 	const [primaryKeys, setPrimaryKeys] = useState<any[]>([])
@@ -55,7 +56,7 @@ const DatabaseTable: React.FC = () => {
 		record: any;
 	  }> = ({ record }) => { 
 		return (
-        <>
+        <IonPage>
         		<IonHeader>
 					<IonToolbar>
 						<IonTitle>Record Details <b>{editMode.editMode ? '[EDIT MODE]' : ''}</b></IonTitle>
@@ -94,10 +95,12 @@ const DatabaseTable: React.FC = () => {
 									<IonCol key={utilsService.randomKey()} size="9">
 									<IonInput className="inputBox" key={utilsService.randomKey()} 
 									value={isText ? record[key] : JSON.stringify(record[key])} 
+									// {debounce((e) => setName(e.detail.value!), 750)}
 									onIonChange={(e) => {
-										// const newRecord = { ...record };
-										// newRecord[key] = e.detail.value;
-										// setRecord(newRecord);
+										const newRecord = { ...record };
+										newRecord[key] = e.detail.value;
+										setRecord(newRecord);
+										console.log('newRecord', newRecord);
 									}}/>
 									</IonCol>
 								}
@@ -111,8 +114,37 @@ const DatabaseTable: React.FC = () => {
                             </IonRow>)
                     })}
                     </IonGrid>
-                </IonContent>     
-        </>
+                </IonContent>
+				<IonFooter> 
+					<IonToolbar>
+						<IonButtons slot='start'>
+							{ currentIndex > 0 &&
+								<IonButton color='primary' fill='clear' 
+								onClick={() => {
+									console.log('forward')
+									setRecord(rows[currentIndex - 1]);
+									setCurrentIndex(currentIndex - 1);
+								}}>
+										<IonIcon size='large' icon={arrowBackOutline}></IonIcon>
+								</IonButton>
+							}
+						</IonButtons>
+						<IonTitle className="ion-text-center">{currentIndex + 1} of {rows.length}</IonTitle>
+						<IonButtons slot='end'>
+						{ currentIndex < rows.length - 1 &&
+							<IonButton color='primary' fill='clear' 
+							onClick={() => {
+								console.log('forward')
+								setRecord(rows[currentIndex + 1]);
+								setCurrentIndex(currentIndex + 1);
+							}}>
+								<IonIcon size='large' icon={arrowForwardOutline}></IonIcon>
+							</IonButton>
+						}
+						</IonButtons>
+					</IonToolbar>
+				</IonFooter>    
+        </IonPage>
 		)};
     const [presentDetail, dismissDetail] = useIonModal(DetailBody, {
 		record
@@ -356,10 +388,10 @@ const DatabaseTable: React.FC = () => {
 							)
 						})}
 					</IonRow>
-					{rows.map((row: any) => {
+					{rows.map((row: any, idx) => {
 						return (
 							<IonRow key={utilsService.randomKey()} 
-							onClick={()=>{setRecord(row);presentDetail({
+							onClick={()=>{setCurrentIndex(idx);setRecord(row);presentDetail({
 								onDidDismiss: () => { setEditMode({editMode: false}); },
 							})}}
 							>
