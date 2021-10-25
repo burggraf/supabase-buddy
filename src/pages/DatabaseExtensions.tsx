@@ -10,6 +10,7 @@ import {
 	IonPage,
 	IonRow,
 	IonTitle,
+	IonToggle,
 	IonToolbar,
     useIonAlert,
     useIonToast,
@@ -19,7 +20,7 @@ import { useHistory, useParams } from 'react-router'
 import './DatabaseExtensions.css'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { useEffect, useState } from 'react'
-import { add } from 'ionicons/icons'
+import { add, addCircleOutline, removeCircleOutline } from 'ionicons/icons'
 import { UtilsService } from '../services/utils.service'
 const utilsService = new UtilsService()
 
@@ -51,7 +52,6 @@ const DatabaseExtensions: React.FC = () => {
             toast(error.message, 'danger');
             console.error(error);
         } else {
-            toast('Install Result: ' + JSON.stringify(data), 'success');
             loadExtensions()
         }
     }
@@ -61,7 +61,6 @@ const DatabaseExtensions: React.FC = () => {
             toast(error.message, 'danger');
             console.error(error);
         } else {
-            toast('Uninstall Result: ' + JSON.stringify(data), 'success');
             loadExtensions()
         }
     }
@@ -113,11 +112,22 @@ const DatabaseExtensions: React.FC = () => {
 					</IonRow>
                     {views.map((extension: any) => {
                         return (
-                            <IonRow key={utilsService.randomKey()} onClick={() => addOrRemoveExtension(extension.name, extension.installed_version ? true : false)}>
+                            <IonRow key={utilsService.randomKey()}>
                                 <IonCol size="4" class="breakItUp">{extension.name}</IonCol>
                                 <IonCol size="6" class="breakItUp">{extension.comment}</IonCol>
                                 <IonCol size="1" class="breakItUp">{extension.default_version}</IonCol>
-                                <IonCol size="1" class="breakItUp">{extension.installed_version}</IonCol>
+                                <IonCol size="1" class="breakItUp">
+                                    <IonButton
+                                        strong
+                                        fill='clear'
+                                        onClick={() => {
+                                            addOrRemoveExtension(extension.name, extension.installed_version ? true : false)
+                                        }}
+                                        color='danger'>
+                                            <IonIcon color={extension.installed_version ? 'danger' : 'primary'} size='large' icon={extension.installed_version ? removeCircleOutline : addCircleOutline}>
+                                            </IonIcon>
+                                    </IonButton>
+                                </IonCol>
                             </IonRow>
                         );
                     })}
