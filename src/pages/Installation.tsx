@@ -6,6 +6,8 @@ import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
 import { SupabaseAuthService } from '../services/supabase.auth.service'
 import { User } from '@supabase/supabase-js';
+import { SupabaseDataService } from '../services/supabase.data.service';
+const supabaseDataService = new SupabaseDataService();
 const supabaseAuthService: SupabaseAuthService = new SupabaseAuthService();
 
 const Installation: React.FC = () => {
@@ -14,13 +16,27 @@ const Installation: React.FC = () => {
   const { name } = useParams<{ name: string; }>();
   const [email, setEmail] = useState('');
   const [id, setId] = useState('');
+  const [installed, setInstalled] = useState(false);
   const [darkMode, setDarkMode] = useState<boolean>(
     window.matchMedia('(prefers-color-scheme: dark)').matches
     )
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
         setDarkMode(e.matches)
     })
+
+    const checkServerVersion = async () => {
+        const { data: serverVersionData, error: serverVersionError } = 
+          await supabaseDataService.checkServerVersion();
+          console.log('serverVersionData', serverVersionData,'error', serverVersionError);
+            if (serverVersionError && serverVersionError.message.startsWith('Could not find the public.execute_sql')) {
+                setInstalled(false);
+            } else {
+                setInstalled(true);
+            }
+      }
+  
     useEffect(()=>{
+        checkServerVersion();
         // Only run this one time!  No multiple subscriptions!
         supabaseAuthService.user.subscribe((user: User | null) => {
           _user = user;
@@ -48,14 +64,18 @@ const Installation: React.FC = () => {
       </IonHeader>
 
       <IonContent className="ion-padding">
-        <p>Your server does not have the required functions installed.</p>
-        <p>Please install the following functions by executing the following code block in your database.  
-            You can do this with any of the following methods:</p>
-        <ul>
-            <li>Pasting the code into a query window in your Supabase Dashboard and hitting the <b>RUN</b> button.</li>
-            <li>Pasting the code into the query window of another third-party app that's connected to your database.</li>
-            <li>Pasting the code into <b>psql</b> after connecting to your database with the connection string found in your Supabase Dashboard.</li>
-        </ul>
+        {!installed && 
+            <div className="boldText">
+                <p>Your server does not have the required functions installed.</p>
+                <p>Please install the following functions by executing the following code block in your database.  
+                    You can do this with any of the following methods:</p>
+                <ul>
+                    <li>Pasting the code into a query window in your Supabase Dashboard and hitting the <b>RUN</b> button.</li>
+                    <li>Pasting the code into the query window of another third-party app that's connected to your database.</li>
+                    <li>Pasting the code into <b>psql</b> after connecting to your database with the connection string found in your Supabase Dashboard.</li>
+                </ul>
+            </div>        
+        }
         <IonGrid>
             <IonRow>
                 <IonCol>
@@ -113,6 +133,7 @@ const Installation: React.FC = () => {
                 <IonCol>
                     <CodeBlock language="sql" code={`
                         DROP FUNCTION IF EXISTS execute_sql;
+                        -- OPTIONAL:
                         DROP TABLE IF EXISTS buddy.authorized_users;
                         DROP SCHEMA IF EXISTS buddy;
                     `} darkMode={darkMode}/>

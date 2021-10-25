@@ -93,10 +93,7 @@ const appPages: AppPage[] = [
   { title: 'Settings', url: 'settings', icon: 'settings', 
     children: [
       { title: 'Authorized Users', url:'settings-authorized-users', icon: 'map'},
-      { title: 'General', url: 'settings-general', icon: 'map' },
-      { title: 'Database', url: 'settings-database', icon: 'map' },
-      { title: 'API', url: 'settings-api', icon: 'map' },
-      { title: 'Billing & Usage', url: 'settings-billing', icon: 'map' },
+      { title: 'Install Instructions', url:'installation', icon: 'map'},
     ] 
   },
 
