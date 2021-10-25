@@ -7,6 +7,9 @@ import { useLocation } from 'react-router-dom';
 
 import { description, version } from '../../package.json';
 import { SupabaseAuthService } from '../services/supabase.auth.service';
+import { ProjectsService } from '../services/projects.service';
+
+// const projectsService: ProjectsService = new ProjectsService();
 
 import './Menu.css';
 
@@ -89,10 +92,10 @@ const appPages: AppPage[] = [
   // },
   { title: 'Settings', url: 'settings', icon: 'settings', 
     children: [
+      { title: 'Authorized Users', url:'settings-authorized-users', icon: 'map'},
       { title: 'General', url: 'settings-general', icon: 'map' },
       { title: 'Database', url: 'settings-database', icon: 'map' },
       { title: 'API', url: 'settings-api', icon: 'map' },
-      { title: 'Auth Settings', url: 'settings-auth', icon: 'map' },
       { title: 'Billing & Usage', url: 'settings-billing', icon: 'map' },
     ] 
   },
@@ -226,6 +229,9 @@ const Menu: React.FC = () => {
           {/* </IonMenuToggle> */}
         </IonList>
 
+        <div className="ion-text-center">
+          { ProjectsService.project.name }
+        </div>
         <div className="ion-text-center">
           { description } v{ version }
         </div>

@@ -189,8 +189,11 @@ export class SupabaseDataService {
   public async getUsers() {
     return this.runStatement(`SELECT id, email, phone, last_sign_in_at FROM auth.users`);
   }
+  public async getAuthorizedUsers() {
+    return this.runStatement(`SELECT id, email, phone, last_sign_in_at FROM auth.users where id in (select id from buddy.authorized_users)`);
+  }
   public async getUserCount() {
-    return  this.runStatement(`SELECT count(*) as total FROM auth.users`);
+    return  this.runStatement(`SELECT count(*)::INT4 as total FROM auth.users`);
   }
   public async getUser(id: string) {
     return this.runStatement(`SELECT *
@@ -278,5 +281,11 @@ export class SupabaseDataService {
   }
   public async checkServerVersion() {
     return await this.runStatement(`SELECT version()`);
+  }
+  public async deleteAuthorizedUser(id: string) {
+    return this.runStatement(`DELETE FROM buddy.authorized_users WHERE id = '${id}'`);
+  }
+  public async addAuthorizedUser(id: string) {
+    return this.runStatement(`INSERT INTO buddy.authorized_users (id) VALUES ('${id}')`);
   }
 }

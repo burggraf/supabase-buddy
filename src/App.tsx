@@ -48,6 +48,7 @@ import DatabaseViews from './pages/DatabaseViews'
 import DatabaseView from './pages/DatabaseView'
 import DatabaseExtensions from './pages/DatabaseExtensions'
 import DatabaseSchemas from './pages/DatabaseSchemas'
+import SettingsAuthorizedUsers from './pages/SettingsAuthorizedUsers'
 
 const startupService = new StartupService()
 const startupRoute = startupService.getStartupRoute()
@@ -109,6 +110,7 @@ const App: React.FC = () => {
 								<Route path='/database-view/:table_schema/:table_name' component={DatabaseView} />
 								<Route path='/database-schemas' component={DatabaseSchemas} />
 								<Route path='/auth-users' component={AuthUsers} />
+								<Route path='/settings-authorized-users' component={SettingsAuthorizedUsers} />
 								<Route path='/auth-user/:id' component={AuthUser} />
 								<Route path='/sql-editor/:id' component={SqlEditor} />
 								<Route path='/sql-snippets' component={SqlSnippets} />
