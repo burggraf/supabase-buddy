@@ -13,6 +13,7 @@ const Installation: React.FC = () => {
 
   const { name } = useParams<{ name: string; }>();
   const [email, setEmail] = useState('');
+  const [id, setId] = useState('');
   const [darkMode, setDarkMode] = useState<boolean>(
     window.matchMedia('(prefers-color-scheme: dark)').matches
     )
@@ -25,6 +26,7 @@ const Installation: React.FC = () => {
           _user = user;
           if (_user) {
             setEmail((_user as any)?.email);
+            setId((_user as any)?.id);
           } else {
               setEmail('');
           }
@@ -63,54 +65,42 @@ const Installation: React.FC = () => {
                 <IonCol>
                     <CodeBlock language="sql" code={`
                         CREATE EXTENSION IF NOT EXISTS PLV8;
+                        CREATE SCHEMA IF NOT EXISTS buddy;
+                        CREATE TABLE IF NOT EXISTS buddy.authorized_users (id UUID PRIMARY KEY);
+                        INSERT INTO buddy.authorized_users (id) VALUES ('${id || '00000000-0000-0000-0000-000000000000'}');
 
                         DROP FUNCTION IF EXISTS execute_sql;
-
                         CREATE OR REPLACE FUNCTION execute_sql (sqlcode text, statement_delimiter text)
                         RETURNS json
                         SECURITY DEFINER
-                        LANGUAGE PLV8
-                        AS $function$
-                            if (!plv8.execute("select auth.is_admin()")[0].is_admin) {
-                                throw 'not authorized';
-                            }
-                            const arr = sqlcode.split(statement_delimiter);
-                            const results = [];
-                            // this handles "TypeError: Do not know how to serialize a BigInt"
-                            function toJson(data) {
-                                if (data !== undefined) {
-                                return JSON.stringify(data, (_, v) => typeof v === 'bigint' ? \`$\{v\}#bigint\` : v)
-                                    .replace(/"(-?\d+)#bigint"/g, (_, a) => a);
-                                }
-                            }
-                            for (let i = 0; i < arr.length; i++) {
-                                if (arr[i].trim() !== '') {
-                                    const result = plv8.execute(arr[i]);
-                                    results.push(toJson(result));
-                                }
-                            }
-                            return results;
-                        $function$;
+                        AS $$
 
-                        
-                        DROP FUNCTION IF EXISTS auth.is_admin;
+                        if (plv8.execute(
+                            "select id from buddy.authorized_users where id = auth.uid()").length == 0) {
+                            throw 'not authorized';
+                        };
 
-                        CREATE OR REPLACE FUNCTION auth.is_admin ()
-                        RETURNS boolean
-                        LANGUAGE sql
-                        STABLE
-                        AS $function$
-                            SELECT
-                                CASE 
-                                    WHEN current_setting('request.jwt.claim.email', TRUE)::text IN ('${email || '<your_admin_email@host.com>'}') 
-                                THEN
-                                    TRUE
-                                ELSE
-                                    FALSE
-                                END 
-                            AS is_admin
-                        $function$;
+                        const arr = sqlcode.split(statement_delimiter);
+                        const results = [];
 
+                        // this handles "TypeError: Do not know how to serialize a BigInt"
+                        function toJson(data) {
+                            if (data !== undefined) {
+                            return JSON.stringify(data, (_, v) => typeof v === 'bigint' ? \`$\{v\}#bigint\` : v)
+                                .replace(/"(-?\d+)#bigint"/g, (_, a) => a);
+                            }
+                        }
+
+                        for (let i = 0; i < arr.length; i++) {
+                            if (arr[i].trim() !== '') {
+                                const result = plv8.execute(arr[i]);
+                                results.push(toJson(result));
+                            }
+                        }
+                        return results;
+
+                        $$
+                        LANGUAGE PLV8;
                     `} darkMode={darkMode}/>
                 </IonCol>
             </IonRow>
@@ -123,7 +113,8 @@ const Installation: React.FC = () => {
                 <IonCol>
                     <CodeBlock language="sql" code={`
                         DROP FUNCTION IF EXISTS execute_sql;
-                        DROP FUNCTION IF EXISTS auth.is_admin;
+                        DROP TABLE IF EXISTS buddy.authorized_users;
+                        DROP SCHEMA IF EXISTS buddy;
                     `} darkMode={darkMode}/>
                 </IonCol>
             </IonRow>
