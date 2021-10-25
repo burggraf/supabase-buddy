@@ -13,9 +13,10 @@ import Copy from './Copy'
 interface ContainerProps {
 	code: string
 	darkMode: boolean
+    language?: string
 }
 
-const CodeBlock: React.FC<ContainerProps> = ({ code, darkMode }) => {
+const CodeBlock: React.FC<ContainerProps> = ({ code, darkMode, language='javascript' }) => {
     // remove leadind empty lines from code
     code = code.split('\n').filter(line => line.trim() !== '').join('\n')
     // get whitespace from first line of code
@@ -28,7 +29,7 @@ const CodeBlock: React.FC<ContainerProps> = ({ code, darkMode }) => {
 	return (
 <>
 <Copy text={code} />
-<SyntaxHighlighter wrapLongLines={true} language='javascript' style={darkMode ? dark : light}>
+<SyntaxHighlighter wrapLongLines={true} language={language} style={darkMode ? dark : light}>
 {code}
 </SyntaxHighlighter>
 </>

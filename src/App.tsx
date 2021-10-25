@@ -24,6 +24,7 @@ import '@ionic/react/css/display.css'
 import './theme/variables.css'
 import Login from './Login/Login'
 import Home from './pages/Home'
+import Installation from './pages/Installation'
 import AuthUsers from './pages/AuthUsers'
 import PageNotFound from './pages/PageNotFound'
 import SettingsGeneral from './pages/SettingsGeneral'
@@ -89,6 +90,7 @@ const App: React.FC = () => {
 								</Route>
 								<Route path='/settings-general' component={SettingsGeneral} />
 								<Route path='/home' component={Home} />
+								<Route path='/installation' component={Installation} />
 								<Route path='/welcome' component={Welcome} />
 								<Route path='/home-dashboard' component={HomeDashboard} />
 								<Route path='/database-extensions' component={DatabaseExtensions} />

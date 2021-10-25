@@ -276,4 +276,7 @@ export class SupabaseDataService {
     .upsert(record);
     return { data, error };
   }
+  public async checkServerVersion() {
+    return await this.runStatement(`SELECT version()`);
+  }
 }
