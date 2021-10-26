@@ -13,9 +13,12 @@ interface ContainerProps {
 
 const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 	const [record, setRecord] = useState({})
+    const [resultSet, setResultSet] = useState(0)
 	const [detailTrigger, setDetailTrigger] = useState({ action: '' })
+	const [currentIndex, setCurrentIndex] = useState(1)
 
 	const outputArray = []
+    const resultSetArray: any[] = []
 	for (let i = 0; i < results.length; i++) {
 		const result = results[i]
 		let resultJson
@@ -26,8 +29,9 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 			resultJson = result
 		}
 		// test if resultJson is an array
-		if (resultJson && Array.isArray(resultJson)) {
-			if (resultJson.length > 0) {
+		if (resultJson && Array.isArray(resultJson)) {  
+            resultSetArray.push(resultJson)
+            if (resultJson.length > 0) {
 				// get keys and values of first element
 				const keys = Object.keys(resultJson[0])
 				outputArray.push(
@@ -48,6 +52,8 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 									key={utilsService.randomKey()}
 									onClick={() => {
 										console.log('onclick fired')
+                                        setResultSet(i)
+                                        setCurrentIndex(index+1)
 										setRecord(row)
 										setDetailTrigger({ action: 'open' })
 									}}>
@@ -95,7 +101,23 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 			)
 		}
 	}
-	return <>{outputArray}<DisplayDetail rec={record} trigger={detailTrigger} />
+	return <>{outputArray}
+			<DisplayDetail 
+				rec={record} 
+				trigger={detailTrigger}  
+				current={currentIndex} 
+				total={resultSetArray[resultSet] ? resultSetArray[resultSet].length : null}
+				onBack={()=>{		
+					const newIndex = currentIndex - 1;
+					setCurrentIndex(newIndex);
+					setRecord(resultSetArray[resultSet][newIndex-1]);
+				}}
+				onForward={()=>{
+					const newIndex = currentIndex + 1;
+					setCurrentIndex(newIndex);
+					setRecord(resultSetArray[resultSet][newIndex-1]);					
+				}}
+			/>
     </>
 }
 

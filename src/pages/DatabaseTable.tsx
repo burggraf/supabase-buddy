@@ -40,7 +40,7 @@ const DatabaseTable: React.FC = () => {
 	const [name, setName] = useState(table_name === 'NEW-TABLE' ? '' : table_name)
 	const [columns, setColumns] = useState<any[]>([])
 	const [rows, setRows] = useState<any[]>([])
-	const [currentIndex, setCurrentIndex] = useState(0)
+	const [currentIndex, setCurrentIndex] = useState(1)
 	const [indexes, setIndexes] = useState<any[]>([])
 	const [grants, setGrants] = useState<any[]>([])
 	const [primaryKeys, setPrimaryKeys] = useState<any[]>([])
@@ -293,7 +293,7 @@ const DatabaseTable: React.FC = () => {
 					{rows.map((row: any, idx) => {
 						return (
 							<IonRow key={utilsService.randomKey()} 
-							onClick={()=>{setCurrentIndex(idx);setRecord(row);setDetailTrigger({action:'open'})}}>
+							onClick={()=>{setCurrentIndex(idx + 1);setRecord(row);setDetailTrigger({action:'open'})}}>
 								{Object.keys(row).map((key, index) => {
 									if (typeof row[key] === 'object') {
 										return (
@@ -384,7 +384,22 @@ const DatabaseTable: React.FC = () => {
 					<TableApi columns={columns} />
 				</div>
 			}
-			<DisplayDetail rec={record} trigger={detailTrigger} />
+			<DisplayDetail 
+				rec={record} 
+				trigger={detailTrigger}  
+				current={currentIndex} 
+				total={rows.length}
+				onBack={()=>{		
+					const newIndex = currentIndex - 1;
+					setCurrentIndex(newIndex);
+					setRecord(rows[newIndex-1]);
+				}}
+				onForward={()=>{
+					const newIndex = currentIndex + 1;
+					setCurrentIndex(newIndex);
+					setRecord(rows[newIndex-1]);					
+				}}
+			/>
 			</IonContent>
 		</IonPage>
 	)
