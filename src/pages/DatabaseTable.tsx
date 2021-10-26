@@ -3,6 +3,7 @@ import { arrowBackOutline, arrowForwardOutline, checkmark, checkmarkOutline, clo
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 
+import DisplayDetail from '../components/DisplayDetail'
 import ItemPicker from '../components/ItemPicker'
 import TableApi from '../components/TableApi'
 import { SupabaseDataService } from '../services/supabase.data.service'
@@ -46,131 +47,9 @@ const DatabaseTable: React.FC = () => {
 	const [policies, setPolicies] = useState<any[]>([])
 	const [ mode, setMode ] = useState<'schema' | 'data' | 'tls' | 'rls' | 'indexes' | 'api'>('schema')
 
+	const [detailTrigger, setDetailTrigger] = useState({action: ''})
 	const [record, setRecord] = useState({});
 	const [editMode, setEditMode] = useState({ editMode: false });
-	const handleDetailDismiss = (e?: any) => {
-		console.log('handleDetailDismiss', e);
-	}
-	const DetailBody: React.FC<{
-		record: any;
-	  }> = ({ record }) => { 
-		  // create a copy of the record
-		const recordCopy = { ...record }
-		return (
-        <IonPage>
-        		<IonHeader>
-					<IonToolbar>
-						<IonTitle>Record Details <b>{editMode.editMode ? '**' : ''}</b></IonTitle>
-						<IonButtons slot='end'>
-							{ mode === 'data' && 
-								<IonButton color={primaryKeys.length > 0 ? 'primary' : 'light'} onClick={async () => 
-									{
-										if (editMode.editMode) {
-											// save record
-											if (table_schema !== 'public') {
-												toast('Cannot update records in a non-public schema', 'danger');
-												return;
-											} else {
-												const { data, error} = await supabaseDataService.upsertRecord('public', table_name, recordCopy);
-												if (error) {
-													toast(error.message, 'danger');
-												} else {
-													setRecord(recordCopy);
-													// copy rows to rowsCopy
-													const rowsCopy = [...rows];
-													rowsCopy[currentIndex] = recordCopy;
-													setRows(rowsCopy);
-												}
-											}
-											setEditMode({ editMode: false })
-										} else {
-											if (primaryKeys.length > 0) {
-												if (editMode.editMode) 
-													setEditMode({ editMode: false });
-												else 
-													setEditMode({ editMode: true });
-											} else {
-												toast('No primary key defined for this table.');
-											}	
-										}
-									}}>
-									<IonIcon size='large' icon={editMode.editMode ? checkmarkOutline : createOutline  }></IonIcon>
-								</IonButton>
-							}
-							<IonButton color='primary' onClick={() => dismissDetail()}>
-								<IonIcon size='large' icon={closeOutline}></IonIcon>
-							</IonButton>
-						</IonButtons>
-					</IonToolbar>
-				</IonHeader>   
-                <IonContent className="ion-padding">
-                    <IonGrid key={utilsService.randomKey()}>
-                    {
-                     Object.keys(recordCopy as any).map((key, index) => {
-						 const theItem = recordCopy[key];
-						 const isText = typeof theItem === 'string' || theItem instanceof String;
-                        return (
-                            <IonRow key={utilsService.randomKey()}>
-                                <IonCol key={utilsService.randomKey()} size="3" className="breakItUp">{key}</IonCol>
-								{ (editMode.editMode)  && 
-									<IonCol key={utilsService.randomKey()} size="9">
-									<IonInput className="inputBox" key={utilsService.randomKey()} 
-									value={isText ? recordCopy[key] : JSON.stringify(recordCopy[key])} 
-									debounce={750}
-									onIonChange={(e) => {
-										recordCopy[key] = e.detail.value;
-										// const newRecord = { ...record };
-										// newRecord[key] = e.detail.value;
-										// setRecord(newRecord);
-										// console.log('newRecord', newRecord);
-									}}/>
-									</IonCol>
-								}
-								{ (!editMode.editMode && isText) &&
-    	                            <IonCol key={utilsService.randomKey()} size="9" className="breakItUp">{theItem}</IonCol>
-								}
-								{ (!editMode.editMode && !isText) &&
-    	                            <IonCol key={utilsService.randomKey()} size="9" className="breakItUp">{JSON.stringify(theItem)}</IonCol>
-								}
-
-                            </IonRow>)
-                    })}
-                    </IonGrid>
-                </IonContent>
-				<IonFooter> 
-					<IonToolbar>
-						<IonButtons slot='start'>
-							{ currentIndex > 0 &&
-								<IonButton color='primary' fill='clear' 
-								onClick={() => {
-									console.log('forward')
-									setRecord(rows[currentIndex - 1]);
-									setCurrentIndex(currentIndex - 1);
-								}}>
-										<IonIcon size='large' icon={arrowBackOutline}></IonIcon>
-								</IonButton>
-							}
-						</IonButtons>
-						<IonTitle className="ion-text-center">{currentIndex + 1} of {rows.length}</IonTitle>
-						<IonButtons slot='end'>
-						{ currentIndex < rows.length - 1 &&
-							<IonButton color='primary' fill='clear' 
-							onClick={() => {
-								console.log('forward')
-								setRecord(rows[currentIndex + 1]);
-								setCurrentIndex(currentIndex + 1);
-							}}>
-								<IonIcon size='large' icon={arrowForwardOutline}></IonIcon>
-							</IonButton>
-						}
-						</IonButtons>
-					</IonToolbar>
-				</IonFooter>    
-        </IonPage>
-		)};
-    const [presentDetail, dismissDetail] = useIonModal(DetailBody, {
-		record
-	});
 
 	const loadColumns = async () => {
 		const { data, error } = await supabaseDataService.getColumns(table_schema, table_name)
@@ -414,10 +293,7 @@ const DatabaseTable: React.FC = () => {
 					{rows.map((row: any, idx) => {
 						return (
 							<IonRow key={utilsService.randomKey()} 
-							onClick={()=>{setCurrentIndex(idx);setRecord(row);presentDetail({
-								onDidDismiss: () => { setEditMode({editMode: false}); },
-							})}}
-							>
+							onClick={()=>{setCurrentIndex(idx);setRecord(row);setDetailTrigger({action:'open'})}}>
 								{Object.keys(row).map((key, index) => {
 									if (typeof row[key] === 'object') {
 										return (
@@ -446,8 +322,7 @@ const DatabaseTable: React.FC = () => {
 				{grants.map((grant: any) => {
 					return (
 						<IonRow key={utilsService.randomKey()}
-							onClick={()=>{setRecord(grants[0]);presentDetail({})}}
-						>
+							onClick={()=>{setRecord(grants[0]);setDetailTrigger({action:'open'})}}>
 							{Object.keys(grant).map((key, index) => {
 								return (
 									<IonCol className="breakItUp" key={utilsService.randomKey()}>{grant[key]}</IonCol>
@@ -470,8 +345,7 @@ const DatabaseTable: React.FC = () => {
 				{policies.map((policy: any) => {
 					return (
 						<IonRow key={utilsService.randomKey()}
-							onClick={()=>{setRecord(policy);presentDetail({})}}
-						>
+							onClick={()=>{setRecord(policy);setDetailTrigger({action:'open'})}}>
 							{Object.keys(policy).map((key, index) => {
 								return (
 									<IonCol className="breakItUp" key={utilsService.randomKey()}>{policy[key]}</IonCol>
@@ -494,8 +368,7 @@ const DatabaseTable: React.FC = () => {
 					{indexes.map((idx: any) => {
 						return (
 							<IonRow key={utilsService.randomKey()}
-	                            onClick={()=>{setRecord(idx);presentDetail({})}}
-							>
+	                            onClick={()=>{setRecord(idx);setDetailTrigger({action:'open'})}}>							
 								{Object.keys(idx).map((key, index) => {
 									return (
 										<IonCol className="breakItUp" key={utilsService.randomKey()}>{idx[key]}</IonCol>
@@ -511,6 +384,7 @@ const DatabaseTable: React.FC = () => {
 					<TableApi columns={columns} />
 				</div>
 			}
+			<DisplayDetail rec={record} trigger={detailTrigger} />
 			</IonContent>
 		</IonPage>
 	)
