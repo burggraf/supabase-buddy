@@ -102,7 +102,7 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 		}
 	}
 	return <>{outputArray}
-			<DisplayDetail 
+			<DisplayDetail                 
 				rec={record} 
 				trigger={detailTrigger}  
 				current={currentIndex} 
@@ -117,6 +117,7 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 					setCurrentIndex(newIndex);
 					setRecord(resultSetArray[resultSet][newIndex-1]);					
 				}}
+                title={`Result #${resultSet+1} Details`}
 			/>
     </>
 }

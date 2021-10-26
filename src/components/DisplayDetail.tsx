@@ -18,9 +18,10 @@ interface ContainerProps {
 	total?: number | null
     onBack?: Function | null
     onForward?: Function | null
+    title?: string | null
 }
 
-const DisplayDetail: React.FC<ContainerProps> = ({ rec, trigger, current, total, onBack, onForward }) => {
+const DisplayDetail: React.FC<ContainerProps> = ({ rec, trigger, current, total, onBack, onForward, title }) => {
 	const [record, setRecord] = useState<any>({})
 	const [editMode, setEditMode] = useState({ editMode: false })
 
@@ -51,7 +52,7 @@ const DisplayDetail: React.FC<ContainerProps> = ({ rec, trigger, current, total,
 				<IonHeader>
 					<IonToolbar>
 						<IonTitle>
-							Record Details <b>{editMode.editMode ? '**' : ''}</b>
+							{title || 'Record Details'} <b>{editMode.editMode ? '**' : ''}</b>
 						</IonTitle>
 						<IonButtons slot='end'>
 							<IonButton color='primary' onClick={() => dismissDetail()}>

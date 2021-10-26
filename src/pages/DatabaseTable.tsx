@@ -399,6 +399,7 @@ const DatabaseTable: React.FC = () => {
 					setCurrentIndex(newIndex);
 					setRecord(rows[newIndex-1]);					
 				}}
+				title={`${table_schema}.${table_name} Details`}
 			/>
 			</IonContent>
 		</IonPage>
