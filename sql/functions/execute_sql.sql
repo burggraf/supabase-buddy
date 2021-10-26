@@ -1,5 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS PLV8;
-
+CREATE SCHEMA IF NOT EXISTS buddy;
 DROP FUNCTION IF EXISTS execute_sql;
 
 CREATE OR REPLACE FUNCTION execute_sql (sqlcode text, statement_delimiter text)
@@ -7,9 +7,14 @@ CREATE OR REPLACE FUNCTION execute_sql (sqlcode text, statement_delimiter text)
   SECURITY DEFINER
   AS $$
 
+  if (plv8.execute('select id from buddy.authorized_users').length == 0) then
+      throw 'not authorized';
+  end if;
+  /*
   if (!plv8.execute("select auth.is_admin()")[0].is_admin) {
       throw 'not authorized';
   }
+  */
 
   const arr = sqlcode.split(statement_delimiter);
   const results = [];
@@ -33,17 +38,17 @@ CREATE OR REPLACE FUNCTION execute_sql (sqlcode text, statement_delimiter text)
 $$
 LANGUAGE PLV8;
 
-DROP FUNCTION IF EXISTS auth.is_admin;
+-- DROP FUNCTION IF EXISTS auth.is_admin;
 
-CREATE OR REPLACE FUNCTION auth.is_admin ()
-  RETURNS boolean
-  LANGUAGE sql
-  STABLE
-  AS $function$
-  SELECT
-    CASE WHEN current_setting('request.jwt.claim.email', TRUE)::text IN ('authorized_user@your_domain.com') THEN
-      TRUE
-    ELSE
-      FALSE
-    END AS is_admin
-$function$
+-- CREATE OR REPLACE FUNCTION auth.is_admin ()
+--   RETURNS boolean
+--   LANGUAGE sql
+--   STABLE
+--   AS $function$
+--   SELECT
+--     CASE WHEN current_setting('request.jwt.claim.email', TRUE)::text IN ('authorized_user@your_domain.com') THEN
+--       TRUE
+--     ELSE
+--       FALSE
+--     END AS is_admin
+-- $function$
