@@ -27,7 +27,7 @@ const DatabaseView: React.FC = () => {
     const history = useHistory();
 	const { table_schema } = useParams<{ table_schema: string }>()
 	const { table_name } = useParams<{ table_name: string }>()
-	const [present] = useIonAlert();
+	const [presentAlert] = useIonAlert();
     const [view, setView] = useState<any>({})
     const supabaseDataService = new SupabaseDataService()
 	const [darkMode, setDarkMode] = useState<boolean>(window.matchMedia('(prefers-color-scheme: dark)').matches)
@@ -186,7 +186,7 @@ const DatabaseView: React.FC = () => {
 					<IonButtons slot='start'>
 						<IonButton color='danger' fill='outline' 
 						onClick={() =>
-							present({
+							presentAlert({
 							  cssClass: 'my-css',
 							  header: 'Delete',
 							  message: 'Are you sure?',

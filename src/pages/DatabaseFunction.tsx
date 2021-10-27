@@ -24,7 +24,7 @@ const editorLanguageSetting: { [key: string]: string } = {
 
 const DatabaseFunction: React.FC = () => {
     const history = useHistory();
-	const [present] = useIonAlert();
+	const [presentAlert] = useIonAlert();
 	const { function_schema } = useParams<{ function_schema: string }>()
 	const { function_name } = useParams<{ function_name: string }>()
     const [definition, setDefinition] = useState<string>("")
@@ -221,7 +221,7 @@ const DatabaseFunction: React.FC = () => {
 					<IonButtons slot='start'>
 						<IonButton color='danger' fill='outline' 
 						onClick={() =>
-							present({
+							presentAlert({
 							  cssClass: 'my-css',
 							  header: 'Delete',
 							  message: 'Are you sure?',

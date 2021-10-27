@@ -29,7 +29,7 @@ import { debounce } from 'ts-debounce'
 import { Snippet } from '../models/Snippet'
 const SqlEditor: React.FC = () => {
 	const { id } = useParams<{ id: string }>()
-	const [present] = useIonAlert();
+	const [presentAlert] = useIonAlert();
 	const history = useHistory();
 	useEffect(() => {
 		if (id === 'sql-snippets' || typeof id === 'undefined') {
@@ -192,7 +192,7 @@ const SqlEditor: React.FC = () => {
 					<IonButtons slot='start'>
 						<IonButton color='danger' fill='outline' 
 						onClick={() =>
-							present({
+							presentAlert({
 							  cssClass: 'my-css',
 							  header: 'Delete',
 							  message: 'Are you sure?',
