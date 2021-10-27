@@ -175,6 +175,18 @@ const DatabaseTable: React.FC = () => {
 	const save = async () => {
 		toast('not implemented yet', 'danger');
 	}
+	const saveDetailRecord = async (record: any) => {
+		console.log('saveDetailRecord', record);
+		const { data, error } = await supabaseDataService.upsertRecord(table_schema, table_name, record)
+		if (error) {
+			toast(error.message, 'danger');
+		} else {
+			toast('record saved', 'success');
+			setRecord(record);
+			setEditMode({ editMode: false });
+			loadData();
+		}
+	}
 	const updateColumnType = (index: any, e: any) => {
 		let newColumnsArray = [...columns]; // copying the old array
 		newColumnsArray[index].data_type = e;
@@ -401,6 +413,7 @@ const DatabaseTable: React.FC = () => {
 					setRecord(detailCollection[newIndex-1]);					
 				}}
 				title={`${table_schema}.${table_name} ${mode} Detail`}
+				onSave={mode === 'data' && primaryKeys.length > 0 ? saveDetailRecord : null}
 			/>
 			</IonContent>
 		</IonPage>
