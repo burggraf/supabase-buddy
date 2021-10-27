@@ -39,6 +39,7 @@ const DatabaseTable: React.FC = () => {
 	const { table_name } = useParams<{ table_name: string }>()
 	const [name, setName] = useState(table_name === 'NEW-TABLE' ? '' : table_name)
 	const [columns, setColumns] = useState<any[]>([])
+	const [detailCollection, setDetailCollection] = useState<any[]>([])
 	const [rows, setRows] = useState<any[]>([])
 	const [currentIndex, setCurrentIndex] = useState(1)
 	const [indexes, setIndexes] = useState<any[]>([])
@@ -293,7 +294,7 @@ const DatabaseTable: React.FC = () => {
 					{rows.map((row: any, idx) => {
 						return (
 							<IonRow key={utilsService.randomKey()} 
-							onClick={()=>{setCurrentIndex(idx + 1);setRecord(row);setDetailTrigger({action:'open'})}}>
+							onClick={()=>{setDetailCollection(rows);setCurrentIndex(idx + 1);setRecord(row);setDetailTrigger({action:'open'})}}>
 								{Object.keys(row).map((key, index) => {
 									if (typeof row[key] === 'object') {
 										return (
@@ -319,10 +320,10 @@ const DatabaseTable: React.FC = () => {
 						)
 					})}
 				</IonRow>
-				{grants.map((grant: any) => {
+				{grants.map((grant: any, idx) => {
 					return (
 						<IonRow key={utilsService.randomKey()}
-							onClick={()=>{setRecord(grants[0]);setDetailTrigger({action:'open'})}}>
+							onClick={()=>{setDetailCollection(grants);setCurrentIndex(idx + 1);setRecord(grants[0]);setDetailTrigger({action:'open'})}}>
 							{Object.keys(grant).map((key, index) => {
 								return (
 									<IonCol className="breakItUp" key={utilsService.randomKey()}>{grant[key]}</IonCol>
@@ -342,10 +343,10 @@ const DatabaseTable: React.FC = () => {
 						)
 					})}
 				</IonRow>
-				{policies.map((policy: any) => {
+				{policies.map((policy: any, idx) => {
 					return (
 						<IonRow key={utilsService.randomKey()}
-							onClick={()=>{setRecord(policy);setDetailTrigger({action:'open'})}}>
+							onClick={()=>{setDetailCollection(policies);setCurrentIndex(idx + 1);setRecord(policy);setDetailTrigger({action:'open'})}}>
 							{Object.keys(policy).map((key, index) => {
 								return (
 									<IonCol className="breakItUp" key={utilsService.randomKey()}>{policy[key]}</IonCol>
@@ -365,10 +366,10 @@ const DatabaseTable: React.FC = () => {
 							)
 						})}
 					</IonRow>
-					{indexes.map((idx: any) => {
+					{indexes.map((idx: any, indx) => {
 						return (
 							<IonRow key={utilsService.randomKey()}
-	                            onClick={()=>{setRecord(idx);setDetailTrigger({action:'open'})}}>							
+	                            onClick={()=>{setDetailCollection(indexes);setCurrentIndex(indx + 1);setRecord(idx);setDetailTrigger({action:'open'})}}>							
 								{Object.keys(idx).map((key, index) => {
 									return (
 										<IonCol className="breakItUp" key={utilsService.randomKey()}>{idx[key]}</IonCol>
@@ -388,18 +389,18 @@ const DatabaseTable: React.FC = () => {
 				rec={record} 
 				trigger={detailTrigger}  
 				current={currentIndex} 
-				total={rows.length}
+				total={detailCollection.length}
 				onBack={()=>{		
 					const newIndex = currentIndex - 1;
 					setCurrentIndex(newIndex);
-					setRecord(rows[newIndex-1]);
+					setRecord(detailCollection[newIndex-1]);
 				}}
 				onForward={()=>{
 					const newIndex = currentIndex + 1;
 					setCurrentIndex(newIndex);
-					setRecord(rows[newIndex-1]);					
+					setRecord(detailCollection[newIndex-1]);					
 				}}
-				title={`${table_schema}.${table_name} Details`}
+				title={`${table_schema}.${table_name} ${mode} Detail`}
 			/>
 			</IonContent>
 		</IonPage>
