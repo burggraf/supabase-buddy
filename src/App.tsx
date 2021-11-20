@@ -83,7 +83,7 @@ const App: React.FC = () => {
 			{currentUser !== null && (
 				<IonApp>
 					<IonReactRouter>
-						<IonSplitPane contentId='main'>
+						<IonSplitPane when={false} contentId='main'>
 							<Menu />
 							<IonRouterOutlet id='main'>
 								<Route path='/editor-tables' exact={true}>
