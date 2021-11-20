@@ -58,7 +58,8 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 										setDetailTrigger({ action: 'open' })
 									}}>
 									{keys.map((key, index) => {
-										if (!Array.isArray(row[key])) {
+										// if (!Array.isArray(row[key])) {
+										if (typeof row[key] !== 'object') {
 											return (
 												<IonCol className='breakItUp boxed' key={utilsService.randomKey()}>
 													{row[key]}
