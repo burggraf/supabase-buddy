@@ -42,9 +42,9 @@ const DisplayDetail: React.FC<ContainerProps> = ({ rec, trigger, current, total,
 		}
 	}, [trigger])
 
-	useEffect(() => {
-		console.log('useEffect inside DisplayDetail...')
-	}, [])
+	// useEffect(() => {
+	// 	console.log('useEffect inside DisplayDetail...')
+	// }, [])
 
 	const DetailBody: React.FC<{
 		record: any

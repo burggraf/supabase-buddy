@@ -1,32 +1,16 @@
-import {
-	IonBackButton,
-	IonButton,
-	IonButtons,
-	IonCol,
-	IonContent,
-	IonFooter,
-	IonGrid,
-	IonHeader,
-	IonIcon,
-	IonInput,
-	IonMenuButton,
-	IonPage,
-	IonRow,
-	IonTextarea,
-	IonTitle,
-	IonToolbar,
-	useIonAlert,
-	useIonViewDidEnter,
-} from '@ionic/react'
+import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonMenuButton, IonPage, IonRow, IonTextarea, IonTitle, IonToolbar, useIonAlert, useIonViewDidEnter } from '@ionic/react'
+import Editor from '@monaco-editor/react'
 import { checkmark } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
-import './SqlEditor.css'
-import { SupabaseDataService } from '../services/supabase.data.service'
-import SqlResults from '../components/SqlResults'
-import Editor from '@monaco-editor/react'
 import { debounce } from 'ts-debounce'
+
+import SqlResults from '../components/SqlResults'
 import { Snippet } from '../models/Snippet'
+import { SupabaseDataService } from '../services/supabase.data.service'
+
+import './SqlEditor.css'
+
 const SqlEditor: React.FC = () => {
 	const { id } = useParams<{ id: string }>()
 	const [presentAlert] = useIonAlert();
@@ -183,7 +167,7 @@ const SqlEditor: React.FC = () => {
 						</IonCol>
 					</IonRow>
 				</IonGrid>
-				<div style={{ height: '60%' }}>
+				<div style={{ height: '60%', overflowX: 'scroll' }}>
 					<SqlResults results={results} />
 				</div>
 			</IonContent>

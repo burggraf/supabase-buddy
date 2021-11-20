@@ -11,6 +11,18 @@ interface ContainerProps {
 	results: any[]
 }
 
+const getTextWidth = (text: string, font?: string) =>{
+	const canvas = document.createElement('canvas');
+	const context = canvas.getContext('2d');
+	if (context) {
+		context.font = font || getComputedStyle(document.body).font;
+		const calculated = Math.round((context.measureText(text).width * 1.05) + 10); // pad here? 10
+		return Math.min(calculated, 400); 
+	} else {
+		return 0;
+	}
+  }
+
 const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 	const [record, setRecord] = useState({})
     const [resultSet, setResultSet] = useState(0)
@@ -34,21 +46,40 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
             if (resultJson.length > 0) {
 				// get keys and values of first element
 				const keys = Object.keys(resultJson[0])
+				const resultWidths: number[]= [];
+				let gridWidth = 0;
+				for (let j = 0; j < keys.length; j++) {
+					const textWidth = getTextWidth(keys[j]);
+					if (typeof resultWidths[j] !== 'number' || textWidth > resultWidths[j]) {
+						resultWidths[j] = textWidth
+					}
+					for (let k = 0; k < resultJson.length; k++) {
+						const item = resultJson[k][keys[j]];
+						const textWidth = getTextWidth(typeof item === 'string' ? item : JSON.stringify(item));
+						if (typeof resultWidths[j] !== 'number' || textWidth > resultWidths[j]) {
+							resultWidths[j] = textWidth
+						}
+					}
+				}
+				for (let j = 0; j < keys.length; j++) {
+					gridWidth += resultWidths[j];
+				}
 				outputArray.push(
 					<div key={utilsService.randomKey()}>
 						<IonLabel key={utilsService.randomKey()} className='resultHeader'>
 							<strong>Result #{i + 1}</strong>
 						</IonLabel>
-						<IonGrid key={utilsService.randomKey()}>
-							<IonRow key={utilsService.randomKey()}>
+						<table style={{'width': gridWidth + 'px'}} key={utilsService.randomKey()}>
+							<tbody>
+							<tr key={utilsService.randomKey()}>
 								{keys.map((key, index) => (
-									<IonCol className='breakItUp' key={utilsService.randomKey()}>
+									<td style={{'width': resultWidths[index] + 'px'}} className='breakItUp' key={utilsService.randomKey()}>
 										<strong>{key}</strong>
-									</IonCol>
+									</td>
 								))}
-							</IonRow>
+							</tr>
 							{resultJson.map((row, index) => (
-								<IonRow
+								<tr
 									key={utilsService.randomKey()}
 									onClick={() => {
 										console.log('onclick fired')
@@ -61,44 +92,45 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 										// if (!Array.isArray(row[key])) {
 										if (typeof row[key] !== 'object') {
 											return (
-												<IonCol className='breakItUp boxed' key={utilsService.randomKey()}>
+												<td style={{'width': resultWidths[index] + 'px'}} className='breakItUp boxed' key={utilsService.randomKey()}>
 													{row[key]}
-												</IonCol>
+												</td>
 											)
 										} else {
 											return (
-												<IonCol className='breakItUp boxed' key={utilsService.randomKey()}>
+												<td style={{'width': resultWidths[index] + 'px'}} className='breakItUp boxed' key={utilsService.randomKey()}>
 													{JSON.stringify(row[key])}
-												</IonCol>
+												</td>
 											)
 										}
 									})}
-								</IonRow>
+								</tr>
 							))}
-						</IonGrid>
+							</tbody>
+						</table>
 					</div>
 				)
 				// resultJson[0]
 			}
 		} else {
 			outputArray.push(
-				<IonGrid key={utilsService.randomKey()}>
-					<IonRow className='resultHeader' key={utilsService.randomKey()}>
-						<IonCol key={utilsService.randomKey()}>
+				<table key={utilsService.randomKey()}>
+					<tr className='resultHeader' key={utilsService.randomKey()}>
+						<td key={utilsService.randomKey()}>
 							<strong>Result #{i + 1}</strong>
-						</IonCol>
-					</IonRow>
-					<IonRow key={utilsService.randomKey()}>
-						<IonCol key={utilsService.randomKey()}>
+						</td>
+					</tr>
+					<tr key={utilsService.randomKey()}>
+						<td key={utilsService.randomKey()}>
 							<IonLabel
 								key={utilsService.randomKey()}
 								className='error'
 								color={parseInt(resultJson) === resultJson ? 'dark' : 'danger'}>
 								{resultJson}
 							</IonLabel>
-						</IonCol>
-					</IonRow>
-				</IonGrid>
+						</td>
+					</tr>
+				</table>
 			)
 		}
 	}

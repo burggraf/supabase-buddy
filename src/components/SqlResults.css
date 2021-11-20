@@ -5,6 +5,11 @@
 ion-col.boxed {
     border: 1px solid;
 }
+td {
+    border: 1px solid;
+    padding: 5px;
+    vertical-align: top;
+}
 .error {
     font-weight: bold;
 }
