@@ -27,7 +27,7 @@ export class UtilsService {
 	
 	public getGridWidths = (obj: any) => {
 		const columnWidths: number[]= [];
-		const keys = Object.keys(obj[0])
+		const keys = Object.keys(obj[0] || [])
 		let gridWidth = 0;
 		for (let j = 0; j < keys.length; j++) {
 			const textWidth = this.getTextWidth(keys[j]);

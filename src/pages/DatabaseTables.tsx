@@ -2,6 +2,7 @@ import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon,
 import { add } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
+import TableGrid from '../components/TableGrid'
 
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { UtilsService } from '../services/utils.service'
@@ -35,6 +36,9 @@ const DatabaseTables: React.FC = () => {
 	const addTable = () => {
 		history.push(`/database-table/public/NEW-TABLE`)
 	}
+	const clickHandler = (row: any, index: number) => {
+		history.push(`/database-table/${row.table_schema}/${row.table_name}`);
+	}
 	return (
 		<IonPage>
 			<IonHeader>
@@ -52,7 +56,8 @@ const DatabaseTables: React.FC = () => {
 			</IonHeader>
 
 			<IonContent>
-				<IonGrid>
+				<TableGrid rows={tables} rowClick={clickHandler}/>
+				{/* <IonGrid>
 					<IonRow className="header">
 						<IonCol className="breakItUp">Name</IonCol>
 						<IonCol className="breakItUp">Description</IonCol>
@@ -67,7 +72,7 @@ const DatabaseTables: React.FC = () => {
                             </IonRow>
                         );
                     })}
-				</IonGrid>
+				</IonGrid> */}
 			</IonContent>
 		</IonPage>
 	)
