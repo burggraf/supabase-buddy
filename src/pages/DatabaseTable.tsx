@@ -285,19 +285,13 @@ const DatabaseTable: React.FC = () => {
 					// search primaryKeys for this column
 					let primaryKey = (primaryKeys.find((pk: any) => pk.attname === column.column_name) !== undefined);
 					return (
-						<IonRow key={utilsService.randomKey()}>
-							<IonCol size="4" className="breakItUp" onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}>
+						<IonRow key={utilsService.randomKey()}
+							onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}
+						>
+							<IonCol size="4" className="breakItUp">
 								{column.column_name} {primaryKey && <IonIcon icon={keyOutline}></IonIcon>}
 							</IonCol>
-							<IonCol size="3" className="breakItUp">
-								<ItemPicker 
-									stateVariable={column.data_type} 									
-									stateFunction={ (e: any) => {updateColumnType(index, e)} } 
-									initialValue={column.data_type}
-									options={columnOptions}
-									title="Column Type"
-								/>
-							</IonCol>
+							<IonCol size="3" className="breakItUp">{column.data_type}</IonCol>
 							<IonCol size="4" className="breakItUp">{column.column_default}</IonCol>
 							<IonCol size="1" className="breakItUp ion-text-center">{column.is_nullable === 'YES' && <IonIcon icon={checkmark}></IonIcon>}</IonCol>
 						</IonRow>

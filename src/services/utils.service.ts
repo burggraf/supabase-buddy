@@ -36,7 +36,16 @@ export class UtilsService {
 			}
 			for (let k = 0; k < obj.length; k++) {
 				const item = obj[k][keys[j]];
-				const textWidth = this.getTextWidth(typeof item === 'string' ? item : JSON.stringify(item));
+				let textWidth = 0;
+				if (typeof item === 'string') {
+					textWidth = this.getTextWidth(item);
+				} else if (typeof item === 'number') {
+					textWidth = this.getTextWidth(item.toString());
+				} else if (typeof item === 'boolean') {
+					textWidth = this.getTextWidth(item.toString());
+				} else if (typeof item === 'object' && item !== null && typeof item !== 'undefined') {
+					textWidth = this.getTextWidth(JSON.stringify(item));
+				}
 				if (typeof columnWidths[j] !== 'number' || textWidth > columnWidths[j]) {
 					columnWidths[j] = textWidth
 				}

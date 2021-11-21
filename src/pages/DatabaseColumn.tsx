@@ -51,11 +51,15 @@ const DatabaseColumn: React.FC = () => {
 
 			<IonContent>
 				<IonGrid>
+					<IonRow key={utilsService.randomKey()}>
+                        <IonCol size="2"><b>Attribute</b></IonCol>
+                        <IonCol size="10"><b>Value</b></IonCol>
+                    </IonRow>
                     {Object.keys(attributes).map((key, index) => {
                         return (
                             <IonRow key={utilsService.randomKey()}>
-                                <IonCol>{key}</IonCol>
-                                <IonCol>{attributes[key]}</IonCol>
+                                <IonCol size="2">{key}</IonCol>
+                                <IonCol size="10">{attributes[key]}</IonCol>
                             </IonRow>
                         )
                     })}
