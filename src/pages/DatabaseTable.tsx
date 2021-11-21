@@ -52,6 +52,10 @@ const DatabaseTable: React.FC = () => {
 	const [record, setRecord] = useState({});
 	const [editMode, setEditMode] = useState({ editMode: false });
 
+	const [keys, setKeys] = useState<string[]>([]);
+	const [gridWidth, setGridWidth] = useState(0);
+	const [columnWidths, setColumnWidths] = useState<any[]>([]);
+
 	const loadColumns = async () => {
 		const { data, error } = await supabaseDataService.getColumns(table_schema, table_name)
 		if (error) {
@@ -238,6 +242,13 @@ const DatabaseTable: React.FC = () => {
 						e.detail.value === 'rls' ||
 						e.detail.value === 'indexes' || 
 						e.detail.value === 'api') {
+						if (e.detail.value === 'data') { 
+							const keys = Object.keys(rows[0])
+							const { gridWidth, columnWidths } = utilsService.getGridWidths(rows);
+							setKeys(keys);
+							setGridWidth(gridWidth);
+							setColumnWidths(columnWidths);			
+						}
 						setMode(e.detail.value)
 					}
 				}}>
@@ -295,33 +306,74 @@ const DatabaseTable: React.FC = () => {
 			</IonGrid>
 			} 
 			{ mode === 'data' && rows?.length > 0 &&
-				<IonGrid>
-					<IonRow key="header.row" className="header">
-						{Object.keys(rows[0]).map((key, index) => {
-							return (
-									<IonCol className="breakItUp" key={utilsService.randomKey()}>{key}</IonCol>
-							)
+				<div style={{ height: '100%', overflow: 'scroll'}}>
+				<table style={{'width': gridWidth + 'px'}} key={utilsService.randomKey()}>
+				<tbody>
+				<tr key={utilsService.randomKey()}>
+					{keys.map((key, index) => (
+						<td style={{'width': columnWidths[index] + 'px'}} className='breakItUp' key={utilsService.randomKey()}>
+							<strong>{key}</strong>
+						</td>
+					))}
+				</tr>
+				{rows.map((row, index) => (
+					<tr
+						key={utilsService.randomKey()}
+						onClick={()=>{setDetailCollection(rows);setCurrentIndex(index + 1);setRecord(row);setDetailTrigger({action:'open'})}}
+					>
+						{keys.map((key, index) => {
+							// if (!Array.isArray(row[key])) {
+							if (typeof row[key] !== 'object') {
+								return (
+									<td style={{'width': columnWidths[index] + 'px'}} className='breakItUp boxed' key={utilsService.randomKey()}>
+										{row[key]}
+									</td>
+								)
+							} else {
+								return (
+									<td style={{'width': columnWidths[index] + 'px'}} className='breakItUp boxed' key={utilsService.randomKey()}>
+										{JSON.stringify(row[key])}
+									</td>
+								)
+							}
 						})}
-					</IonRow>
-					{rows.map((row: any, idx) => {
-						return (
-							<IonRow key={utilsService.randomKey()} 
-							onClick={()=>{setDetailCollection(rows);setCurrentIndex(idx + 1);setRecord(row);setDetailTrigger({action:'open'})}}>
-								{Object.keys(row).map((key, index) => {
-									if (typeof row[key] === 'object') {
-										return (
-											<IonCol className="breakItUp" key={utilsService.randomKey()}>{JSON.stringify(row[key])}</IonCol>
-										)	
-									} else {
-										return (
-											<IonCol className="breakItUp" key={utilsService.randomKey()}>{row[key]}</IonCol>
-										)	
-									}
-								})}
-							</IonRow>
-						)
-					})}
-				</IonGrid>
+					</tr>
+				))}
+				</tbody>
+				</table>
+				</div>
+
+
+
+				// <IonGrid>
+				// 	<IonRow key="header.row" className="header">
+				// 		{Object.keys(rows[0]).map((key, index) => {
+				// 			return (
+				// 					<IonCol className="breakItUp" key={utilsService.randomKey()}>{key}</IonCol>
+				// 			)
+				// 		})}
+				// 	</IonRow>
+				// 	{rows.map((row: any, idx) => {
+				// 		return (
+				// 			<IonRow key={utilsService.randomKey()} 
+				// 			onClick={()=>{setDetailCollection(rows);setCurrentIndex(idx + 1);setRecord(row);setDetailTrigger({action:'open'})}}>
+				// 				{Object.keys(row).map((key, index) => {
+				// 					if (typeof row[key] === 'object') {
+				// 						return (
+				// 							<IonCol className="breakItUp" key={utilsService.randomKey()}>{JSON.stringify(row[key])}</IonCol>
+				// 						)	
+				// 					} else {
+				// 						return (
+				// 							<IonCol className="breakItUp" key={utilsService.randomKey()}>{row[key]}</IonCol>
+				// 						)	
+				// 					}
+				// 				})}
+				// 			</IonRow>
+				// 		)
+				// 	})}
+				// </IonGrid>
+
+
 			}
 			{ mode === 'tls' &&
 				<IonGrid>

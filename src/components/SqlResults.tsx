@@ -34,7 +34,6 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
             if (resultJson.length > 0) {
 				// get keys and values of first element
 				const keys = Object.keys(resultJson[0])
-
 				const { gridWidth, columnWidths } = utilsService.getGridWidths(resultJson);
 				outputArray.push(
 					<div key={utilsService.randomKey()}>
