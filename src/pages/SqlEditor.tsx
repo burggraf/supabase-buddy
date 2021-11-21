@@ -8,7 +8,8 @@ import { debounce } from 'ts-debounce'
 import SqlResults from '../components/SqlResults'
 import { Snippet } from '../models/Snippet'
 import { SupabaseDataService } from '../services/supabase.data.service'
-
+import { Allotment } from "allotment";
+import "allotment/dist/style.css";
 import './SqlEditor.css'
 
 const SqlEditor: React.FC = () => {
@@ -115,6 +116,7 @@ const SqlEditor: React.FC = () => {
 			</IonHeader>
 
 			<IonContent>
+			<Allotment vertical>
 				<IonGrid>
 					<IonRow>
 						<IonCol size="5">
@@ -149,7 +151,7 @@ const SqlEditor: React.FC = () => {
 						<IonCol>
 							<Editor
 								className='textarea'
-								height="40vh"
+								height="100vh"
 								defaultLanguage='sql'
 								defaultValue={content}
 								value={content}
@@ -167,9 +169,10 @@ const SqlEditor: React.FC = () => {
 						</IonCol>
 					</IonRow>
 				</IonGrid>
-				<div style={{ height: '60%', overflowX: 'scroll' }}>
+				<div style={{ height: '100%', overflow: 'scroll'}}>
 					<SqlResults results={results} />
 				</div>
+				</Allotment>
 			</IonContent>
 			<IonFooter>
 				<IonToolbar>
