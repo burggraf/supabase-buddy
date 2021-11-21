@@ -16,12 +16,12 @@ const TableGrid: React.FC<ContainerProps> = ({ rows, rowClick }) => {
 			<table style={{ width: gridWidth + 'px' }} key={utilsService.randomKey()}>
 				<tbody>
 					<tr key={utilsService.randomKey()}>
-						{keys.map((key, index) => (
+						{keys.map((keyname, index) => (
 							<td
 								style={{ width: columnWidths[index] + 'px' }}
 								className='breakItUp'
 								key={utilsService.randomKey()}>
-								<strong>{key}</strong>
+								<strong>{keyname}</strong>
 							</td>
 						))}
 					</tr>

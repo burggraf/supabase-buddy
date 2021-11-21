@@ -3,6 +3,7 @@ import { add } from 'ionicons/icons'
 import Moment from 'moment';
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
+import TableGrid from '../components/TableGrid';
 
 import { Snippet } from '../models/Snippet'
 import { SupabaseDataService } from '../services/supabase.data.service'
@@ -28,6 +29,12 @@ const SqlSnippets: React.FC = () => {
 				console.error(error)
 			}
 		} else {
+			if (data) {
+				for (let i = 0; i < data.length; i++) {
+					data[i].created_at = Moment(data[i].created_at).format('MM/DD/YYYY hh:mm a')
+					data[i].updated_at = Moment(data[i].updated_at).format('MM/DD/YYYY hh:mm a')				
+				}	
+			}
 			setSnippets(data!)
 		}
 	}
@@ -47,7 +54,9 @@ const SqlSnippets: React.FC = () => {
 		const id = utilsService.uuidv4()
 		history.push(`/sql-editor/${id}`)
 	}
-
+	const clickSnippet = (row: any, index: number) => {
+		editSnippet(row.id);
+	}
 	return (
 		<IonPage>
 			<IonHeader>
@@ -64,30 +73,7 @@ const SqlSnippets: React.FC = () => {
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
-				<IonGrid key={utilsService.randomKey()}>
-					<IonRow key={utilsService.randomKey()} className="header">
-						<IonCol key={utilsService.randomKey()}>Title</IonCol>
-						<IonCol key={utilsService.randomKey()}>Description</IonCol>
-						<IonCol key={utilsService.randomKey()}>Created</IonCol>
-						<IonCol key={utilsService.randomKey()}>Updated</IonCol>
-					</IonRow>
-
-					{snippets.map((snippet) => (
-						<IonRow
-							key={utilsService.randomKey()}
-							onClick={() => {
-								editSnippet(snippet.id)
-							}}>
-							<IonCol key={utilsService.randomKey()}>{snippet.title}</IonCol>
-							<IonCol key={utilsService.randomKey()}>{snippet.description}</IonCol>
-							<IonCol key={utilsService.randomKey()}>{Moment(snippet.created_at).format('YYYY-MM-DD hh:mmA')}</IonCol>
-							<IonCol key={utilsService.randomKey()}>{Moment(snippet.updated_at).format('YYYY-MM-DD hh:mmA')}</IonCol>
-						</IonRow>
-					))}
-					{/* <IonRow>
-						<IonCol></IonCol>
-					</IonRow> */}
-				</IonGrid>
+				<TableGrid rows={snippets} rowClick={clickSnippet}/>
 			</IonContent>
 		</IonPage>
 	)

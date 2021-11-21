@@ -19,6 +19,7 @@ import { SupabaseDataService } from '../services/supabase.data.service'
 import { useEffect, useState } from 'react'
 import { add } from 'ionicons/icons'
 import { UtilsService } from '../services/utils.service'
+import TableGrid from '../components/TableGrid'
 const utilsService = new UtilsService()
 
 const DatabaseViews: React.FC = () => {
@@ -43,6 +44,9 @@ const DatabaseViews: React.FC = () => {
     const addView = () => {
         history.push(`/database-view/public/NEW-VIEW`);
     }
+	const clickView = (row: any, index: number) => {
+		history.push(`/database-view/${row.table_schema}/${row.table_name}`);		
+	}
 	return (
 		<IonPage>
 			<IonHeader>
@@ -60,20 +64,9 @@ const DatabaseViews: React.FC = () => {
 			</IonHeader>
 
 			<IonContent>
-				<IonGrid>
-					<IonRow className="header">
-                    <IonCol>Name</IonCol>
-						<IonCol>Schema</IonCol>
-					</IonRow>
-                    {views.map((view: any) => {
-                        return (
-                            <IonRow key={utilsService.randomKey()} onClick={() => history.push(`/database-view/${view.table_schema}/${view.table_name}`)}>
-                                <IonCol>{view.table_name}</IonCol>
-                                <IonCol>{view.table_schema}</IonCol>
-                            </IonRow>
-                        );
-                    })}
-				</IonGrid>
+
+				<TableGrid rows={views} rowClick={clickView}/>
+
 			</IonContent>
 		</IonPage>
 	)

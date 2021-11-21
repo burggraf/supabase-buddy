@@ -136,7 +136,7 @@ const DatabaseView: React.FC = () => {
         				<IonGrid>
                         <IonRow key="name-header" className="header">
                             <IonCol>
-							View Name:{' '}
+							View Name
 							<IonInput
 								value={view.table_name}
 								onIonChange={debounce((e) => setView({...view, table_name: e.detail.value!}), 750)}

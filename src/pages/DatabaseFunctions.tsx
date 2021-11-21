@@ -16,6 +16,7 @@ import './DatabaseFunctions.css'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { useEffect, useState } from 'react'
 import { UtilsService } from '../services/utils.service'
+import TableGrid from '../components/TableGrid'
 const utilsService = new UtilsService()
 
 const DatabaseFunctions: React.FC = () => {
@@ -38,6 +39,9 @@ const DatabaseFunctions: React.FC = () => {
         //loadFunctions();
     },[]);
     
+	const clickFunction = (row: any, index: number) => {
+		history.push(`/database-function/${row.function_schema}/${row.function_name}`);		
+	}
 	return (
 		<IonPage>
 			<IonHeader>
@@ -50,27 +54,7 @@ const DatabaseFunctions: React.FC = () => {
 			</IonHeader>
 
 			<IonContent>
-				<IonGrid>
-					<IonRow className="header">
-                        <IonCol>Schema</IonCol>
-						<IonCol>Name</IonCol>
-						<IonCol>Language</IonCol>
-						<IonCol>Arguments</IonCol>
-						<IonCol>Return Type</IonCol>
-					</IonRow>
-
-                    {functions.map((f: any) => {
-                        return (
-                            <IonRow key={utilsService.randomKey()} onClick={() => history.push(`/database-function/${f.function_schema}/${f.function_name}`)}>
-                                <IonCol className="breakItUp">{f.function_schema}</IonCol>
-                                <IonCol className="breakItUp">{f.function_name}</IonCol>
-                                <IonCol className="breakItUp">{f.function_language}</IonCol>
-                                <IonCol className="breakItUp">{f.function_arguments}</IonCol>
-                                <IonCol className="breakItUp">{f.return_type}</IonCol>
-                            </IonRow>
-                        );
-                    })}
-				</IonGrid>
+				<TableGrid rows={functions} rowClick={clickFunction}/>
 			</IonContent>
 		</IonPage>
 	)
