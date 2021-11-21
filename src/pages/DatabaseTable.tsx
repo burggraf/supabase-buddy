@@ -6,6 +6,7 @@ import { useHistory, useParams } from 'react-router'
 import DisplayDetail from '../components/DisplayDetail'
 import ItemPicker from '../components/ItemPicker'
 import TableApi from '../components/TableApi'
+import TableGrid from '../components/TableGrid'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { UtilsService } from '../services/utils.service'
 
@@ -196,6 +197,18 @@ const DatabaseTable: React.FC = () => {
 		newColumnsArray[index].data_type = e;
 		setColumns(newColumnsArray);	
 	}
+	const clickSchema = (row: any, index: number) => {
+		history.push(`/database-column/${table_schema}/${table_name}/${row.column_name}`);
+	}
+	const clickTLS = (row: any, index: number) => {
+		setDetailCollection(grants);setCurrentIndex(index + 1);setRecord(row);setDetailTrigger({action:'open'})
+	}
+	const clickRLS = (row: any, index: number) => {
+		setDetailCollection(policies);setCurrentIndex(index + 1);setRecord(row);setDetailTrigger({action:'open'})		
+	}
+	const clickIndex = (row: any, index: number) => {
+		setDetailCollection(indexes);setCurrentIndex(index + 1);setRecord(row);setDetailTrigger({action:'open'})		
+	}
 	return (
 		<IonPage>
 			<IonHeader>
@@ -274,30 +287,9 @@ const DatabaseTable: React.FC = () => {
 			}
 
 			{ ((mode === 'schema') || (table_schema === 'public' && table_name === 'NEW-TABLE')) &&
-				<IonGrid>
-				<IonRow className="header">
-					<IonCol size="4">Name</IonCol>
-					<IonCol size="3">Type</IonCol>
-					<IonCol size="4">Default</IonCol>
-					<IonCol className="ion-text-center" size="1">Null?</IonCol>
-				</IonRow>
-				{columns.map((column: any, index) => {
-					// search primaryKeys for this column
-					let primaryKey = (primaryKeys.find((pk: any) => pk.attname === column.column_name) !== undefined);
-					return (
-						<IonRow key={utilsService.randomKey()}
-							onClick={() => history.push(`/database-column/${table_schema}/${table_name}/${column.column_name}`)}
-						>
-							<IonCol size="4" className="breakItUp">
-								{column.column_name} {primaryKey && <IonIcon icon={keyOutline}></IonIcon>}
-							</IonCol>
-							<IonCol size="3" className="breakItUp">{column.data_type}</IonCol>
-							<IonCol size="4" className="breakItUp">{column.column_default}</IonCol>
-							<IonCol size="1" className="breakItUp ion-text-center">{column.is_nullable === 'YES' && <IonIcon icon={checkmark}></IonIcon>}</IonCol>
-						</IonRow>
-					)
-				})}
-			</IonGrid>
+
+				<TableGrid rows={columns} rowClick={clickSchema}/>
+
 			} 
 			{ mode === 'data' && rows?.length > 0 &&
 				<div style={{ height: '100%', overflow: 'scroll'}}>
@@ -337,106 +329,19 @@ const DatabaseTable: React.FC = () => {
 				</table>
 				</div>
 
-
-
-				// <IonGrid>
-				// 	<IonRow key="header.row" className="header">
-				// 		{Object.keys(rows[0]).map((key, index) => {
-				// 			return (
-				// 					<IonCol className="breakItUp" key={utilsService.randomKey()}>{key}</IonCol>
-				// 			)
-				// 		})}
-				// 	</IonRow>
-				// 	{rows.map((row: any, idx) => {
-				// 		return (
-				// 			<IonRow key={utilsService.randomKey()} 
-				// 			onClick={()=>{setDetailCollection(rows);setCurrentIndex(idx + 1);setRecord(row);setDetailTrigger({action:'open'})}}>
-				// 				{Object.keys(row).map((key, index) => {
-				// 					if (typeof row[key] === 'object') {
-				// 						return (
-				// 							<IonCol className="breakItUp" key={utilsService.randomKey()}>{JSON.stringify(row[key])}</IonCol>
-				// 						)	
-				// 					} else {
-				// 						return (
-				// 							<IonCol className="breakItUp" key={utilsService.randomKey()}>{row[key]}</IonCol>
-				// 						)	
-				// 					}
-				// 				})}
-				// 			</IonRow>
-				// 		)
-				// 	})}
-				// </IonGrid>
-
-
 			}
 			{ mode === 'tls' &&
-				<IonGrid>
-				<IonRow className="header">
-					{Object.keys(grants[0]).map((key, index) => {
-						return (
-								<IonCol className="breakItUp" key={utilsService.randomKey()}>{key}</IonCol>
-						)
-					})}
-				</IonRow>
-				{grants.map((grant: any, idx) => {
-					return (
-						<IonRow key={utilsService.randomKey()}
-							onClick={()=>{setDetailCollection(grants);setCurrentIndex(idx + 1);setRecord(grants[0]);setDetailTrigger({action:'open'})}}>
-							{Object.keys(grant).map((key, index) => {
-								return (
-									<IonCol className="breakItUp" key={utilsService.randomKey()}>{grant[key]}</IonCol>
-								)
-							})}
-						</IonRow>
-					)
-				})}
-			</IonGrid>
-		}
+			
+				<TableGrid rows={grants} rowClick={clickTLS}/>
+
+			}
 			{ mode === 'rls' && policies?.length > 0 &&
-				<IonGrid>
-				<IonRow className="header">
-					{Object.keys(policies[0]).map((key, index) => {
-						return (
-								<IonCol className="breakItUp" key={utilsService.randomKey()}>{key}</IonCol>
-						)
-					})}
-				</IonRow>
-				{policies.map((policy: any, idx) => {
-					return (
-						<IonRow key={utilsService.randomKey()}
-							onClick={()=>{setDetailCollection(policies);setCurrentIndex(idx + 1);setRecord(policy);setDetailTrigger({action:'open'})}}>
-							{Object.keys(policy).map((key, index) => {
-								return (
-									<IonCol className="breakItUp" key={utilsService.randomKey()}>{policy[key]}</IonCol>
-								)
-							})}
-						</IonRow>
-					)
-				})}
-			</IonGrid>
+
+				<TableGrid rows={policies} rowClick={clickRLS}/>
+
 			}
 			{ mode === 'indexes' && indexes?.length > 0 &&
-				<IonGrid>
-					<IonRow key={utilsService.randomKey()} className="header">
-						{Object.keys(indexes[0]).map((key, index) => {
-							return (
-									<IonCol className="breakItUp" key={utilsService.randomKey()}>{key}</IonCol>
-							)
-						})}
-					</IonRow>
-					{indexes.map((idx: any, indx) => {
-						return (
-							<IonRow key={utilsService.randomKey()}
-	                            onClick={()=>{setDetailCollection(indexes);setCurrentIndex(indx + 1);setRecord(idx);setDetailTrigger({action:'open'})}}>							
-								{Object.keys(idx).map((key, index) => {
-									return (
-										<IonCol className="breakItUp" key={utilsService.randomKey()}>{idx[key]}</IonCol>
-									)
-								})}
-							</IonRow>
-						)
-					})}
-				</IonGrid>
+				<TableGrid rows={indexes} rowClick={clickIndex}/>
 			}
 			{ mode === 'api' &&
 				<div>

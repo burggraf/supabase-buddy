@@ -57,22 +57,6 @@ const DatabaseTables: React.FC = () => {
 
 			<IonContent>
 				<TableGrid rows={tables} rowClick={clickHandler}/>
-				{/* <IonGrid>
-					<IonRow className="header">
-						<IonCol className="breakItUp">Name</IonCol>
-						<IonCol className="breakItUp">Description</IonCol>
-						<IonCol className="breakItUp">Schema</IonCol>
-					</IonRow>
-                    {tables.map((table: any) => {
-                        return (
-                            <IonRow key={utilsService.randomKey()} onClick={() => history.push(`/database-table/${table.table_schema}/${table.table_name}`)}>
-                                <IonCol className="breakItUp">{table.table_name}</IonCol>
-                                <IonCol className="breakItUp">{table.description}</IonCol>
-                                <IonCol className="breakItUp">{table.table_schema}</IonCol>
-                            </IonRow>
-                        );
-                    })}
-				</IonGrid> */}
 			</IonContent>
 		</IonPage>
 	)
