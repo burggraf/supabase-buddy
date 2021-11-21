@@ -66,9 +66,9 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 				}
 				outputArray.push(
 					<div key={utilsService.randomKey()}>
-						<IonLabel key={utilsService.randomKey()} className='resultHeader'>
+						<div key={utilsService.randomKey()} className='resultHeader'>
 							<strong>Result #{i + 1}</strong>
-						</IonLabel>
+						</div>
 						<table style={{'width': gridWidth + 'px'}} key={utilsService.randomKey()}>
 							<tbody>
 							<tr key={utilsService.randomKey()}>
