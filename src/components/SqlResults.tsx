@@ -11,18 +11,6 @@ interface ContainerProps {
 	results: any[]
 }
 
-const getTextWidth = (text: string, font?: string) =>{
-	const canvas = document.createElement('canvas');
-	const context = canvas.getContext('2d');
-	if (context) {
-		context.font = font || getComputedStyle(document.body).font;
-		const calculated = Math.round((context.measureText(text).width * 1.05) + 10); // pad here? 10
-		return Math.min(calculated, 400); 
-	} else {
-		return 0;
-	}
-  }
-
 const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 	const [record, setRecord] = useState({})
     const [resultSet, setResultSet] = useState(0)
@@ -46,24 +34,8 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
             if (resultJson.length > 0) {
 				// get keys and values of first element
 				const keys = Object.keys(resultJson[0])
-				const resultWidths: number[]= [];
-				let gridWidth = 0;
-				for (let j = 0; j < keys.length; j++) {
-					const textWidth = getTextWidth(keys[j]);
-					if (typeof resultWidths[j] !== 'number' || textWidth > resultWidths[j]) {
-						resultWidths[j] = textWidth
-					}
-					for (let k = 0; k < resultJson.length; k++) {
-						const item = resultJson[k][keys[j]];
-						const textWidth = getTextWidth(typeof item === 'string' ? item : JSON.stringify(item));
-						if (typeof resultWidths[j] !== 'number' || textWidth > resultWidths[j]) {
-							resultWidths[j] = textWidth
-						}
-					}
-				}
-				for (let j = 0; j < keys.length; j++) {
-					gridWidth += resultWidths[j];
-				}
+
+				const { gridWidth, columnWidths } = utilsService.getGridWidths(resultJson);
 				outputArray.push(
 					<div key={utilsService.randomKey()}>
 						<div key={utilsService.randomKey()} className='resultHeader'>
@@ -73,7 +45,7 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 							<tbody>
 							<tr key={utilsService.randomKey()}>
 								{keys.map((key, index) => (
-									<td style={{'width': resultWidths[index] + 'px'}} className='breakItUp' key={utilsService.randomKey()}>
+									<td style={{'width': columnWidths[index] + 'px'}} className='breakItUp' key={utilsService.randomKey()}>
 										<strong>{key}</strong>
 									</td>
 								))}
@@ -92,13 +64,13 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 										// if (!Array.isArray(row[key])) {
 										if (typeof row[key] !== 'object') {
 											return (
-												<td style={{'width': resultWidths[index] + 'px'}} className='breakItUp boxed' key={utilsService.randomKey()}>
+												<td style={{'width': columnWidths[index] + 'px'}} className='breakItUp boxed' key={utilsService.randomKey()}>
 													{row[key]}
 												</td>
 											)
 										} else {
 											return (
-												<td style={{'width': resultWidths[index] + 'px'}} className='breakItUp boxed' key={utilsService.randomKey()}>
+												<td style={{'width': columnWidths[index] + 'px'}} className='breakItUp boxed' key={utilsService.randomKey()}>
 													{JSON.stringify(row[key])}
 												</td>
 											)
