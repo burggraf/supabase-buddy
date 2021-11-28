@@ -42,12 +42,14 @@ const Welcome: React.FC = () => {
 	}
 	useIonViewDidEnter(async () => {    
 		await loadSettings()
+		projectsService.listProjectsToConsole();
+		projectsService.listProjectToConsole();
 	})
     // useEffect(() => {
     // }, [project]);
 
 	const saveChanges = () => {
-		projectsService.selectProject(project);
+		setProject(projectsService.selectProject(project));
     }
 	const signInWithEmail = async () => {
 		saveChanges()
