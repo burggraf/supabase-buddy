@@ -21,7 +21,7 @@ export class SupabaseAuthService {
       this.loadUser();
   }
 
-  private authStateSubscription: any;
+  private authStateSubscription: any = null;
 
   public connect() {
     const url = ProjectsService.project.url;
@@ -29,6 +29,10 @@ export class SupabaseAuthService {
     if (url !== '' && apikey !== '') {
       supabase = createClient(url, apikey);
       this.isConnected = true;
+      if (this.authStateSubscription) {
+        this.authStateSubscription.unsubscribe();
+        this.authStateSubscription = null;
+      }
       this.authStateSubscription = supabase.auth.onAuthStateChange(async (event, session) => {
         if (event === 'SIGNED_IN' && session) {
           this._user = session.user;
@@ -128,6 +132,11 @@ export class SupabaseAuthService {
       this._user = null;
       this.user.next(null);
     }
+    if (this.authStateSubscription) {
+      this.authStateSubscription.unsubscribe();
+      this.authStateSubscription = null;
+    }
+    this.isConnected = false;
     return { error };
   }
 }
