@@ -151,6 +151,8 @@ const Menu: React.FC = () => {
     const { error } = await supabaseAuthService.signOut();
     if (error) {
       console.error('Error signing out', error);
+    } else {
+      localStorage.removeItem('supabase.auth.token');
     }
   }
   const loadImage = () =>{
