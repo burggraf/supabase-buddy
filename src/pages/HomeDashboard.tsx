@@ -30,7 +30,12 @@ const HomeDashboard: React.FC = () => {
             return;            
           } else if (serverVersionError) {
             console.error(serverVersionError);
-            toast('checkServerVersion error: ' + serverVersionError.message, 'danger');
+            if (serverVersionError.message === 'JWSError JWSInvalidSignature') {
+              // checkServerVersion error: JWSError JWSInvalidSignature
+              history.replace('/welcome');
+            } else {
+              toast('checkServerVersion error: ' + serverVersionError.message, 'danger');
+            }
           } else {
             console.log('serverVersionData', serverVersionData);
             setServerVersion((serverVersionData as any)[0].version);
