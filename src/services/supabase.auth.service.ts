@@ -136,6 +136,8 @@ export class SupabaseAuthService {
       this.authStateSubscription.unsubscribe();
       this.authStateSubscription = null;
     }
+    supabase.auth.setAuth('');
+    supabase.auth.setSession('');
     this.isConnected = false;
     return { error };
   }

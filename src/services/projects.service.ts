@@ -17,8 +17,15 @@ export class ProjectsService {
 		}
 		try {
 			ProjectsService.projects = JSON.parse(localStorage.getItem('projects') || '[]');
-			console.log('init got projects', ProjectsService.projects);
-			ProjectsService.project = JSON.parse(localStorage.getItem('project') || '{projectID:"",name:"",url:"",apikey:""}');
+			// console.log('init got projects', ProjectsService.projects);
+			// console.log('project', localStorage.getItem('project') || '{projectID:"",name:"",url:"",apikey:""}');
+			const projectText = localStorage.getItem('project');
+			if (projectText) {
+				ProjectsService.project = JSON.parse(projectText);
+			} else {
+				ProjectsService.project = {projectID:"",name:"",url:"",apikey:""};
+			}
+			// console.log('parsed project', ProjectsService.project);
 			ProjectsService.initialized = true;
 		} catch (error) {
 			console.error('*** ProjectsService init: error', error)
@@ -28,13 +35,22 @@ export class ProjectsService {
 		this.init();
 	}
 	public selectProject(project: Project) {
+		// console.log('selectProject', project);
+		if (!project) {
+			project = {
+				projectID: '',
+				name: '',
+				url: '',
+				apikey: ''
+			}
+		}
 		// find this project in the list of projects
 		if (project.projectID === '') {
 			project.projectID = this.utilsService.uuidv4();
 		}
-		console.log('** selectProject', project);
+		// console.log('** selectProject', project);
 		const index = ProjectsService.projects.findIndex((p) => p.projectID === project.projectID);
-		console.log('index is', index);
+		// console.log('index is', index);
 		if (index === -1) {
 			// add this project to the list of projects
 			ProjectsService.projects.push(project);
@@ -57,7 +73,6 @@ export class ProjectsService {
 		return ProjectsService.projects.findIndex((p) => p.projectID === id) > -1;
 	}
 	public addProject(url: string, apikey: string, name: string): Project {
-		console.log('ProjectsService.addProject');
 		const newProject = {
 			projectID: this.utilsService.uuidv4(),
 			name: name,

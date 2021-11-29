@@ -38,7 +38,12 @@ const Welcome: React.FC = () => {
     
     const loadSettings = async () => {
         setProjects(JSON.parse(localStorage.getItem('projects') || '[]'));
-		setProject(JSON.parse(localStorage.getItem('project') || '{projectID:"",name:"",url:"",apikey:""}'));
+		const projectText = localStorage.getItem('project');
+		if (projectText) {
+			setProject(JSON.parse(projectText));
+		} else {
+			setProject({projectID:"",name:"",url:"",apikey:""});
+		}
 	}
 	useIonViewDidEnter(async () => {    
 		await loadSettings()
@@ -59,7 +64,6 @@ const Welcome: React.FC = () => {
 			toast(error.message)
 		} else {
 			// localStorage.setItem('currentProjectID', currentProjectID)
-            console.log('signInWithEmail returned user', user);
 			window.location.href = '/home-dashboard'
 		}
 	}
