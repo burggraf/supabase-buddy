@@ -89,6 +89,8 @@ const Welcome: React.FC = () => {
 		const { user, session, error } = await supabaseAuthService.sendMagicLink(email)
 		if (error) {
 			toast(error.message)
+		} else {
+			console.log('magic link was sent to', email);
 		}
 	}
 	const validateEmail = (email: string) => {

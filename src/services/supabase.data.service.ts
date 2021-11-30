@@ -186,11 +186,11 @@ export class SupabaseDataService {
     return this.runStatement(`SELECT schema_name FROM information_schema.schemata order by schema_name`);
   }
 
-  public async getUsers() {
-    return this.runStatement(`SELECT id, email, phone, last_sign_in_at FROM auth.users`);
+  public async getUsers(orderBy: string = 'email', ascending: boolean = true, limit: number = 100, offset: number = 0) {
+    return this.runStatement(`SELECT id, email, phone, last_sign_in_at FROM auth.users order by ${orderBy} ${ascending?'ASC':'DESC'} limit ${limit} offset ${offset}`);
   }
-  public async getAuthorizedUsers() {
-    return this.runStatement(`SELECT id, email, phone, last_sign_in_at FROM auth.users where id in (select id from buddy.authorized_users)`);
+  public async getAuthorizedUsers(orderBy: string = 'email', ascending: boolean = true, limit: number = 100, offset: number = 0) {
+    return this.runStatement(`SELECT id, email, phone, last_sign_in_at FROM auth.users where id in (select id from buddy.authorized_users) order by ${orderBy} ${ascending?'ASC':'DESC'} limit ${limit} offset ${offset}`);
   }
   public async getUserCount() {
     return  this.runStatement(`SELECT count(*)::INT4 as total FROM auth.users`);

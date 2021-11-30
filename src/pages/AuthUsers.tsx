@@ -1,13 +1,18 @@
 import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenuButton, IonPage, IonPopover, IonRow, IonTitle, IonToolbar, useIonToast, useIonViewDidEnter } from '@ionic/react';
-import { add, closeOutline, ellipsisHorizontal, mail } from 'ionicons/icons';
+import { add, caretUpOutline, closeOutline, ellipsisHorizontal, mail } from 'ionicons/icons';
 import Moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
+import TableColumnSort from '../components/TableColumnSort';
 
 import { SupabaseAuthService } from '../services/supabase.auth.service';
 import { SupabaseDataService } from '../services/supabase.data.service';
 
 import './AuthUsers.css';
+interface Sort {
+  orderBy: string;
+  ascending: boolean;
+}
 
 const AuthUsers: React.FC = () => {
 	const supabaseDataService = new SupabaseDataService();
@@ -25,8 +30,10 @@ const AuthUsers: React.FC = () => {
       open: false,
       event: undefined
     });
+    const [sort, setSort] = useState<Sort>({orderBy: 'email', ascending: true});
+    const [page, setPage] = useState<{limit: number, offset: number}>({limit: 100, offset: 0});
 	const loadUsers = async () => {
-		const { data, error } = await supabaseDataService.getUsers()
+		const { data, error } = await supabaseDataService.getUsers(sort.orderBy, sort.ascending, page.limit, page.offset);
 		if (error) {
 			console.error('getUsers error', error)
 		} else {
@@ -75,6 +82,10 @@ const AuthUsers: React.FC = () => {
     }
     setShowInvite({open: false, event: undefined});
   }
+  const changeSort = async (newSort: Sort) => {
+    setSort(newSort);
+    loadUsers();
+  }
   const inviteUser = async () => {
 
   }
@@ -100,13 +111,13 @@ const AuthUsers: React.FC = () => {
 
             <IonRow className="header">
                 <IonCol size="4" className="breakItUp">
-                    <IonLabel>Email</IonLabel>
+                    <IonLabel>Email</IonLabel>&nbsp;&nbsp;<TableColumnSort sort={sort} columnName="email" callback={changeSort}/>
                 </IonCol>
                 <IonCol size="3" className="breakItUp">
-                    <IonLabel>Phone</IonLabel>
+                    <IonLabel>Phone</IonLabel>&nbsp;&nbsp;<TableColumnSort sort={sort} columnName="phone" callback={changeSort}/>
                 </IonCol>
                 <IonCol size="3" className="breakItUp">
-                    <IonLabel>Last Sign In</IonLabel>
+                    <IonLabel>Last Sign In</IonLabel>&nbsp;&nbsp;<TableColumnSort sort={sort} columnName="last_sign_in_at" callback={changeSort}/>
                </IonCol>
                <IonCol size="2" className="breakItUp">
                  &nbsp;
