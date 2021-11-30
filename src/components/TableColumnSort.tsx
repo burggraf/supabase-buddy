@@ -23,8 +23,9 @@ const TableColumnSort: React.FC<ContainerProps> = ({ sort, columnName, callback 
         callback(sort);
     };
         return (
-        <IonIcon icon={sort.ascending ? caretUpOutline : caretDownOutline} 
+        <IonIcon icon={sort.ascending || sort.orderBy !== columnName ? caretUpOutline : caretDownOutline} 
         // onClick={() => {changeSort();}}
+        size="large"
         onClick={changeSort}
         color={columnName === sort.orderBy ? 'dark' : 'medium'}></IonIcon> 
       );
