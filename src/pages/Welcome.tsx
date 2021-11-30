@@ -1,10 +1,12 @@
 import { IonButton, IonButtons, IonChip, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonAlert, useIonToast, useIonViewDidEnter } from '@ionic/react'
 import { add, link, logIn, refreshCircle } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
+import { useHistory } from 'react-router';
 
 //import { Project } from 'react-router'
 
 import { Project } from '../../models/Project';
+import ProviderSignInButton from '../Login/ProviderSignInButton';
 import { ProjectsService } from '../services/projects.service';
 import { SupabaseAuthService } from '../services/supabase.auth.service'
 
@@ -14,9 +16,9 @@ import './Welcome.css'
 
 const supabaseAuthService: SupabaseAuthService = new SupabaseAuthService();
 const projectsService: ProjectsService = new ProjectsService();
-
 const Welcome: React.FC = () => {
     console.log('welcome, main loop fired');
+	const history = useHistory();
 
     const [presentAlert] = useIonAlert()
     const [presentToast, dismissToast] = useIonToast()
@@ -49,6 +51,12 @@ const Welcome: React.FC = () => {
 		await loadSettings()
 		projectsService.listProjectsToConsole();
 		projectsService.listProjectToConsole();
+		setTimeout(() => {
+			if (supabaseAuthService.getCurrentUser()) {
+				console.log('supabaseAuthService.user', supabaseAuthService.getCurrentUser());
+				history.replace('/home-dashboard');
+			}
+		},100);
 	})
     // useEffect(() => {
     // }, [project]);
@@ -271,6 +279,27 @@ const Welcome: React.FC = () => {
 						</IonCol>
 					</IonRow>
 				</IonGrid>
+
+				<div className="ion-text-center">
+					<IonLabel><b>Sign in with:</b></IonLabel>
+				</div>
+				<div className="flex-container">
+
+						<ProviderSignInButton name="google" />
+						<ProviderSignInButton name="facebook" />
+						<ProviderSignInButton name="twitter" />
+						<ProviderSignInButton name="apple" />
+						<ProviderSignInButton name="spotify" />
+						<ProviderSignInButton name="slack" />
+						<ProviderSignInButton name="twitch" />
+						<ProviderSignInButton name="discord" />
+						<ProviderSignInButton name="github" />
+						<ProviderSignInButton name="bitbucket" />
+						<ProviderSignInButton name="gitlab" />
+
+				</div>
+
+
 			</IonContent>
 			{(project?.projectID?.length > 0) && 
 				<IonFooter>

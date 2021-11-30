@@ -23,6 +23,9 @@ export class SupabaseAuthService {
 
   private authStateSubscription: any = null;
 
+  public getCurrentUser() {
+    return this._user;
+  }
   public connect() {
     const url = ProjectsService.project.url;
     const apikey = ProjectsService.project.apikey;
@@ -77,6 +80,8 @@ export class SupabaseAuthService {
     const { user, session, error } = await supabase.auth.signIn({
       email: email,
       password: password,
+    },{
+      redirectTo: window.location.origin + '/'
     });
     if (!error) {
       this._user = user;
@@ -90,7 +95,7 @@ export class SupabaseAuthService {
     const { user, session, error } = await supabase.auth.signIn({
       provider: provider
     }, {
-      redirectTo: window.location.origin
+      redirectTo: window.location.origin + '/'
     });
     if (!error) {
       this._user = user;
@@ -103,17 +108,18 @@ export class SupabaseAuthService {
     if (!this.isConnected) this.connect();
     const { data, error } = await supabase.auth.api.resetPasswordForEmail(email,
       {
-        redirectTo: window.location.origin
+        redirectTo: window.location.origin + '/'
       });
     return { data, error };
   }
 
   public sendMagicLink = async (email: string) => {
+    console.log('sendMagicLink, redirect to', window.location.origin + '/')
     if (!this.isConnected) this.connect();
     const { user, session, error } = await supabase.auth.signIn({
       email: email
-    }, {
-      redirectTo: window.location.origin
+    }, {      
+      redirectTo: window.location.origin + '/'
     });
     return { user, session, error };
   }

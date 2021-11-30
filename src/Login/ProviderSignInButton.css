@@ -1,0 +1,11 @@
+.flex-child {
+    /* flex: 1; */
+    /* border: 2px solid yellow; */
+    /* margin: 15px; */
+    margin: 2% 5% 2%
+    /* margin: 0 1% 20px; */
+}  
+
+/* .flex-child:first-child {
+    margin-right: 20px;
+}  */
