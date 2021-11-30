@@ -32,7 +32,7 @@ export class UtilsService {
 		for (let j = 0; j < keys.length; j++) {
 			const textWidth = this.getTextWidth(keys[j]);
 			if (typeof columnWidths[j] !== 'number' || textWidth > columnWidths[j]) {
-				columnWidths[j] = textWidth
+				columnWidths[j] = textWidth + 35;
 			}
 			for (let k = 0; k < obj.length; k++) {
 				const item = obj[k][keys[j]];

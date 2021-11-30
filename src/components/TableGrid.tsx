@@ -23,7 +23,7 @@ const TableGrid: React.FC<ContainerProps> = ({ rows, rowClick, sort, changeSortC
 					<tr key={utilsService.randomKey()}>
 						{keys.map((keyname, index) => (
 							<td
-								style={{ width: columnWidths[index] + 'px' }}
+								style={{ verticalAlign: 'bottom', width: columnWidths[index] + 'px' }}
 								className='breakItUp'
 								key={utilsService.randomKey()}>
 								<strong>{keyname}</strong>
