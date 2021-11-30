@@ -3,6 +3,7 @@ import { add } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import TableGrid from '../components/TableGrid'
+import { Sort } from '../models/Sort'
 
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { UtilsService } from '../services/utils.service'
@@ -18,7 +19,7 @@ const DatabaseTables: React.FC = () => {
 	const { name } = useParams<{ name: string }>()
     const [tables, setTables] = useState<any[]>([])
     const loadTables = async () => {
-        const { data, error } = await supabaseDataService.getTables();
+        const { data, error } = await supabaseDataService.getTables(sort.orderBy, sort.ascending);
         if (error) {
             console.error(error);
         } else {
@@ -39,6 +40,12 @@ const DatabaseTables: React.FC = () => {
 	const clickHandler = (row: any, index: number) => {
 		history.push(`/database-table/${row.table_schema}/${row.table_name}`);
 	}
+    const [sort, setSort] = useState<Sort>({orderBy: 'table_name', ascending: true});
+    const changeSort = async (newSort: Sort) => {
+      setSort(newSort);
+      loadTables();
+    }  
+
 	return (
 		<IonPage>
 			<IonHeader>
@@ -54,9 +61,8 @@ const DatabaseTables: React.FC = () => {
 					</IonButtons>
 				</IonToolbar>
 			</IonHeader>
-
 			<IonContent>
-				<TableGrid rows={tables} rowClick={clickHandler}/>
+				<TableGrid rows={tables} rowClick={clickHandler} sort={sort} changeSortCallback={changeSort} sortableColumns={['table_name','table_schema','table_type']}/>
 			</IonContent>
 		</IonPage>
 	)

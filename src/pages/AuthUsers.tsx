@@ -9,10 +9,7 @@ import { SupabaseAuthService } from '../services/supabase.auth.service';
 import { SupabaseDataService } from '../services/supabase.data.service';
 
 import './AuthUsers.css';
-interface Sort {
-  orderBy: string;
-  ascending: boolean;
-}
+import { Sort } from '../models/Sort';
 
 const AuthUsers: React.FC = () => {
 	const supabaseDataService = new SupabaseDataService();
@@ -31,6 +28,10 @@ const AuthUsers: React.FC = () => {
       event: undefined
     });
     const [sort, setSort] = useState<Sort>({orderBy: 'email', ascending: true});
+    const changeSort = async (newSort: Sort) => {
+      setSort(newSort);
+      loadUsers();
+    }  
     const [page, setPage] = useState<{limit: number, offset: number}>({limit: 100, offset: 0});
 	const loadUsers = async () => {
 		const { data, error } = await supabaseDataService.getUsers(sort.orderBy, sort.ascending, page.limit, page.offset);
@@ -81,10 +82,6 @@ const AuthUsers: React.FC = () => {
       toast('Error: ' + error?.message, 'danger')
     }
     setShowInvite({open: false, event: undefined});
-  }
-  const changeSort = async (newSort: Sort) => {
-    setSort(newSort);
-    loadUsers();
   }
   const inviteUser = async () => {
 

@@ -2,11 +2,13 @@ import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon,
 import { add } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
+import TableColumnSort from '../components/TableColumnSort'
 
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { UtilsService } from '../services/utils.service'
 
 import './DatabaseSchemas.css'
+import { Sort } from '../models/Sort';
 
 const utilsService = new UtilsService()
 
@@ -16,13 +18,18 @@ const DatabaseSchemas: React.FC = () => {
 	const { name } = useParams<{ name: string }>()
     const [schemas, setSchemas] = useState<any[]>([])
     const loadSchemas = async () => {
-        const { data, error } = await supabaseDataService.getSchemas();
+        const { data, error } = await supabaseDataService.getSchemas(sort.orderBy, sort.ascending);
         if (error) {
             console.error(error);
         } else {
             setSchemas(data!);
         }
     }
+    const [sort, setSort] = useState<Sort>({orderBy: 'schema_name', ascending: true});
+    const changeSort = async (newSort: Sort) => {
+      setSort(newSort);
+      loadSchemas();
+    }  
 	useIonViewDidEnter(() => {
         loadSchemas()
 	})
@@ -51,7 +58,7 @@ const DatabaseSchemas: React.FC = () => {
 			<IonContent>
 				<IonGrid>
 					<IonRow className="header">
-						<IonCol>Schema</IonCol>
+						<IonCol>Schema&nbsp;&nbsp;<TableColumnSort sort={sort} columnName="schema_name" callback={changeSort}/></IonCol>
 					</IonRow>
                     {schemas.map((schema: any) => {
                         return (

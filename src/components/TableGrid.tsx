@@ -1,14 +1,19 @@
+import { Sort } from '../models/Sort'
 import { UtilsService } from '../services/utils.service'
+import TableColumnSort from './TableColumnSort'
 import './TableGrid.css'
 
 interface ContainerProps {
 	rows: any[];
     rowClick: Function;
+	sort?: Sort;
+	changeSortCallback?: Function;
+	sortableColumns?: string[];
 }
 
 const utilsService = new UtilsService()
 
-const TableGrid: React.FC<ContainerProps> = ({ rows, rowClick }) => {
+const TableGrid: React.FC<ContainerProps> = ({ rows, rowClick, sort, changeSortCallback, sortableColumns }) => {
 	const keys = Object.keys(rows[0] || [])
 	const { gridWidth, columnWidths } = utilsService.getGridWidths(rows)
 	return (
@@ -22,6 +27,9 @@ const TableGrid: React.FC<ContainerProps> = ({ rows, rowClick }) => {
 								className='breakItUp'
 								key={utilsService.randomKey()}>
 								<strong>{keyname}</strong>
+								{sort && changeSortCallback && sortableColumns && (sortableColumns?.findIndex(col => col === keyname) > -1) && 						
+									<TableColumnSort sort={sort} columnName={keyname} callback={changeSortCallback}/>
+								}
 							</td>
 						))}
 					</tr>

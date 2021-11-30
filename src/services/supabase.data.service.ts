@@ -150,13 +150,13 @@ export class SupabaseDataService {
     `DROP EXTENSION IF EXISTS "${name}"`);
   }
 
-  public async getTables(exclude_schemas: string = "'pg_catalog', 'information_schema', 'extensions', 'auth', 'storage'") {
+  public async getTables(orderBy: string = 'schema_name', ascending: boolean = true, exclude_schemas: string = "'pg_catalog', 'information_schema', 'extensions', 'auth', 'storage'") {
     return this.runStatement(`SELECT information_schema.tables.*,pg_description.description 
     FROM information_schema.tables 
     LEFT OUTER JOIN pg_description 
     ON pg_description.objoid = (information_schema.tables.table_schema || '.' || information_schema.tables.table_name)::regclass
     WHERE table_schema 
-    NOT IN (${exclude_schemas})
+    NOT IN (${exclude_schemas}) order by ${orderBy} ${ascending ? 'asc' : 'desc'}, table_name asc
     `);
   }
 
@@ -182,8 +182,8 @@ export class SupabaseDataService {
     AND column_name = '${column_name}'
     `);
   }
-  public async getSchemas() {
-    return this.runStatement(`SELECT schema_name FROM information_schema.schemata order by schema_name`);
+  public async getSchemas(orderBy: string = 'schema_name', ascending: boolean = true) {
+    return this.runStatement(`SELECT schema_name FROM information_schema.schemata order by ${orderBy} ${ascending?'ASC':'DESC'}`);
   }
 
   public async getUsers(orderBy: string = 'email', ascending: boolean = true, limit: number = 100, offset: number = 0) {
