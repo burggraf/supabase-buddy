@@ -66,7 +66,7 @@ const DatabaseTables: React.FC = () => {
 						rowClick={clickHandler} 
 						sort={sort} 
 						changeSortCallback={changeSort} 
-						sortableColumns={[null,'table_schema','table_name','table_type']}/>
+						sortableColumns={['table_schema','table_name','table_type']}/>
 			</IonContent>
 		</IonPage>
 	)
