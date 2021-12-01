@@ -8,19 +8,23 @@ interface Sort {
 }
 interface ContainerProps {
     sort: Sort;
-    columnName: string;
+    columnName: string|null;
     callback: Function;
 }
 
 const TableColumnSort: React.FC<ContainerProps> = ({ sort, columnName, callback }) => {
     const changeSort = async () => {
-        if (sort.orderBy === columnName) {
-            sort.ascending = !sort.ascending;
+        if (columnName !== null) {
+            if (sort.orderBy === columnName) {
+                sort.ascending = !sort.ascending;
+            } else {
+                sort.orderBy = columnName;
+                sort.ascending = true;
+            }
+            callback(sort);    
         } else {
-            sort.orderBy = columnName;
-            sort.ascending = true;
+            console.error('TableColumnSortError: sort, columnName',sort, columnName);
         }
-        callback(sort);
     };
         return (
         <IonIcon icon={sort.ascending || sort.orderBy !== columnName ? caretUpOutline : caretDownOutline} 

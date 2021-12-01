@@ -8,12 +8,13 @@ interface ContainerProps {
     rowClick: Function;
 	sort?: Sort;
 	changeSortCallback?: Function;
-	sortableColumns?: string[];
+	sortableColumns?: (string|null)[];
 }
 
 const utilsService = new UtilsService()
 
 const TableGrid: React.FC<ContainerProps> = ({ rows, rowClick, sort, changeSortCallback, sortableColumns }) => {
+	console.log('tableGrid, sortableColumns, sort', sortableColumns, sort);
 	const keys = Object.keys(rows[0] || [])
 	const { gridWidth, columnWidths } = utilsService.getGridWidths(rows)
 	return (
@@ -27,8 +28,8 @@ const TableGrid: React.FC<ContainerProps> = ({ rows, rowClick, sort, changeSortC
 								className='breakItUp'
 								key={utilsService.randomKey()}>
 								<strong>{keyname}</strong>
-								{sort && changeSortCallback && sortableColumns && (sortableColumns?.findIndex(col => col === keyname) > -1) && 						
-									<TableColumnSort sort={sort} columnName={keyname} callback={changeSortCallback}/>
+								{sort && changeSortCallback && sortableColumns && typeof sortableColumns[index] === 'string' &&  						
+									<TableColumnSort sort={sort} columnName={sortableColumns[index]} callback={changeSortCallback}/>
 								}
 							</td>
 						))}

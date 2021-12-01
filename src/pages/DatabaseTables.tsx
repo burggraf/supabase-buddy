@@ -62,7 +62,11 @@ const DatabaseTables: React.FC = () => {
 				</IonToolbar>
 			</IonHeader>
 			<IonContent>
-				<TableGrid rows={tables} rowClick={clickHandler} sort={sort} changeSortCallback={changeSort} sortableColumns={['table_name','table_schema','table_type']}/>
+				<TableGrid rows={tables} 
+						rowClick={clickHandler} 
+						sort={sort} 
+						changeSortCallback={changeSort} 
+						sortableColumns={[null,'table_schema','table_name','table_type']}/>
 			</IonContent>
 		</IonPage>
 	)
