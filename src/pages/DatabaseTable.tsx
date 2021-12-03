@@ -6,7 +6,7 @@ import { useHistory, useParams } from 'react-router'
 import DisplayDetail from '../components/DisplayDetail'
 import ItemPicker from '../components/ItemPicker'
 import TableApi from '../components/TableApi'
-import TableGrid from '../components/TableGrid'
+import { TableGrid } from 'ionic-react-tablegrid'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { UtilsService } from '../services/utils.service'
 

@@ -16,7 +16,7 @@ import { useParams } from 'react-router'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import './DatabaseColumn.css'
 import { UtilsService } from '../services/utils.service'
-import TableGrid from '../components/TableGrid'
+import { TableGrid } from 'ionic-react-tablegrid'
 const utilsService = new UtilsService()
 
 const DatabaseColumn: React.FC = () => {

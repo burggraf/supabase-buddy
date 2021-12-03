@@ -2,7 +2,7 @@ import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon,
 import { add } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
-import TableGrid from '../components/TableGrid'
+import { TableGrid } from 'ionic-react-tablegrid'
 import { Sort } from '../models/Sort'
 
 import { SupabaseDataService } from '../services/supabase.data.service'

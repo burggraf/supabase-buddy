@@ -3,7 +3,7 @@ import { add } from 'ionicons/icons'
 import Moment from 'moment';
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
-import TableGrid from '../components/TableGrid';
+import { TableGrid } from 'ionic-react-tablegrid'
 
 import { Snippet } from '../models/Snippet'
 import { SupabaseDataService } from '../services/supabase.data.service'

@@ -19,7 +19,7 @@ import { SupabaseDataService } from '../services/supabase.data.service'
 import { useEffect, useState } from 'react'
 import { add } from 'ionicons/icons'
 import { UtilsService } from '../services/utils.service'
-import TableGrid from '../components/TableGrid'
+import { TableGrid } from 'ionic-react-tablegrid'
 const utilsService = new UtilsService()
 
 const DatabaseViews: React.FC = () => {

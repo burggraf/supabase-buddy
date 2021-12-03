@@ -1,15 +1,15 @@
+import { TableColumnSort } from 'ionic-react-tablegrid'
 import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenuButton, IonPage, IonPopover, IonRow, IonTitle, IonToolbar, useIonToast, useIonViewDidEnter } from '@ionic/react';
 import { add, caretUpOutline, closeOutline, ellipsisHorizontal, mail } from 'ionicons/icons';
 import Moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
-import TableColumnSort from '../components/TableColumnSort';
 
+import { Sort } from '../models/Sort';
 import { SupabaseAuthService } from '../services/supabase.auth.service';
 import { SupabaseDataService } from '../services/supabase.data.service';
 
 import './AuthUsers.css';
-import { Sort } from '../models/Sort';
 
 const AuthUsers: React.FC = () => {
 	const supabaseDataService = new SupabaseDataService();
