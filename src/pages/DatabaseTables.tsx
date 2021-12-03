@@ -4,7 +4,7 @@ import { add } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 
-import { Sort } from '../models/Sort'
+import { Sort } from 'ionic-react-tablegrid'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { UtilsService } from '../services/utils.service'
 

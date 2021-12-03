@@ -1,14 +1,14 @@
 import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react'
+import { TableColumnSort } from 'ionic-react-tablegrid'
 import { add } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
-import { TableColumnSort } from 'ionic-react-tablegrid'
 
+import { Sort } from 'ionic-react-tablegrid'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { UtilsService } from '../services/utils.service'
 
 import './DatabaseSchemas.css'
-import { Sort } from '../models/Sort';
 
 const utilsService = new UtilsService()
 
