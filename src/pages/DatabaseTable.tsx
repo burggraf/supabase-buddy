@@ -1,4 +1,5 @@
 import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonMenuButton, IonPage, IonRow, IonSegment, IonSegmentButton, IonTitle, IonToolbar, useIonModal, useIonToast } from '@ionic/react'
+import { TableGrid } from 'ionic-react-tablegrid'
 import { arrowBackOutline, arrowForwardOutline, checkmark, checkmarkOutline, closeOutline, createOutline, keyOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
@@ -6,7 +7,6 @@ import { useHistory, useParams } from 'react-router'
 import DisplayDetail from '../components/DisplayDetail'
 import ItemPicker from '../components/ItemPicker'
 import TableApi from '../components/TableApi'
-import { TableGrid } from 'ionic-react-tablegrid'
 import { SupabaseDataService } from '../services/supabase.data.service'
 import { UtilsService } from '../services/utils.service'
 

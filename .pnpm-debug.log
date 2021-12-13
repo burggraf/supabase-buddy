@@ -1,0 +1,15 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1
+  },
+  "1 error pnpm": {
+    "code": "ERR_PNPM_CANNOT_REMOVE_MISSING_DEPS",
+    "hint": "Available dependencies: @capacitor/cli, @types/react-copy-to-clipboard, @types/react-syntax-highlighter, @capacitor/app, @capacitor/core, @capacitor/haptics, @capacitor/keyboard, @capacitor/status-bar, @ionic/react, @ionic/react-router, @monaco-editor/react, @supabase/supabase-js, @testing-library/jest-dom, @testing-library/react, @testing-library/user-event, @types/jest, @types/node, @types/react, @types/react-dom, @types/react-router, @types/react-router-dom, allotment, ionic-react-tablegrid, ionicons, moment, react, react-copy-to-clipboard, react-dom, react-router, react-router-dom, react-scripts, react-syntax-highlighter, rxjs, ts-debounce, typescript, web-vitals, workbox-background-sync, workbox-broadcast-update, workbox-cacheable-response, workbox-core, workbox-expiration, workbox-google-analytics, workbox-navigation-preload, workbox-precaching, workbox-range-requests, workbox-routing, workbox-strategies, workbox-streams",
+    "err": {
+      "name": "pnpm",
+      "message": "Cannot remove 'ionics': no such dependency found",
+      "code": "ERR_PNPM_CANNOT_REMOVE_MISSING_DEPS",
+      "stack": "pnpm: Cannot remove 'ionics': no such dependency found\n    at Object.handler (/Users/markb/.nvm/versions/node/v14.16.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.23.6/node_modules/pnpm/dist/pnpm.cjs:118593:15)\n    at async /Users/markb/.nvm/versions/node/v14.16.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.23.6/node_modules/pnpm/dist/pnpm.cjs:182688:21\n    at async run (/Users/markb/.nvm/versions/node/v14.16.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.23.6/node_modules/pnpm/dist/pnpm.cjs:182662:34)\n    at async runPnpm (/Users/markb/.nvm/versions/node/v14.16.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.23.6/node_modules/pnpm/dist/pnpm.cjs:182874:5)\n    at async /Users/markb/.nvm/versions/node/v14.16.0/pnpm-global/5/node_modules/.pnpm/pnpm@6.23.6/node_modules/pnpm/dist/pnpm.cjs:182866:7"
+    }
+  }
+}

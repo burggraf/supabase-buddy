@@ -1,9 +1,9 @@
 import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react'
+import { TableGrid } from 'ionic-react-tablegrid'
 import { add } from 'ionicons/icons'
 import Moment from 'moment';
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
-import { TableGrid } from 'ionic-react-tablegrid'
 
 import { Snippet } from '../models/Snippet'
 import { SupabaseDataService } from '../services/supabase.data.service'

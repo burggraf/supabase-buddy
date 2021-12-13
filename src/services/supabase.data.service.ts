@@ -153,10 +153,10 @@ export class SupabaseDataService {
   public async getTables(orderBy: string = 'schema_name', ascending: boolean = true, exclude_schemas: string = "'pg_catalog', 'information_schema', 'extensions', 'auth', 'storage'") {
     return this.runStatement(`SELECT 
     /* information_schema.tables.table_catalog,	*/
-    information_schema.tables.table_schema as "Schema",
-    information_schema.tables.table_name as "Name",
-    information_schema.tables.table_type as "Type",
-    pg_description.description as "Description",
+    information_schema.tables.table_schema as "Schema^",
+    information_schema.tables.table_name as "Name^",
+    information_schema.tables.table_type as "Type^",
+    pg_description.description as "Description^",
     information_schema.tables.self_referencing_column_name,	
     information_schema.tables.reference_generation,
     information_schema.tables.user_defined_type_catalog,

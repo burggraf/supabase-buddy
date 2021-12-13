@@ -1,11 +1,11 @@
 import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenuButton, IonPage, IonPopover, IonRow, IonTitle, IonToolbar, useIonToast, useIonViewDidEnter } from '@ionic/react';
 import { TableColumnSort } from 'ionic-react-tablegrid'
+import { Sort } from 'ionic-react-tablegrid'
 import { add, caretUpOutline, closeOutline, ellipsisHorizontal, mail } from 'ionicons/icons';
 import Moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 
-import { Sort } from 'ionic-react-tablegrid'
 import { SupabaseAuthService } from '../services/supabase.auth.service';
 import { SupabaseDataService } from '../services/supabase.data.service';
 

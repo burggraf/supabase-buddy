@@ -1,4 +1,3 @@
-import { present } from '@ionic/core/dist/types/utils/overlays'
 import { IonButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonPage, IonRow, IonTitle, IonToolbar, useIonModal } from '@ionic/react'
 import { arrowBackOutline, arrowForwardOutline, checkmarkOutline, closeOutline, createOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'

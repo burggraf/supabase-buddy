@@ -1,25 +1,14 @@
-import {
-    IonButton,
-	IonButtons,
-	IonCol,
-	IonContent,
-	IonGrid,
-	IonHeader,
-	IonIcon,
-	IonMenuButton,
-	IonPage,
-	IonRow,
-	IonTitle,
-	IonToolbar,
-    useIonViewDidEnter
-} from '@ionic/react'
-import { useHistory, useParams } from 'react-router'
-import './DatabaseViews.css'
-import { SupabaseDataService } from '../services/supabase.data.service'
-import { useEffect, useState } from 'react'
-import { add } from 'ionicons/icons'
-import { UtilsService } from '../services/utils.service'
+import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react'
 import { TableGrid } from 'ionic-react-tablegrid'
+import { add } from 'ionicons/icons'
+import { useEffect, useState } from 'react'
+import { useHistory, useParams } from 'react-router'
+
+import { SupabaseDataService } from '../services/supabase.data.service'
+import { UtilsService } from '../services/utils.service'
+
+import './DatabaseViews.css'
+
 const utilsService = new UtilsService()
 
 const DatabaseViews: React.FC = () => {
