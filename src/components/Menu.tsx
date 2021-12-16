@@ -4,13 +4,13 @@ import { addIcons } from 'ionicons';
 import { analytics, code, documentText, fileTrayStacked, home, link, list, logOutOutline, logOutSharp, people, settings } from 'ionicons/icons';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-
 import { description, version } from '../../package.json';
-import SupabaseAuthService from '../services/supabase.auth.service';
 import ProjectsService from '../services/projects.service';
-
-
+import SupabaseAuthService from '../services/supabase.auth.service';
 import './Menu.css';
+
+
+
 
 const supabaseAuthService = SupabaseAuthService.getInstance();
 

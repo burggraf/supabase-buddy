@@ -1,16 +1,15 @@
-import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonMenuButton, IonPage, IonRow, IonTextarea, IonTitle, IonToolbar, useIonAlert, useIonViewDidEnter } from '@ionic/react'
+import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonPage, IonRow, IonTitle, IonToolbar, useIonAlert } from '@ionic/react'
 import Editor from '@monaco-editor/react'
+import { Allotment } from "allotment"
+import "allotment/dist/style.css"
 import { checkmark } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { debounce } from 'ts-debounce'
-
 import SqlResults from '../components/SqlResults'
-import { Snippet } from '../models/Snippet'
 import SupabaseDataService from '../services/supabase.data.service'
-import { Allotment } from "allotment";
-import "allotment/dist/style.css";
 import './SqlEditor.css'
+
 
 const SqlEditor: React.FC = () => {
 	const { id } = useParams<{ id: string }>()
@@ -22,7 +21,7 @@ const SqlEditor: React.FC = () => {
 		} else {
 			loadSnippet(id);
 		}
-	}, []);
+	});
 	const [content, setContent] = useState<string>('')
 	const [title, setTitle] = useState<string>('')
 	const [description, setDescription] = useState<string>('')
@@ -73,7 +72,6 @@ const SqlEditor: React.FC = () => {
 		markers.forEach((marker: { message: any }) => console.log('onValidate:', marker.message))
 	}
 
-	const { name } = useParams<{ name: string }>()
 	const runSql = async () => {
 		if (content) {
 			const { data, error } = await supabaseDataService.runSql(content, statementDelimiter)

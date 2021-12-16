@@ -1,36 +1,33 @@
 import {
     IonButton,
-	IonButtons,
-	IonCol,
-	IonContent,
-	IonGrid,
-	IonHeader,
-	IonIcon,
-	IonMenuButton,
-	IonPage,
-	IonRow,
-	IonTitle,
-	IonToggle,
-	IonToolbar,
+    IonButtons,
+    IonCol,
+    IonContent,
+    IonGrid,
+    IonHeader,
+    IonIcon,
+    IonMenuButton,
+    IonPage,
+    IonRow,
+    IonTitle, IonToolbar,
     useIonAlert,
     useIonToast,
     useIonViewDidEnter
 } from '@ionic/react'
-import { useHistory, useParams } from 'react-router'
-import './DatabaseExtensions.css'
-import SupabaseDataService from '../services/supabase.data.service'
+import { addCircleOutline, removeCircleOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
-import { add, addCircleOutline, removeCircleOutline } from 'ionicons/icons'
+import SupabaseDataService from '../services/supabase.data.service'
 import UtilsService from '../services/utils.service'
+import './DatabaseExtensions.css'
 const utilsService = UtilsService.getInstance();
 
 const DatabaseExtensions: React.FC = () => {
     const [presentAlert] = useIonAlert();
     const [presentToast, dismissToast] = useIonToast();
 
-    const history = useHistory();
+    // const history = useHistory();
 	const supabaseDataService = SupabaseDataService.getInstance()
-    const { name } = useParams<{ name: string }>()
+    // const { name } = useParams<{ name: string }>()
     const [views, setViews] = useState<any[]>([])
     const loadExtensions = async () => {
         const { data, error } = await supabaseDataService.getExtensions();

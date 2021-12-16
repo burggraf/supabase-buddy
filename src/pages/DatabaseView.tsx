@@ -1,5 +1,5 @@
 import {
-    IonBackButton,
+	IonBackButton,
 	IonButton,
 	IonButtons,
 	IonCol,
@@ -7,21 +7,19 @@ import {
 	IonFooter,
 	IonGrid,
 	IonHeader,
-	IonInput,
-	IonMenuButton,
-	IonPage,
+	IonInput, IonPage,
 	IonRow,
 	IonTitle,
 	IonToolbar,
 	useIonAlert,
-	useIonToast,
+	useIonToast
 } from '@ionic/react'
 import Editor from '@monaco-editor/react'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
+import { debounce } from 'ts-debounce'
 import SupabaseDataService from '../services/supabase.data.service'
 import './DatabaseView.css'
-import { debounce } from 'ts-debounce'
 
 const DatabaseView: React.FC = () => {
     const history = useHistory();

@@ -59,6 +59,7 @@ const App: React.FC = () => {
 	useEffect(() => {
 		// Only run this one time!  No multiple subscriptions!
 		supabaseAuthService.user.subscribe((user: User | null) => {
+			console.log('user', user);
 			setCurrentUser(user)
 		})
 	}, []) // <-- empty dependency array

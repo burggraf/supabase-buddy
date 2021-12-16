@@ -1,12 +1,12 @@
 import { IonButton, IonIcon } from '@ionic/react';
-import { Provider } from '@supabase/supabase-js'
+import { Provider } from '@supabase/supabase-js';
 import { addIcons } from 'ionicons';
 import { logoApple, logoBitbucket, logoDiscord, logoFacebook, logoGithub, logoGitlab, logoGoogle, logoSlack, logoTwitch, logoTwitter } from 'ionicons/icons';
-
 import logoSpotify from '../Login/auth-provider-icons/spotify.svg';
 import SupabaseAuthService from '../services/supabase.auth.service';
-
 import './ProviderSignInButton.css';
+
+
 
 interface ContainerProps {
   name: string;

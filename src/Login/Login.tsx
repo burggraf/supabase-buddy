@@ -1,13 +1,15 @@
-import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, 
-    IonHeader, IonIcon, IonInput, IonLabel, IonPage, IonRow, 
-    IonTitle, IonToolbar, useIonToast } from '@ionic/react';
+import {
+    IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid,
+    IonHeader, IonIcon, IonInput, IonLabel, IonPage, IonRow,
+    IonTitle, IonToolbar, useIonToast
+} from '@ionic/react';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { link, logIn, personAdd, refreshCircle } from 'ionicons/icons';
 import { useState } from 'react';
 import './Login.css';
-
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-
 import ProviderSignInButton from './ProviderSignInButton';
+
+
 let supabase: SupabaseClient;
 
 const validateEmail = (email: string) => {

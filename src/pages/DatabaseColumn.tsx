@@ -1,14 +1,13 @@
-import { IonBackButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react'
+import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
 import { TableGrid } from 'ionic-react-tablegrid'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-
 import SupabaseDataService from '../services/supabase.data.service'
-import UtilsService from '../services/utils.service'
-
 import './DatabaseColumn.css'
 
-const utilsService = UtilsService.getInstance();
+
+
+// const utilsService = UtilsService.getInstance();
 
 const DatabaseColumn: React.FC = () => {
 	const { table_schema } = useParams<{ table_schema: string }>()

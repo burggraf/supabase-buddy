@@ -1,37 +1,21 @@
-import { useIonViewDidEnter, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/react';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import ExploreContainer from '../components/ExploreContainer';
+import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react';
 import './SettingsGeneral.css';
 
 const SettingsGeneral: React.FC = () => {
-    const [url, setUrl] = useState('');
-    const [anonkey, setAnonkey] = useState('');
     const loadSettings = async () => {
         const url = await localStorage.getItem('url');
         const anonkey = await localStorage.getItem('anonkey');
-        //setUrl(url => localStorage.getItem('url') || '');
-        //setAnonkey(anonkey => localStorage.getItem('anonkey') || '');
         const urlField = document.getElementById('url') as HTMLInputElement;
         const anonkeyField = document.getElementById('anonkey') as HTMLInputElement;
         (urlField as any).value = url;
         (anonkeyField as any).value = anonkey;
     }
 
-    useEffect(() => {
-        // loadSettings();
-    }, []);
-
     useIonViewDidEnter(async () => {
         await loadSettings();
     });
 
-    const { name } = useParams<{ name: string; }>();
     const saveChanges = () => {
-        // localStorage.setItem('url', url);
-        // localStorage.setItem('anonkey', anonkey);
-        // const url = localStorage.getItem('url');
-        // const anonkey = localStorage.getItem('anonkey');
         const url = (document.getElementById('url') as HTMLInputElement).value;
         const anonkey = (document.getElementById('anonkey') as HTMLInputElement).value;
         if (url) localStorage.setItem('url', (document.getElementById('url') as HTMLInputElement).value);
@@ -68,7 +52,4 @@ const SettingsGeneral: React.FC = () => {
 };
 
 export default SettingsGeneral;
-function ionViewWillEnter() {
-    throw new Error('Function not implemented.');
-}
 

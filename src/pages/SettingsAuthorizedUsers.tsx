@@ -5,9 +5,7 @@ import {
 	IonContent,
 	IonGrid,
 	IonHeader,
-	IonIcon,
-	IonInput,
-	IonItem,
+	IonIcon, IonItem,
 	IonLabel,
 	IonList,
 	IonListHeader,
@@ -19,20 +17,18 @@ import {
 	IonToolbar,
 	useIonAlert,
 	useIonToast,
-	useIonViewDidEnter,
+	useIonViewDidEnter
 } from '@ionic/react'
-import { add, closeOutline, ellipsisHorizontal, mail, remove, removeCircle, removeCircleOutline, trashBin } from 'ionicons/icons'
+import { add, closeOutline, removeCircleOutline, trashBin } from 'ionicons/icons'
 import Moment from 'moment'
 import { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router'
-
-import SupabaseAuthService from '../services/supabase.auth.service'
 import SupabaseDataService from '../services/supabase.data.service'
 import './SettingsAuthorizedUsers.css'
+
 const supabaseDataService = SupabaseDataService.getInstance()
-const supabaseAuthService = SupabaseAuthService.getInstance()
+// const supabaseAuthService = SupabaseAuthService.getInstance()
 const SettingsAuthorizedUsers: React.FC = () => {
-	const history = useHistory()
+	// const history = useHistory()
     const [presentAlert] = useIonAlert();
 
 	const [users, setUsers] = useState<any[]>([])
@@ -122,7 +118,7 @@ const SettingsAuthorizedUsers: React.FC = () => {
 			//onWillDismiss: () => console.log('will dismiss'),
 		})
 	}
-	const { name } = useParams<{ name: string }>()
+	// const { name } = useParams<{ name: string }>()
 
 	return (
 		<IonPage>

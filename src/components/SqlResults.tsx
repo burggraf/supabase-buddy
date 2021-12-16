@@ -1,10 +1,10 @@
-import { IonCol, IonGrid, IonLabel, IonRow } from '@ionic/react'
+import { IonLabel } from '@ionic/react'
 import { useState } from 'react'
-
 import UtilsService from '../services/utils.service'
 import DisplayDetail from './DisplayDetail'
-
 import './SqlResults.css'
+
+
 
 const utilsService = UtilsService.getInstance();
 interface ContainerProps {

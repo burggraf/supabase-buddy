@@ -1,11 +1,6 @@
-import { IonButton, IonIcon } from '@ionic/react'
-import { copyOutline } from 'ionicons/icons'
-import CopyToClipboard from 'react-copy-to-clipboard'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import {
-	atomOneDark as dark,
-	docco,
-	atomOneLight as light,
+    atomOneDark as dark, atomOneLight as light
 } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import './CodeBlock.css'
 import Copy from './Copy'

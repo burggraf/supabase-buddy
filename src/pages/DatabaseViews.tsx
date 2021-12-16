@@ -2,12 +2,11 @@ import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, I
 import { TableGrid } from 'ionic-react-tablegrid'
 import { add } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router'
-
+import { useHistory } from 'react-router'
 import SupabaseDataService from '../services/supabase.data.service'
 //import UtilsService from '../services/utils.service'
-
 import './DatabaseViews.css'
+
 
 //const utilsService = UtilsService.getInstance()
 

@@ -1,15 +1,14 @@
-import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react'
-import { TableGrid } from 'ionic-react-tablegrid'
-import { add } from 'ionicons/icons'
+import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react';
+import { TableGrid } from 'ionic-react-tablegrid';
+import { add } from 'ionicons/icons';
 import Moment from 'moment';
-import { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router'
+import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
+import { Snippet } from '../models/Snippet';
+import SupabaseDataService from '../services/supabase.data.service';
+import UtilsService from '../services/utils.service';
+import './SqlSnippets.css';
 
-import { Snippet } from '../models/Snippet'
-import SupabaseDataService from '../services/supabase.data.service'
-import UtilsService from '../services/utils.service'
-
-import './SqlSnippets.css'
 
 const supabaseDataService = SupabaseDataService.getInstance()
 const utilsService = UtilsService.getInstance()
@@ -18,7 +17,6 @@ const SqlSnippets: React.FC = () => {
 	const history = useHistory()
 	
 	const [snippets, setSnippets] = useState<Snippet[]>([])
-	const { name } = useParams<{ name: string }>()
 	const loadSnippets = async () => {
 		const { data, error } = await supabaseDataService.getSnippets()
 		if (error) {

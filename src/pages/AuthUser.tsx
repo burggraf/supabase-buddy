@@ -1,10 +1,9 @@
-import { IonBackButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
+import { IonBackButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonLabel, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import SupabaseDataService from '../services/supabase.data.service';
-import './AuthUser.css';
-import Moment from 'moment';
 import UtilsService from '../services/utils.service';
+import './AuthUser.css';
 const utilsService = UtilsService.getInstance();
 
 const AuthUser: React.FC = () => {
@@ -13,6 +12,7 @@ const AuthUser: React.FC = () => {
 	const supabaseDataService = SupabaseDataService.getInstance();
   const [user, setUser] = useState<any>({})
 
+	useEffect(() => {
     const loadUser = async () => {
       const { data, error } = await supabaseDataService.getUser(id)
       if (error) {
@@ -23,9 +23,8 @@ const AuthUser: React.FC = () => {
               }
       }
 	  }
-	useEffect(() => {
 		loadUser()
-	}, [])
+	})
 
   return (
     <IonPage>

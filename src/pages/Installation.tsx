@@ -1,19 +1,18 @@
 import { IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
+import { User } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import CodeBlock from '../components/CodeBlock';
-import ExploreContainer from '../components/ExploreContainer';
-import './Home.css';
-import SupabaseAuthService from '../services/supabase.auth.service'
-import { User } from '@supabase/supabase-js';
+import SupabaseAuthService from '../services/supabase.auth.service';
 import SupabaseDataService from '../services/supabase.data.service';
+import './Home.css';
 const supabaseDataService = SupabaseDataService.getInstance();
 const supabaseAuthService: SupabaseAuthService = new SupabaseAuthService();
 
 const Installation: React.FC = () => {
     let _user: User | null = null;
 
-  const { name } = useParams<{ name: string; }>();
+  // const { name } = useParams<{ name: string; }>();
   const [email, setEmail] = useState('');
   const [id, setId] = useState('');
   const [installed, setInstalled] = useState(false);

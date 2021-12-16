@@ -1,22 +1,20 @@
-import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react'
-import { TableGrid } from 'ionic-react-tablegrid'
-import { Sort } from 'ionic-react-tablegrid'
+import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react'
+import { Sort, TableGrid } from 'ionic-react-tablegrid'
 import { add } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router'
-
+import { useHistory } from 'react-router'
 import SupabaseDataService from '../services/supabase.data.service'
-import UtilsService from '../services/utils.service'
-
 import './DatabaseTables.css'
 
-const utilsService = UtilsService.getInstance()
+
+
+// const utilsService = UtilsService.getInstance()
 
 const DatabaseTables: React.FC = () => {
 	let isMounted = false;
     const history = useHistory();
 	const supabaseDataService = SupabaseDataService.getInstance()
-	const { name } = useParams<{ name: string }>()
+	// const { name } = useParams<{ name: string }>()
     const [tables, setTables] = useState<any[]>([])
     const loadTables = async () => {
         const { data, error } = await supabaseDataService.getTables(sort.orderBy, sort.ascending);
@@ -42,10 +40,10 @@ const DatabaseTables: React.FC = () => {
 		history.push(`/database-table/${row["Schema^"]}/${row["Name^"]}`);
 	}
     const [sort, setSort] = useState<Sort>({orderBy: 'table_name', ascending: true});
-    const changeSort = async (newSort: Sort) => {
-      setSort(newSort);
-      loadTables();
-    }  
+    // const changeSort = async (newSort: Sort) => {
+    //   setSort(newSort);
+    //   loadTables();
+    // }  
 
 	return (
 		<IonPage>

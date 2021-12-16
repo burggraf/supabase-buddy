@@ -1,16 +1,12 @@
 import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonPage, IonRow, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { checkmark, link, logIn, personAdd, refreshCircle } from 'ionicons/icons';
+import { checkmark } from 'ionicons/icons';
 import { useState } from 'react';
 import { useParams } from 'react-router';
 import { useHistory } from "react-router-dom";
-
 import ProjectsService from '../services/projects.service';
 import StartupService from '../services/startup.service';
-
 import './ResetPassword.css';
-
-const projectsService: ProjectsService = ProjectsService.getInstance();
 
 const startupService = StartupService.getInstance();
 const defaultRoute = startupService.getDefaultRoute();

@@ -1,13 +1,12 @@
-import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonInput, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonAlert, useIonToast } from '@ionic/react'
+import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonInput, IonPage, IonRow, IonTitle, IonToolbar, useIonAlert, useIonToast } from '@ionic/react'
 import Editor from '@monaco-editor/react'
-import { setMode } from 'ionicons/dist/types/stencil-public-runtime'
 import { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import { debounce } from 'ts-debounce'
-
 import ItemPicker from '../components/ItemPicker'
 import SupabaseDataService from '../services/supabase.data.service'
 import './DatabaseFunction.css'
+
 
 const languageOptions = [
 	{ value: "sql", text: "SQL" },
@@ -22,7 +21,7 @@ const editorLanguageSetting: { [key: string]: string } = {
 }
 
 const DatabaseFunction: React.FC = () => {
-    const history = useHistory();
+    // const history = useHistory();
 	const [presentAlert] = useIonAlert();
 	const { function_schema } = useParams<{ function_schema: string }>()
 	const { function_name } = useParams<{ function_name: string }>()

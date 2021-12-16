@@ -1,38 +1,37 @@
-import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonMenuButton, IonPage, IonRow, IonSegment, IonSegmentButton, IonTitle, IonToolbar, useIonModal, useIonToast } from '@ionic/react'
+import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonPage, IonRow, IonSegment, IonSegmentButton, IonTitle, IonToolbar, useIonToast } from '@ionic/react'
 import { TableGrid } from 'ionic-react-tablegrid'
-import { arrowBackOutline, arrowForwardOutline, checkmark, checkmarkOutline, closeOutline, createOutline, keyOutline } from 'ionicons/icons'
+import { checkmark } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
-
 import DisplayDetail from '../components/DisplayDetail'
-import ItemPicker from '../components/ItemPicker'
 import TableApi from '../components/TableApi'
 import SupabaseDataService from '../services/supabase.data.service'
 import UtilsService from '../services/utils.service'
-
 import './DatabaseTable.css'
+
+
 
 const utilsService = UtilsService.getInstance()
 const supabaseDataService = SupabaseDataService.getInstance();
-const columnOptions = [
-	{ value: "text", text: "text - variable unlimited length text" },
-	{ value: "numeric", text: "numeric - any numeric entry" },
-	{ value: "int2", text: "int2 - signed two-byte integer" },
-	{ value: "int4", text: "int4 - signed four-byte integer" },
-	{ value: "int8", text: "int8 - signed eight-byte integer" },
-	{ value: "float4", text: "float4 - single precision floating point number 4-bytes" },
-	{ value: "float8", text: "float8 - double precision floating point number 8-bytes" },
-	{ value: "json", text: "json - textual JSON data" },
-	{ value: "jsonb", text: "jsonb - binary JSON data, decomposed" },
-	{ value: "varchar", text: "varchar - variable length character string" },
-	{ value: "uuid", text: "uuid - universally unique identifier" },
-	{ value: "date", text: "date - calendar date (year, month, day)" },
-	{ value: "time", text: "time - time of day (no time zone)" },
-	{ value: "timetz", text: "timetz - time of day (including time zone)" },
-	{ value: "timestamp", text: "timestamp - date and time (no time zone)" },
-	{ value: "timestamptz", text: "timestamptz - date and time (including time zone)" },
-	{ value: "bool", text: "bool - logical boolean (true/false)" }, 
-  ];
+// const columnOptions = [
+// 	{ value: "text", text: "text - variable unlimited length text" },
+// 	{ value: "numeric", text: "numeric - any numeric entry" },
+// 	{ value: "int2", text: "int2 - signed two-byte integer" },
+// 	{ value: "int4", text: "int4 - signed four-byte integer" },
+// 	{ value: "int8", text: "int8 - signed eight-byte integer" },
+// 	{ value: "float4", text: "float4 - single precision floating point number 4-bytes" },
+// 	{ value: "float8", text: "float8 - double precision floating point number 8-bytes" },
+// 	{ value: "json", text: "json - textual JSON data" },
+// 	{ value: "jsonb", text: "jsonb - binary JSON data, decomposed" },
+// 	{ value: "varchar", text: "varchar - variable length character string" },
+// 	{ value: "uuid", text: "uuid - universally unique identifier" },
+// 	{ value: "date", text: "date - calendar date (year, month, day)" },
+// 	{ value: "time", text: "time - time of day (no time zone)" },
+// 	{ value: "timetz", text: "timetz - time of day (including time zone)" },
+// 	{ value: "timestamp", text: "timestamp - date and time (no time zone)" },
+// 	{ value: "timestamptz", text: "timestamptz - date and time (including time zone)" },
+// 	{ value: "bool", text: "bool - logical boolean (true/false)" }, 
+//   ];
 const DatabaseTable: React.FC = () => {
     const history = useHistory();
 	const { table_schema } = useParams<{ table_schema: string }>()
