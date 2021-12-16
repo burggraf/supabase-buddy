@@ -1,7 +1,7 @@
 import { createClient, Provider, SupabaseClient, User } from '@supabase/supabase-js';
 import { BehaviorSubject } from 'rxjs';
-
 import ProjectsService from '../services/projects.service';
+
 
 const projectsService: ProjectsService = ProjectsService.getInstance();
 
@@ -34,8 +34,9 @@ export default class SupabaseAuthService {
     return this._user;
   }
   public connect() {
-    const url = ProjectsService.project.url;
-    const apikey = ProjectsService.project.apikey;
+    const project = projectsService.getProject();
+    const url = project.url;
+    const apikey = project.apikey;
     if (url !== '' && apikey !== '') {
       supabase = createClient(url, apikey);
       this.isConnected = true;

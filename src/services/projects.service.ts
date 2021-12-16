@@ -20,6 +20,9 @@ export default class ProjectsService {
 		apikey: ''
 	};
 	public static projects: Project[] = [];
+	public getProject = () => {
+		return ProjectsService.project;
+	}
 	private init = async () => {
 		if (ProjectsService.initialized) {
 			return;

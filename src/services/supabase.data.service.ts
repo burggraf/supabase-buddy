@@ -1,7 +1,7 @@
-import { createClient, Provider, SupabaseClient, User } from '@supabase/supabase-js';
-
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Snippet } from '../models/Snippet';
 import ProjectsService from '../services/projects.service';
+
 
 const projectsService: ProjectsService = ProjectsService.getInstance();
 
@@ -20,15 +20,17 @@ export default class SupabaseDataService {
 		return this.myInstance;
 	  }
 
-  constructor() {}
+  // constructor() {}
   
   public isConnected = () => {
     return (typeof supabase !== 'undefined');
   }
 
   public connect = async () => {
-      const url = ProjectsService.project.url;
-      const apikey = ProjectsService.project.apikey;
+    const project = projectsService.getProject();
+    const url = project.url;
+    const apikey = project.apikey;
+
       if (url && apikey) {
         supabase = await createClient(url, apikey);
         return true;

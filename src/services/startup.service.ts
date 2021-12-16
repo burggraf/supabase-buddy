@@ -9,10 +9,10 @@ export default class StartupService {
 		return this.myInstance;
 	  }
 
-    constructor() {
+    // constructor() {
 
 
-    }
+    // }
 
     public getDefaultRoute(): string {
         return '/welcome';
