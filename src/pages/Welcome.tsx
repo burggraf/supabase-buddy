@@ -7,15 +7,15 @@ import { useHistory } from 'react-router';
 
 import { Project } from '../../models/Project';
 import ProviderSignInButton from '../Login/ProviderSignInButton';
-import { ProjectsService } from '../services/projects.service';
-import { SupabaseAuthService } from '../services/supabase.auth.service'
+import ProjectsService from '../services/projects.service';
+import SupabaseAuthService from '../services/supabase.auth.service'
 
-// import { UtilsService } from '../services/utils.service'
+// import UtilsService from '../services/utils.service'
 
 import './Welcome.css'
 
-const supabaseAuthService: SupabaseAuthService = new SupabaseAuthService();
-const projectsService: ProjectsService = new ProjectsService();
+const supabaseAuthService: SupabaseAuthService = SupabaseAuthService.getInstance();
+const projectsService: ProjectsService = ProjectsService.getInstance();
 const Welcome: React.FC = () => {
     console.log('welcome, main loop fired');
 	const history = useHistory();

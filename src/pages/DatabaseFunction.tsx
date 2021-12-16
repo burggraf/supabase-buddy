@@ -6,8 +6,7 @@ import { useHistory, useParams } from 'react-router'
 import { debounce } from 'ts-debounce'
 
 import ItemPicker from '../components/ItemPicker'
-import { SupabaseDataService } from '../services/supabase.data.service'
-
+import SupabaseDataService from '../services/supabase.data.service'
 import './DatabaseFunction.css'
 
 const languageOptions = [
@@ -37,7 +36,7 @@ const DatabaseFunction: React.FC = () => {
 	const [sqlPrefix, setSqlPrefix] = useState<string>("")
 	const [sqlSuffix, setSqlSuffix] = useState<string>("$function$")
 	const [editorLanguage, setEditorLanguage] = useState<string>(editorLanguageSetting[functionLanguage])
-	const supabaseDataService = new SupabaseDataService()
+	const supabaseDataService = SupabaseDataService.getInstance()
 	const [darkMode, setDarkMode] = useState<boolean>(window.matchMedia('(prefers-color-scheme: dark)').matches)
 	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
 		setDarkMode(e.matches)

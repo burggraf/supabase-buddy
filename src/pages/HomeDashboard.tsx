@@ -1,10 +1,11 @@
 import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
 import { useHistory, useParams } from 'react-router';
 import './HomeDashboard.css';
-import { SupabaseDataService } from '../services/supabase.data.service';
+import SupabaseDataService from '../services/supabase.data.service';
 import { useEffect, useState } from 'react';
-const supabaseDataService = new SupabaseDataService();
-
+import SupabaseAuthService from '../services/supabase.auth.service';
+const supabaseDataService = SupabaseDataService.getInstance();  
+const supabaseAuthService = SupabaseAuthService.getInstance();
 const HomeDashboard: React.FC = () => {
   const history = useHistory();
 
@@ -32,7 +33,13 @@ const HomeDashboard: React.FC = () => {
             console.error(serverVersionError);
             if (serverVersionError.message === 'JWSError JWSInvalidSignature') {
               // checkServerVersion error: JWSError JWSInvalidSignature
-              history.replace('/welcome');
+              // history.replace('/welcome');
+              const { error } = await supabaseAuthService.signOut();
+              if (!error) {
+                history.replace('/welcome');
+              } else {
+                toast('session expired, please login again', 'danger');
+              }
             } else {
               toast('checkServerVersion error: ' + serverVersionError.message, 'danger');
             }

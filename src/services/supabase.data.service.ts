@@ -1,16 +1,24 @@
 import { createClient, Provider, SupabaseClient, User } from '@supabase/supabase-js';
 
 import { Snippet } from '../models/Snippet';
-import { ProjectsService } from '../services/projects.service';
+import ProjectsService from '../services/projects.service';
 
-const projectsService: ProjectsService = new ProjectsService();
+const projectsService: ProjectsService = ProjectsService.getInstance();
 
 // import { keys } from 'rxjs';
 // import { keys } from './keys.service';
 
 let supabase: SupabaseClient; // = createClient(keys.SUPABASE_URL, keys.SUPABASE_KEY);
 
-export class SupabaseDataService {
+export default class SupabaseDataService {
+	static myInstance:any = null;
+
+	static getInstance() {
+		if (this.myInstance == null) {
+		  this.myInstance = new this();
+		}
+		return this.myInstance;
+	  }
 
   constructor() {}
   

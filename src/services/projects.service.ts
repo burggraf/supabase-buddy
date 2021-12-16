@@ -1,8 +1,17 @@
 import { Project } from '../../models/Project';
-import { UtilsService } from './utils.service';
+import UtilsService from './utils.service';
 
-export class ProjectsService {
-	private utilsService = new UtilsService();
+export default class ProjectsService {
+	static myInstance:any = null;
+
+	static getInstance() {
+		if (this.myInstance == null) {
+		  this.myInstance = new this();
+		}
+		return this.myInstance;
+	  }
+
+	private utilsService = UtilsService.getInstance();
 	private static initialized = false;
 	public static project: Project = {
 		projectID: '',

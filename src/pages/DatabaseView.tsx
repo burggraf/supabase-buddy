@@ -19,7 +19,7 @@ import {
 import Editor from '@monaco-editor/react'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
-import { SupabaseDataService } from '../services/supabase.data.service'
+import SupabaseDataService from '../services/supabase.data.service'
 import './DatabaseView.css'
 import { debounce } from 'ts-debounce'
 
@@ -29,7 +29,7 @@ const DatabaseView: React.FC = () => {
 	const { table_name } = useParams<{ table_name: string }>()
 	const [presentAlert] = useIonAlert();
     const [view, setView] = useState<any>({})
-    const supabaseDataService = new SupabaseDataService()
+    const supabaseDataService = SupabaseDataService.getInstance()
 	const [darkMode, setDarkMode] = useState<boolean>(window.matchMedia('(prefers-color-scheme: dark)').matches)
 	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
 		setDarkMode(e.matches)

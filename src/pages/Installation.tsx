@@ -4,10 +4,10 @@ import { useParams } from 'react-router';
 import CodeBlock from '../components/CodeBlock';
 import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
-import { SupabaseAuthService } from '../services/supabase.auth.service'
+import SupabaseAuthService from '../services/supabase.auth.service'
 import { User } from '@supabase/supabase-js';
-import { SupabaseDataService } from '../services/supabase.data.service';
-const supabaseDataService = new SupabaseDataService();
+import SupabaseDataService from '../services/supabase.data.service';
+const supabaseDataService = SupabaseDataService.getInstance();
 const supabaseAuthService: SupabaseAuthService = new SupabaseAuthService();
 
 const Installation: React.FC = () => {

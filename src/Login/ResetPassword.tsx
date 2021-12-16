@@ -5,14 +5,14 @@ import { useState } from 'react';
 import { useParams } from 'react-router';
 import { useHistory } from "react-router-dom";
 
-import { ProjectsService } from '../services/projects.service';
-import { StartupService } from '../services/startup.service';
+import ProjectsService from '../services/projects.service';
+import StartupService from '../services/startup.service';
 
 import './ResetPassword.css';
 
-const projectsService: ProjectsService = new ProjectsService();
+const projectsService: ProjectsService = ProjectsService.getInstance();
 
-const startupService = new StartupService();
+const startupService = StartupService.getInstance();
 const defaultRoute = startupService.getDefaultRoute();
 
 

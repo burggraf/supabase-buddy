@@ -7,14 +7,13 @@ import { useHistory, useParams } from 'react-router'
 import DisplayDetail from '../components/DisplayDetail'
 import ItemPicker from '../components/ItemPicker'
 import TableApi from '../components/TableApi'
-import { SupabaseDataService } from '../services/supabase.data.service'
-import { UtilsService } from '../services/utils.service'
+import SupabaseDataService from '../services/supabase.data.service'
+import UtilsService from '../services/utils.service'
 
 import './DatabaseTable.css'
 
-const utilsService = new UtilsService()
-const supabaseDataService = new SupabaseDataService()
-
+const utilsService = UtilsService.getInstance()
+const supabaseDataService = SupabaseDataService.getInstance();
 const columnOptions = [
 	{ value: "text", text: "text - variable unlimited length text" },
 	{ value: "numeric", text: "numeric - any numeric entry" },

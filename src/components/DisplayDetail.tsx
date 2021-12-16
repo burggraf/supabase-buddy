@@ -2,11 +2,11 @@ import { IonButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeade
 import { arrowBackOutline, arrowForwardOutline, checkmarkOutline, closeOutline, createOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 
-import { UtilsService } from '../services/utils.service'
+import UtilsService from '../services/utils.service'
 
 import './DisplayDetail.css'
 
-const utilsService = new UtilsService()
+const utilsService = UtilsService.getInstance();
 interface Trigger {
 	action: string
 }

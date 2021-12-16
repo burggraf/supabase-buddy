@@ -18,19 +18,19 @@ import {
 } from '@ionic/react'
 import { useHistory, useParams } from 'react-router'
 import './DatabaseExtensions.css'
-import { SupabaseDataService } from '../services/supabase.data.service'
+import SupabaseDataService from '../services/supabase.data.service'
 import { useEffect, useState } from 'react'
 import { add, addCircleOutline, removeCircleOutline } from 'ionicons/icons'
-import { UtilsService } from '../services/utils.service'
-const utilsService = new UtilsService()
+import UtilsService from '../services/utils.service'
+const utilsService = UtilsService.getInstance();
 
 const DatabaseExtensions: React.FC = () => {
     const [presentAlert] = useIonAlert();
     const [presentToast, dismissToast] = useIonToast();
 
     const history = useHistory();
-	const supabaseDataService = new SupabaseDataService()
-	const { name } = useParams<{ name: string }>()
+	const supabaseDataService = SupabaseDataService.getInstance()
+    const { name } = useParams<{ name: string }>()
     const [views, setViews] = useState<any[]>([])
     const loadExtensions = async () => {
         const { data, error } = await supabaseDataService.getExtensions();

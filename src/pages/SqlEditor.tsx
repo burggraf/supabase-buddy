@@ -7,7 +7,7 @@ import { debounce } from 'ts-debounce'
 
 import SqlResults from '../components/SqlResults'
 import { Snippet } from '../models/Snippet'
-import { SupabaseDataService } from '../services/supabase.data.service'
+import SupabaseDataService from '../services/supabase.data.service'
 import { Allotment } from "allotment";
 import "allotment/dist/style.css";
 import './SqlEditor.css'
@@ -32,8 +32,7 @@ const SqlEditor: React.FC = () => {
 	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
 		setDarkMode(e.matches)
 	});
-	const supabaseDataService = new SupabaseDataService()
-
+	const supabaseDataService = SupabaseDataService.getInstance();
     async function save() {
         const {data, error} = await supabaseDataService.saveSnippet({
             id,

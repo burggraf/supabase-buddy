@@ -1,14 +1,21 @@
 import { createClient, Provider, SupabaseClient, User } from '@supabase/supabase-js';
 import { BehaviorSubject } from 'rxjs';
 
-//import { ProjectsService } from '../services/keys.service';
-import { ProjectsService } from '../services/projects.service';
+import ProjectsService from '../services/projects.service';
 
-const projectsService: ProjectsService = new ProjectsService();
+const projectsService: ProjectsService = ProjectsService.getInstance();
 
 let supabase: SupabaseClient;// = createClient('URL', 'ANON-KEY');
 
-export class SupabaseAuthService {
+export default class SupabaseAuthService {
+	static myInstance:any = null;
+
+	static getInstance() {
+		if (this.myInstance == null) {
+		  this.myInstance = new this();
+		}
+		return this.myInstance;
+	  }
 
   public user = new BehaviorSubject<User | null>(null);
   private _user: User | null = null;
@@ -144,6 +151,7 @@ export class SupabaseAuthService {
     supabase.auth.setAuth('');
     supabase.auth.setSession('');
     this.isConnected = false;
+    localStorage.removeItem('supabase.auth.token');
     return { error };
   }
 }

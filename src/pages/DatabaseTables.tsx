@@ -5,17 +5,17 @@ import { add } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 
-import { SupabaseDataService } from '../services/supabase.data.service'
-import { UtilsService } from '../services/utils.service'
+import SupabaseDataService from '../services/supabase.data.service'
+import UtilsService from '../services/utils.service'
 
 import './DatabaseTables.css'
 
-const utilsService = new UtilsService()
+const utilsService = UtilsService.getInstance()
 
 const DatabaseTables: React.FC = () => {
 	let isMounted = false;
     const history = useHistory();
-	const supabaseDataService = new SupabaseDataService()
+	const supabaseDataService = SupabaseDataService.getInstance()
 	const { name } = useParams<{ name: string }>()
     const [tables, setTables] = useState<any[]>([])
     const loadTables = async () => {

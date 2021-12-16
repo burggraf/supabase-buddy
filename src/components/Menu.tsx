@@ -6,14 +6,13 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { description, version } from '../../package.json';
-import { SupabaseAuthService } from '../services/supabase.auth.service';
-import { ProjectsService } from '../services/projects.service';
+import SupabaseAuthService from '../services/supabase.auth.service';
+import ProjectsService from '../services/projects.service';
 
-// const projectsService: ProjectsService = new ProjectsService();
 
 import './Menu.css';
 
-const supabaseAuthService = new SupabaseAuthService();
+const supabaseAuthService = SupabaseAuthService.getInstance();
 
 interface AppPage {
   title: string;
@@ -152,7 +151,7 @@ const Menu: React.FC = () => {
     if (error) {
       console.error('Error signing out', error);
     } else {
-      localStorage.removeItem('supabase.auth.token');
+      // localStorage.removeItem('supabase.auth.token'); // moved to supabaseAuthService
     }
   }
   const loadImage = () =>{

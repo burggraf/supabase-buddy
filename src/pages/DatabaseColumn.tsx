@@ -3,12 +3,12 @@ import { TableGrid } from 'ionic-react-tablegrid'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
-import { SupabaseDataService } from '../services/supabase.data.service'
-import { UtilsService } from '../services/utils.service'
+import SupabaseDataService from '../services/supabase.data.service'
+import UtilsService from '../services/utils.service'
 
 import './DatabaseColumn.css'
 
-const utilsService = new UtilsService()
+const utilsService = UtilsService.getInstance();
 
 const DatabaseColumn: React.FC = () => {
 	const { table_schema } = useParams<{ table_schema: string }>()
@@ -16,7 +16,7 @@ const DatabaseColumn: React.FC = () => {
 	const { column_name } = useParams<{ column_name: string }>()
 	const [rows, setRows] = useState<any[]>([])
 
-	const supabaseDataService = new SupabaseDataService()
+	const supabaseDataService = SupabaseDataService.getInstance();
 	const loadColumn = async () => {
 		const { data, error } = await supabaseDataService.getColumn(table_schema, table_name, column_name)
 		if (error) {

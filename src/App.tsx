@@ -1,60 +1,57 @@
-import { setupIonicReact, IonApp, IonRouterOutlet, IonSplitPane, useIonViewWillEnter } from '@ionic/react'
+import { IonApp, IonRouterOutlet, IonSplitPane, setupIonicReact, useIonViewWillEnter } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
+import { User } from '@supabase/supabase-js'
+import { useEffect, useState } from 'react'
 import { Redirect, Route } from 'react-router-dom'
+
 import Menu from './components/Menu'
+import Login from './Login/Login'
+import ResetPassword from './Login/ResetPassword'
+import AuthUser from './pages/AuthUser'
+import AuthUsers from './pages/AuthUsers'
+import DatabaseColumn from './pages/DatabaseColumn'
+import DatabaseExtensions from './pages/DatabaseExtensions'
+import DatabaseFunction from './pages/DatabaseFunction'
+import DatabaseFunctions from './pages/DatabaseFunctions'
+import DatabaseSchemas from './pages/DatabaseSchemas'
+import DatabaseTable from './pages/DatabaseTable'
+import DatabaseTables from './pages/DatabaseTables'
+import DatabaseView from './pages/DatabaseView'
+import DatabaseViews from './pages/DatabaseViews'
+import Home from './pages/Home'
+import HomeDashboard from './pages/HomeDashboard'
+import Installation from './pages/Installation'
 import Page from './pages/Page'
-
-/* Core CSS required for Ionic components to work properly */
-import '@ionic/react/css/core.css'
-
-/* Basic CSS for apps built with Ionic */
-import '@ionic/react/css/normalize.css'
-import '@ionic/react/css/structure.css'
-import '@ionic/react/css/typography.css'
-
-/* Optional CSS utils that can be commented out */
-import '@ionic/react/css/padding.css'
-import '@ionic/react/css/float-elements.css'
-import '@ionic/react/css/text-alignment.css'
-import '@ionic/react/css/text-transformation.css'
-import '@ionic/react/css/flex-utils.css'
-import '@ionic/react/css/display.css'
+import PageNotFound from './pages/PageNotFound'
+import SettingsAuthorizedUsers from './pages/SettingsAuthorizedUsers'
+import SettingsGeneral from './pages/SettingsGeneral'
+import SqlEditor from './pages/SqlEditor'
+import SqlSnippets from './pages/SqlSnippets'
+import Welcome from './pages/Welcome'
+import StartupService from './services/startup.service'
+import SupabaseAuthService from './services/supabase.auth.service'
 
 /* Theme variables */
 import './theme/variables.css'
-import Login from './Login/Login'
-import Home from './pages/Home'
-import Installation from './pages/Installation'
-import AuthUsers from './pages/AuthUsers'
-import PageNotFound from './pages/PageNotFound'
-import SettingsGeneral from './pages/SettingsGeneral'
-import HomeDashboard from './pages/HomeDashboard'
-import SqlEditor from './pages/SqlEditor'
-import SqlSnippets from './pages/SqlSnippets'
-import DatabaseTables from './pages/DatabaseTables'
-import DatabaseTable from './pages/DatabaseTable'
-import DatabaseColumn from './pages/DatabaseColumn'
-import AuthUser from './pages/AuthUser'
-import DatabaseFunctions from './pages/DatabaseFunctions'
-import DatabaseFunction from './pages/DatabaseFunction'
-import ResetPassword from './Login/ResetPassword'
-import { StartupService } from './services/startup.service'
-import Welcome from './pages/Welcome'
-import { useEffect, useState } from 'react'
-import { User } from '@supabase/supabase-js'
-
-import { SupabaseAuthService } from './services/supabase.auth.service'
-import DatabaseViews from './pages/DatabaseViews'
-import DatabaseView from './pages/DatabaseView'
-import DatabaseExtensions from './pages/DatabaseExtensions'
-import DatabaseSchemas from './pages/DatabaseSchemas'
-import SettingsAuthorizedUsers from './pages/SettingsAuthorizedUsers'
+/* Core CSS required for Ionic components to work properly */
+import '@ionic/react/css/core.css'
+import '@ionic/react/css/display.css'
+import '@ionic/react/css/flex-utils.css'
+import '@ionic/react/css/float-elements.css'
+/* Basic CSS for apps built with Ionic */
+import '@ionic/react/css/normalize.css'
+/* Optional CSS utils that can be commented out */
+import '@ionic/react/css/padding.css'
+import '@ionic/react/css/structure.css'
+import '@ionic/react/css/text-alignment.css'
+import '@ionic/react/css/text-transformation.css'
+import '@ionic/react/css/typography.css'
 
 setupIonicReact();
 
-const startupService = new StartupService()
-const startupRoute = startupService.getStartupRoute()
-const supabaseAuthService = new SupabaseAuthService()
+const startupService = StartupService.getInstance();
+const startupRoute = startupService.getStartupRoute();
+const supabaseAuthService = SupabaseAuthService.getInstance();
 
 const App: React.FC = () => {
 	const [currentUser, setCurrentUser] = useState<User | null>(null)

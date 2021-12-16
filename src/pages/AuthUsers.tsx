@@ -6,14 +6,14 @@ import Moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 
-import { SupabaseAuthService } from '../services/supabase.auth.service';
-import { SupabaseDataService } from '../services/supabase.data.service';
+import SupabaseAuthService from '../services/supabase.auth.service';
+import SupabaseDataService from '../services/supabase.data.service';
 
 import './AuthUsers.css';
 
 const AuthUsers: React.FC = () => {
-	const supabaseDataService = new SupabaseDataService();
-  const supabaseAuthService = new SupabaseAuthService();
+	const supabaseDataService = SupabaseDataService.getInstance();
+  const supabaseAuthService = SupabaseAuthService.getInstance();
     const history = useHistory();
     const [users, setUsers] = useState<any[]>([])
     const [total, setTotal] = useState<number>(0)

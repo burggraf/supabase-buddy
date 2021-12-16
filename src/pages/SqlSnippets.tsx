@@ -6,13 +6,13 @@ import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 
 import { Snippet } from '../models/Snippet'
-import { SupabaseDataService } from '../services/supabase.data.service'
-import { UtilsService } from '../services/utils.service'
+import SupabaseDataService from '../services/supabase.data.service'
+import UtilsService from '../services/utils.service'
 
 import './SqlSnippets.css'
 
-const supabaseDataService = new SupabaseDataService()
-const utilsService = new UtilsService()
+const supabaseDataService = SupabaseDataService.getInstance()
+const utilsService = UtilsService.getInstance()
 let isMounted = false;
 const SqlSnippets: React.FC = () => {
 	const history = useHistory()

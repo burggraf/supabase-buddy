@@ -4,7 +4,7 @@ import { addIcons } from 'ionicons';
 import { logoApple, logoBitbucket, logoDiscord, logoFacebook, logoGithub, logoGitlab, logoGoogle, logoSlack, logoTwitch, logoTwitter } from 'ionicons/icons';
 
 import logoSpotify from '../Login/auth-provider-icons/spotify.svg';
-import { SupabaseAuthService } from '../services/supabase.auth.service';
+import SupabaseAuthService from '../services/supabase.auth.service';
 
 import './ProviderSignInButton.css';
 
@@ -12,7 +12,7 @@ interface ContainerProps {
   name: string;
 }
 
-const supabaseAuthService = new SupabaseAuthService();
+const supabaseAuthService = SupabaseAuthService.getInstance();
 const signInWithProvider = async (provider: Provider) => {
     console.log('signInWithProvider', provider)
     const { user, session, error } = 
