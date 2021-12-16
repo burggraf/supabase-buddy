@@ -1,20 +1,20 @@
-import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react'
+import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react'
 import { TableGrid } from 'ionic-react-tablegrid'
 import { add } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 
 import SupabaseDataService from '../services/supabase.data.service'
-import UtilsService from '../services/utils.service'
+//import UtilsService from '../services/utils.service'
 
 import './DatabaseViews.css'
 
-const utilsService = UtilsService.getInstance()
+//const utilsService = UtilsService.getInstance()
 
 const DatabaseViews: React.FC = () => {
     const history = useHistory();
 	const supabaseDataService = SupabaseDataService.getInstance()
-	const { name } = useParams<{ name: string }>()
+	// const { name } = useParams<{ name: string }>()
     const [views, setViews] = useState<any[]>([])
     const loadViews = async () => {
         const { data, error } = await supabaseDataService.getViews();

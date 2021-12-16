@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
+import { IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
 import { useHistory, useParams } from 'react-router';
 import './HomeDashboard.css';
 import SupabaseDataService from '../services/supabase.data.service';
@@ -51,7 +51,7 @@ const HomeDashboard: React.FC = () => {
 
     useEffect(() => {
       checkServerVersion();
-    } , [])
+    }, [checkServerVersion])
 
   const { name } = useParams<{ name: string; }>();
   return (
