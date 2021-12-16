@@ -1,7 +1,7 @@
-import { IonAccordion, IonAccordionGroup, IonButton, IonContent, IonFooter, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote } from '@ionic/react';
+import { IonAccordion, IonAccordionGroup, IonContent, IonFooter, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle } from '@ionic/react';
 import { User } from '@supabase/supabase-js';
 import { addIcons } from 'ionicons';
-import { analytics, archiveOutline, archiveSharp, barChart, barChartOutline, barChartSharp, bookmarkOutline, code, documentText, fileTrayStacked, hammer, heartOutline, heartSharp, home, homeOutline, homeSharp, informationCircle, informationCircleOutline, informationCircleSharp, link, list, listCircleOutline, listCircleSharp, listOutline, listSharp, lockClosed, lockClosedOutline, lockClosedSharp, logIn, logInOutline, logInSharp, logoApple, logoBitbucket, logoDiscord, logoFacebook, logoGithub, logoGitlab, logoGoogle, logoTwitch, logoTwitter, logOut, logOutOutline, logOutSharp, mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp, people, peopleOutline, peopleSharp, person, personOutline, personSharp, search, searchOutline, searchSharp, settings, settingsOutline, settingsSharp, trashOutline, trashSharp, warningOutline, warningSharp } from 'ionicons/icons';
+import { analytics, code, documentText, fileTrayStacked, home, link, list, logOutOutline, logOutSharp, people, settings } from 'ionicons/icons';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 

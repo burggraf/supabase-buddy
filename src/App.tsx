@@ -1,4 +1,4 @@
-import { IonApp, IonRouterOutlet, IonSplitPane, setupIonicReact, useIonViewWillEnter } from '@ionic/react'
+import { IonApp, IonRouterOutlet, IonSplitPane, setupIonicReact } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 import { User } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
