@@ -1,4 +1,4 @@
-import { IonApp, IonRouterOutlet, IonSplitPane, useIonViewWillEnter } from '@ionic/react'
+import { setupIonicReact, IonApp, IonRouterOutlet, IonSplitPane, useIonViewWillEnter } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 import { Redirect, Route } from 'react-router-dom'
 import Menu from './components/Menu'
@@ -49,6 +49,8 @@ import DatabaseView from './pages/DatabaseView'
 import DatabaseExtensions from './pages/DatabaseExtensions'
 import DatabaseSchemas from './pages/DatabaseSchemas'
 import SettingsAuthorizedUsers from './pages/SettingsAuthorizedUsers'
+
+setupIonicReact();
 
 const startupService = new StartupService()
 const startupRoute = startupService.getStartupRoute()
