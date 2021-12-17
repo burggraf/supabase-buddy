@@ -13,6 +13,7 @@ import './Menu.css';
 
 
 const supabaseAuthService = SupabaseAuthService.getInstance();
+const projectsService = ProjectsService.getInstance();
 
 interface AppPage {
   title: string;
@@ -228,7 +229,7 @@ const Menu: React.FC = () => {
         </IonList>
 
         <div className="ion-text-center">
-          { ProjectsService.project.name }
+          { projectsService.getProject().name }
         </div>
         <div className="ion-text-center">
           { description } v{ version }

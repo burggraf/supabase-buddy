@@ -253,7 +253,7 @@ const DatabaseTable: React.FC = () => {
 						e.detail.value === 'rls' ||
 						e.detail.value === 'indexes' || 
 						e.detail.value === 'api') {
-						if (e.detail.value === 'data') { 
+						if (e.detail.value === 'data' && rows && rows.length > 0) { 
 							const keys = Object.keys(rows[0])
 							const { gridWidth, columnWidths } = utilsService.getGridWidths(rows);
 							setKeys(keys);

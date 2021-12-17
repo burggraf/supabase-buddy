@@ -1,18 +1,16 @@
-import { IonButton, IonButtons, IonChip, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonAlert, useIonToast, useIonViewDidEnter } from '@ionic/react'
-import { add, link, logIn, refreshCircle } from 'ionicons/icons'
-import { useEffect, useState } from 'react'
+import { IonButton, IonButtons, IonChip, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonPage, IonRow, IonTitle, IonToolbar, useIonAlert, useIonToast, useIonViewDidEnter } from '@ionic/react';
+import { add, link, logIn, refreshCircle } from 'ionicons/icons';
+import { useState } from 'react';
 import { useHistory } from 'react-router';
-
 //import { Project } from 'react-router'
-
 import { Project } from '../../models/Project';
 import ProviderSignInButton from '../Login/ProviderSignInButton';
 import ProjectsService from '../services/projects.service';
-import SupabaseAuthService from '../services/supabase.auth.service'
-
+import SupabaseAuthService from '../services/supabase.auth.service';
 // import UtilsService from '../services/utils.service'
+import './Welcome.css';
 
-import './Welcome.css'
+
 
 const supabaseAuthService: SupabaseAuthService = SupabaseAuthService.getInstance();
 const projectsService: ProjectsService = ProjectsService.getInstance();

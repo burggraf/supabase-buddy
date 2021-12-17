@@ -10,7 +10,7 @@ import './ResetPassword.css';
 
 const startupService = StartupService.getInstance();
 const defaultRoute = startupService.getDefaultRoute();
-
+const projectsService = ProjectsService.getInstance();
 
 let supabase: SupabaseClient;
 
@@ -18,8 +18,9 @@ const isConnected = () => {
   return (typeof supabase !== 'undefined');
 }
 const connect = async () => {
-  const url = ProjectsService.project.url;
-  const apikey = ProjectsService.project.apikey;
+  const project = projectsService.getProject();
+  const url = project.url;
+  const apikey = project.apikey;
   console.log('url', url);
   console.log('apikey', apikey);
   if (url && apikey) {
