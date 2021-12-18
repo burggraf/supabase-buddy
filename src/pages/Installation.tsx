@@ -106,7 +106,7 @@ const Installation: React.FC = () => {
                         function toJson(data) {
                             if (data !== undefined) {
                             return JSON.stringify(data, (_, v) => typeof v === 'bigint' ? \`$\{v\}#bigint\` : v)
-                                .replace(/"(-?\d+)#bigint"/g, (_, a) => a);
+                                .replace(/"(-?\d+)#bigint"/g, (_, a) => a).replace(/#bigint/g, '');
                             }
                         }
 

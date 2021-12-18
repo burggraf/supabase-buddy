@@ -23,7 +23,7 @@ CREATE OR REPLACE FUNCTION execute_sql (sqlcode text, statement_delimiter text)
   function toJson(data) {
     if (data !== undefined) {
       return JSON.stringify(data, (_, v) => typeof v === 'bigint' ? `${v}#bigint` : v)
-          .replace(/"(-?\d+)#bigint"/g, (_, a) => a);
+          .replace(/"(-?\d+)#bigint"/g, (_, a) => a).replace(/#bigint/g, '');
     }
   }
 
