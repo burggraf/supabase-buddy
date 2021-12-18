@@ -24,7 +24,7 @@ const AuthUser: React.FC = () => {
       }
 	  }
 		loadUser()
-	})
+	},[])
 
   return (
     <IonPage>

@@ -21,7 +21,7 @@ const SqlEditor: React.FC = () => {
 		} else {
 			loadSnippet(id);
 		}
-	});
+	},[]);
 	const [content, setContent] = useState<string>('')
 	const [title, setTitle] = useState<string>('')
 	const [description, setDescription] = useState<string>('')

@@ -23,6 +23,7 @@ const HomeDashboard: React.FC = () => {
         })
   }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const checkServerVersion = async () => {
       const { data: serverVersionData, error: serverVersionError } = 
         await supabaseDataService.checkServerVersion();

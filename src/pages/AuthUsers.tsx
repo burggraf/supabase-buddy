@@ -49,9 +49,9 @@ const AuthUsers: React.FC = () => {
 	useIonViewDidEnter(() => {
 		loadUsers()
 	})
-	useEffect(() => {
+	//useEffect(() => {
 		//loadUsers()
-	}, [])
+	//}, [])
 	const [presentToast, dismissToast] = useIonToast();
     const toast = (message: string, color: string = 'danger') => {
         presentToast({

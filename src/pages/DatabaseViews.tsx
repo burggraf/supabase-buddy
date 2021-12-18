@@ -26,9 +26,9 @@ const DatabaseViews: React.FC = () => {
 	useIonViewDidEnter(() => {
         loadViews()
 	})
-    useEffect(() => {
+    //useEffect(() => {
         // loadTables();
-    },[]);
+    //},[]);
     const addView = () => {
         history.push(`/database-view/public/NEW-VIEW`);
     }

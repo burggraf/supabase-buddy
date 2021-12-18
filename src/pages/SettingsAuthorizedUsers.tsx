@@ -103,9 +103,9 @@ const SettingsAuthorizedUsers: React.FC = () => {
 		loadUsers()
 		loadAll()
 	})
-	useEffect(() => {
+	//useEffect(() => {
 		//loadUsers()
-	}, [])
+	//}, [])
 	const [presentToast, dismissToast] = useIonToast()
 	const toast = (message: string, color: string = 'danger') => {
 		presentToast({
