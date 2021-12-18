@@ -7,9 +7,9 @@ CREATE OR REPLACE FUNCTION execute_sql (sqlcode text, statement_delimiter text)
   SECURITY DEFINER
   AS $$
 
-  if (plv8.execute('select id from buddy.authorized_users').length == 0) then
+  if (plv8.execute('select id from buddy.authorized_users').length == 0) {
       throw 'not authorized';
-  end if;
+  };
   /*
   if (!plv8.execute("select auth.is_admin()")[0].is_admin) {
       throw 'not authorized';
