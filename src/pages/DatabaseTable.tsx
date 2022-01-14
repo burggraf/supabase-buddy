@@ -339,7 +339,7 @@ const DatabaseTable: React.FC = () => {
 
 			}
 			{ mode === 'indexes' && indexes?.length > 0 &&
-				<TableGrid rows={indexes} rowClick={clickIndex}/>
+				<TableGrid rows={indexes} rowClick={clickIndex} setRows={setIndexes} />
 			}
 			{ mode === 'api' &&
 				<div>

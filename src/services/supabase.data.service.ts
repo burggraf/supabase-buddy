@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+
 import { Snippet } from '../models/Snippet';
 import ProjectsService from '../services/projects.service';
-
 
 const projectsService: ProjectsService = ProjectsService.getInstance();
 
@@ -233,10 +233,17 @@ export default class SupabaseDataService {
     `);
   }
   public async getIndexes(table_schema: string, table_name: string) {
-    return this.runStatement(`SELECT *
-    FROM pg_indexes
-    WHERE schemaname = '${table_schema}'
-    AND tablename = '${table_name}'
+    return this.runStatement(`
+    SELECT
+    ui.indexrelname AS "index^", case when indisunique then 'YES' else 'NO' end as "unique^",
+    pg_size_pretty(pg_relation_size(i.indexrelid)) AS size,
+    idx_scan as "scans^", indexdef as "indexdef^", pg_relation_size(i.indexrelid) as "bytes^"
+    FROM pg_stat_user_indexes ui
+    JOIN pg_index i ON ui.indexrelid = i.indexrelid 
+    JOIN pg_indexes pgi ON pgi.schemaname = ui.schemaname and pgi.tablename = ui.relname and pgi.indexname = ui.indexrelname 
+    WHERE ui.schemaname = '${table_schema}'
+    AND ui.relname = '${table_name}'  
+    ORDER BY "index^"
     `);
   }
   public async getGrants(table_schema: string, table_name: string) {
