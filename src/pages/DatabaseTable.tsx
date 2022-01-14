@@ -3,13 +3,13 @@ import { TableGrid } from 'ionic-react-tablegrid'
 import { checkmark } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
+
 import DisplayDetail from '../components/DisplayDetail'
 import TableApi from '../components/TableApi'
 import SupabaseDataService from '../services/supabase.data.service'
 import UtilsService from '../services/utils.service'
+
 import './DatabaseTable.css'
-
-
 
 const utilsService = UtilsService.getInstance()
 const supabaseDataService = SupabaseDataService.getInstance();
@@ -286,7 +286,7 @@ const DatabaseTable: React.FC = () => {
 
 			{ ((mode === 'schema') || (table_schema === 'public' && table_name === 'NEW-TABLE')) &&
 
-				<TableGrid rows={columns} rowClick={clickSchema}/>
+				<TableGrid rows={columns} rowClick={clickSchema} setRows={setColumns} />
 
 			} 
 			{ mode === 'data' && rows?.length > 0 &&

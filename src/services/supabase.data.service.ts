@@ -185,17 +185,51 @@ export default class SupabaseDataService {
 
   public async getColumns(table_schema: string, table_name: string) {
     return this.runStatement(`SELECT 
-    column_name,ordinal_position,column_default,is_nullable,data_type,character_maximum_length,
-    character_octet_length,numeric_precision,numeric_precision_radix,numeric_scale,datetime_precision,
-    interval_type,interval_precision,character_set_catalog,character_set_schema,character_set_name,
-    collation_catalog,collation_schema,collation_name,domain_catalog,domain_schema,domain_name,
-    udt_catalog,udt_schema,udt_name,scope_catalog,scope_schema,scope_name,maximum_cardinality,
-    dtd_identifier,is_self_referencing,is_identity,identity_generation,identity_start,
-    identity_increment,identity_maximum,identity_minimum,identity_cycle,is_generated,
-    generation_expression,is_updatable
+    column_name as "column_name^",
+    ordinal_position::NUMERIC as "ordinal_position^",
+    column_default as "column_default^",
+    is_nullable as "is_nullable^",
+    data_type as "data_type^",
+    character_maximum_length as "character_maximum_length^",
+    character_octet_length as "character_octet_length^",
+    numeric_precision as "numeric_precision^",
+    numeric_precision_radix as "numeric_precision_radix^",
+    numeric_scale as "numeric_scale^",
+    datetime_precision as "datetime_precision^",
+    interval_type as "interval_type^",
+    interval_precision as "interval_precision^",
+    character_set_catalog as "character_set_catalog^",
+    character_set_schema as "character_set_schema^",
+    character_set_name as "character_set_name^",
+    collation_catalog as "collation_catalog^",
+    collation_schema as "collation_schema^",
+    collation_name as "collation_name^",
+    domain_catalog as "domain_catalog^",
+    domain_schema as "domain_schema^",
+    domain_name as "domain_name^",
+    udt_catalog as "udt_catalog^",
+    udt_schema as "udt_schema^",
+    udt_name as "udt_name^",
+    scope_catalog as "scope_catalog^",
+    scope_schema as "scope_schema^",
+    scope_name as "scope_name^",
+    maximum_cardinality as "maximum_cardinality^",
+    dtd_identifier::NUMERIC as "dtd_identifier^",
+    is_self_referencing as "is_self_referencing^",
+    is_identity as "is_identity^",
+    identity_generation as "identity_generation^",
+    identity_start as "identity_start^",
+    identity_increment as "identity_increment^",
+    identity_maximum as "identity_maximum^",
+    identity_minimum as "identity_minimum^",
+    identity_cycle as "identity_cycle^",
+    is_generated as "is_generated^",
+    generation_expression as "generation_expression^",
+    is_updatable as "is_updatable^"
     FROM information_schema.columns
     WHERE table_schema = '${table_schema}'
     AND table_name = '${table_name}'
+    ORDER BY "ordinal_position^" ASC
     `);
   }
   public async getTableRows(table_schema: string, table_name: string) {
