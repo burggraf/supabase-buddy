@@ -36,6 +36,7 @@ const DatabaseTable: React.FC = () => {
     const history = useHistory();
 	const { table_schema } = useParams<{ table_schema: string }>()
 	const { table_name } = useParams<{ table_name: string }>()
+	const [createTableStatement, setCreateTableStatement] = useState<string>("")
 	const [name, setName] = useState(table_name === 'NEW-TABLE' ? '' : table_name)
 	const [columns, setColumns] = useState<any[]>([])
 	const [detailCollection, setDetailCollection] = useState<any[]>([])
@@ -101,6 +102,16 @@ const DatabaseTable: React.FC = () => {
 			console.error(error)
 		} else {
 			setPolicies(data!)
+		}
+	}
+	const loadCreateTableStatement = async () => {
+		const { data, error } = await supabaseDataService.getCreateTableStatement(table_schema, table_name)
+		if (error) {
+			console.error(error)
+		} else {
+			if (data && data.length) {
+				setCreateTableStatement(data[0].create_table_statement)
+			}
 		}
 	}
 	const [presentToast, dismissToast] = useIonToast();
@@ -173,6 +184,7 @@ const DatabaseTable: React.FC = () => {
 			loadIndexes();
 			loadGrants();
 			loadPolicies();	
+			loadCreateTableStatement();
 		}
 	}, [])
 	const save = async () => {
@@ -285,9 +297,15 @@ const DatabaseTable: React.FC = () => {
 			}
 
 			{ ((mode === 'schema') || (table_schema === 'public' && table_name === 'NEW-TABLE')) &&
-
+				<>
 				<TableGrid rows={columns} rowClick={clickSchema} setRows={setColumns} />
-
+				<pre className="ion-padding">{createTableStatement}
+				{indexes && indexes.length > 0 &&
+					indexes.map((index: any, indexNumber: number) => {
+						return ('\n' + index["indexdef^"] + ';');
+					})
+				}</pre>
+				</>
 			} 
 			{ mode === 'data' && rows?.length > 0 &&
 				<div style={{ height: '100%', overflow: 'scroll'}}>

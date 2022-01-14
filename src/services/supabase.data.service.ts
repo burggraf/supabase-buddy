@@ -39,8 +39,8 @@ export default class SupabaseDataService {
       }
   }
 
-  public async runStatement(sql: string) {
-    let { data, error } = await this.runSql(sql);
+  public async runStatement(sql: string, statementDelimiter: string = ';') {
+    let { data, error } = await this.runSql(sql, statementDelimiter);
     try {
       if (data!) {
         data = JSON.parse(data![0]);
@@ -309,6 +309,19 @@ export default class SupabaseDataService {
     WHERE schemaname = '${table_schema}'
     AND tablename = '${table_name}'
     `);
+  }
+  public async getCreateTableStatement(table_schema: string, table_name: string, separator: string = '\n') {
+    const sql = `SELECT 'CREATE TABLE IF NOT EXISTS ' || '${table_schema}.${table_name}' || ' (' || '${separator}' || '' || 
+    string_agg(column_list.column_expr, ', ' || '${separator}' || '') || 
+    '' || '${separator}' || ');' as create_table_statement
+    FROM (
+    SELECT '    ' || column_name || ' ' || data_type || 
+        coalesce('(' || character_maximum_length || ')', '') || 
+        case when is_nullable = 'YES' then '' else ' NOT NULL' end as column_expr
+    FROM information_schema.columns
+    WHERE table_schema = '${table_schema}' AND table_name = '${table_name}'
+    ORDER BY ordinal_position) column_list`;
+    return this.runStatement(sql,';;');
   }
   public async getView(table_schema: string, table_name: string) {
     return this.runStatement(`SELECT *
