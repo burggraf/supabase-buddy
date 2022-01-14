@@ -281,14 +281,30 @@ export default class SupabaseDataService {
     `);
   }
   public async getGrants(table_schema: string, table_name: string) {
-    return this.runStatement(`SELECT *
+    return this.runStatement(`SELECT 
+    grantor as "grantor^",
+    grantee as "grantee^",
+    table_catalog as "table_catalog^",
+    table_schema as "table_schema^",
+    table_name as "table_name^",
+    privilege_type as "privilege_type^",
+    is_grantable as "is_grantable^",
+    with_hierarchy as "with_hierarchy^"
     FROM information_schema.role_table_grants
     WHERE table_schema = '${table_schema}'
     AND table_name = '${table_name}'
     `);
   }
   public async getRLSPolicies(table_schema: string, table_name: string) {
-    return this.runStatement(`SELECT *
+    return this.runStatement(`SELECT
+    schemaname as "schemaname^",
+    tablename as "tablename^",
+    policyname as "policyname^",
+    permissive as "permissive^",
+    roles as "roles^",
+    cmd as "cmd^",
+    qual as "qual^",
+    with_check as "with_check^"
     FROM pg_policies
     WHERE schemaname = '${table_schema}'
     AND tablename = '${table_name}'

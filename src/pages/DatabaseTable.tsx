@@ -330,12 +330,12 @@ const DatabaseTable: React.FC = () => {
 			}
 			{ mode === 'tls' &&
 			
-				<TableGrid rows={grants} rowClick={clickTLS}/>
+				<TableGrid rows={grants} rowClick={clickTLS} setRows={setGrants}/>
 
 			}
 			{ mode === 'rls' && policies?.length > 0 &&
 
-				<TableGrid rows={policies} rowClick={clickRLS}/>
+				<TableGrid rows={policies} rowClick={clickRLS} setRows={setPolicies}/>
 
 			}
 			{ mode === 'indexes' && indexes?.length > 0 &&
