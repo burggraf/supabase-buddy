@@ -1,11 +1,11 @@
-import { IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonInput, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
 import { User } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import CodeBlock from '../components/CodeBlock';
 import SupabaseAuthService from '../services/supabase.auth.service';
 import SupabaseDataService from '../services/supabase.data.service';
-import './Home.css';
+import './Installation.css';
 const supabaseDataService = SupabaseDataService.getInstance();
 const supabaseAuthService: SupabaseAuthService = new SupabaseAuthService();
 
@@ -14,6 +14,12 @@ const Installation: React.FC = () => {
 
   // const { name } = useParams<{ name: string; }>();
   const [email, setEmail] = useState('');
+  
+  const [emails, setEmails] = useState('');
+  const [projectref, setProjectref] = useState(JSON.parse(localStorage.getItem('project') || '{}')?.url?.replace('https://','').split('.')[0]);
+  const [apikey, setApikey] = useState(JSON.parse(localStorage.getItem('project') || '{}')?.apikey);
+  const [password, setPassword] = useState('');
+
   const [id, setId] = useState('');
   const [installed, setInstalled] = useState(false);
   const [darkMode, setDarkMode] = useState<boolean>(
@@ -41,6 +47,7 @@ const Installation: React.FC = () => {
           _user = user;
           if (_user) {
             setEmail((_user as any)?.email);
+            setEmails((_user as any)?.email);
             setId((_user as any)?.id);
           } else {
               setEmail('');
@@ -51,6 +58,37 @@ const Installation: React.FC = () => {
         // } , 1000);
       }, []) // <-- empty dependency array
     
+
+    const install = async () => {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                'REF': projectref,
+                'PASSWORD': password,
+                'EMAILS': emails.replace(/ /g, '')
+            })
+        };
+        // const response = await fetch('https://supabase-buddy-middleware.fly.dev', requestOptions);
+        const response = await fetch('https://supabase-buddy-middleware.fly.dev/install', requestOptions);
+        const data = await response.json();
+        console.log('data returned', data);
+    }
+    const uninstall = async () => {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                'REF': projectref,
+                'PASSWORD': password
+            })
+        };
+        // const response = await fetch('https://supabase-buddy-middleware.fly.dev', requestOptions);
+        const response = await fetch('https://supabase-buddy-middleware.fly.dev/uninstall', requestOptions);
+        const data = await response.json();
+        console.log('data returned', data);
+    }
+
   return (
     <IonPage>
       <IonHeader>
@@ -63,6 +101,92 @@ const Installation: React.FC = () => {
       </IonHeader>
 
       <IonContent className="ion-padding">
+            <table style={{"width": "100%"}}>
+                <tbody>
+                    <tr>
+                        <td colSpan={2} style={{paddingTop: '5px', paddingBottom: '5px'}}><div className="ion-text-center">
+                            <b>Automatic installation (using middleware):</b>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="autoCenter"><b>Project Ref</b>
+                        </td>
+                        <td>
+                            <IonInput
+                                className='inputBox'
+                                style={{fontWeight: 'bold'}}
+                                key='inputRef'
+                                value={projectref}
+                                debounce={50}
+                                onIonChange={e => setProjectref(e.detail.value!)}
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="autoCenter"><b>API Key</b>
+                        </td>
+                        <td>
+                            <IonInput
+                                className='inputBox'
+                                style={{fontWeight: 'bold'}}
+                                key='inputApikey'
+                                value={apikey}
+                                debounce={50}
+                                onIonChange={e => setApikey(e.detail.value!)}
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="autoCenter"><b>Password</b>
+                        </td>
+                        <td>
+                            <IonInput
+                                className='inputBox'
+                                style={{fontWeight: 'bold'}}
+                                key='inputPassword'
+                                value={password}
+                                type='password'
+                                debounce={50}
+                                onIonChange={e => setPassword(e.detail.value!)}
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="autoCenter"><b>Emails</b>
+                        </td>
+                        <td>
+                            <IonInput
+                                className='inputBox'
+                                style={{fontWeight: 'bold'}}
+                                key='inputEmails'
+                                value={emails}
+                                type='email'
+                                debounce={50}
+                                onIonChange={e => setEmails(e.detail.value!)}
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+          <IonGrid>
+              <IonRow>
+                  <IonCol>
+                      <div className="ion-text-center">
+                      <b>Automatic installation (using middleware):</b>
+                      </div>
+                  </IonCol>
+              </IonRow>
+              <IonRow>
+                  <IonCol>
+                      <IonButton expand="block" strong color="success" onClick={install}>INSTALL</IonButton>
+                  </IonCol>
+                  <IonCol>
+                      <IonButton expand="block" strong color="danger" onClick={uninstall}>UNINSTALL</IonButton>
+                  </IonCol>
+              </IonRow>
+            </IonGrid>
         {!installed && 
             <div className="boldText">
                 <p>Your server does not have the required functions installed.</p>
@@ -78,7 +202,9 @@ const Installation: React.FC = () => {
         <IonGrid>
             <IonRow>
                 <IonCol>
-                    <IonLabel><b>INSTALL CODE:</b></IonLabel>
+                <div className="ion-text-center">
+                <b>Manual Install Code:</b>
+                </div>
                 </IonCol>
                 </IonRow><IonRow>
                 <IonCol>
@@ -125,7 +251,9 @@ const Installation: React.FC = () => {
             </IonRow>
             <IonRow>
                 <IonCol>
-                    <IonLabel><b>UNINSTALL CODE:</b></IonLabel>
+                    <div className="ion-text-center">
+                    <b>Manual Uninstall Code:</b>
+                    </div>
                 </IonCol>
                 </IonRow>
                 <IonRow>
