@@ -33,3 +33,5 @@ sql-ts/config.json
 /deploy-data-pump.sh
 /tmp
 
+# middleware
+middleware/node_modules
