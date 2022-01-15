@@ -1,4 +1,4 @@
-const VERSION = '1';
+const VERSION = '2';
 const http = require('http');
 const cors = require("cors");
 const app = require("restana")(); // more efficient than express.js
