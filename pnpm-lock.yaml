@@ -10,7 +10,7 @@ specifiers:
   '@ionic/react': 6.0.2
   '@ionic/react-router': 6.0.2
   '@monaco-editor/react': ^4.2.2
-  '@supabase/supabase-js': ^1.28.5
+  '@supabase/supabase-js': ^1.29.1
   '@testing-library/jest-dom': ^5.11.9
   '@testing-library/react': ^11.2.5
   '@testing-library/user-event': ^12.6.3
@@ -59,7 +59,7 @@ dependencies:
   '@ionic/react': 6.0.2_react-dom@17.0.2+react@17.0.2
   '@ionic/react-router': 6.0.2_ec3754057c966eea46e215a6e633f33f
   '@monaco-editor/react': 4.3.1_react-dom@17.0.2+react@17.0.2
-  '@supabase/supabase-js': 1.28.5
+  '@supabase/supabase-js': 1.29.1
   '@testing-library/jest-dom': 5.16.1
   '@testing-library/react': 11.2.7_react-dom@17.0.2+react@17.0.2
   '@testing-library/user-event': 12.8.3
@@ -3049,14 +3049,14 @@ packages:
       cross-fetch: 3.1.4
     dev: false
 
-  /@supabase/postgrest-js/0.35.0:
-    resolution: {integrity: sha512-z+XKJ2oXuGEAEBVXseeQUXaM3ekQZK4XF0Kc399Glyg+rZaBTwNeJtY+Q/23NcIE5uNMYbTnEXm80jZbLBnWdw==}
+  /@supabase/postgrest-js/0.35.1:
+    resolution: {integrity: sha512-N9IOxwgKvek2HqVrC3Usr6hUWvzy53vebsoqLqUBaelu8StATTrhdqaw+9IKthQsn8qoB9A0XD2vN39SGlgd/A==}
     dependencies:
       cross-fetch: 3.1.4
     dev: false
 
-  /@supabase/realtime-js/1.3.3:
-    resolution: {integrity: sha512-9D79jlo/56VQf/U7TWhu24epCoj0vWJ7ALkGcqci8Luk/iOcdCxY1NJ76BbS1UnpXEIvQxQGb1R5NSexriKcUA==}
+  /@supabase/realtime-js/1.3.4:
+    resolution: {integrity: sha512-N9xerTleMp6OKgsqYp0WujYJvKplMxhSJ9agTvAL6vc/+4hh5uxak4wLpgqigy3ZBzpRUSYty7hDyS017+waiw==}
     dependencies:
       '@types/websocket': 1.0.4
       websocket: 1.0.34
@@ -3068,12 +3068,12 @@ packages:
       cross-fetch: 3.1.4
     dev: false
 
-  /@supabase/supabase-js/1.28.5:
-    resolution: {integrity: sha512-RZFSkj0tC6YppUVOBDldLLko4BgV8ASY+OiXC1ZxpcwmNInPgGiDkv59kVPN1UC96vnRQ/1fbFngPcwTtb1Qjw==}
+  /@supabase/supabase-js/1.29.1:
+    resolution: {integrity: sha512-5UPgB93XCzALTpbuwvEGH+Y7i3YBY3y3y96uNnzAWYerGWlqx2kIVmV++GAiEPp/tp+QRsv103AoLKiP3dP2DA==}
     dependencies:
       '@supabase/gotrue-js': 1.21.7
-      '@supabase/postgrest-js': 0.35.0
-      '@supabase/realtime-js': 1.3.3
+      '@supabase/postgrest-js': 0.35.1
+      '@supabase/realtime-js': 1.3.4
       '@supabase/storage-js': 1.5.0
     dev: false
 
@@ -4695,8 +4695,8 @@ packages:
       isarray: 1.0.0
     dev: true
 
-  /bufferutil/4.0.5:
-    resolution: {integrity: sha512-HTm14iMQKK2FjFLRTM5lAVcyaUzOnqbPtesFIvREgXpJHdQm8bWS+GkQgIkfaBYRHuCnea7w8UVNfwiAQhlr9A==}
+  /bufferutil/4.0.6:
+    resolution: {integrity: sha512-jduaYOYtnio4aIAyc6UbvPCVcgq7nYpVnucyxr6eCYg/Woad9Hf/oxxBRDnGGjPfjUm6j5O/uBWhIu4iLebFaw==}
     engines: {node: '>=6.14.2'}
     requiresBuild: true
     dependencies:
@@ -12818,8 +12818,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /utf-8-validate/5.0.7:
-    resolution: {integrity: sha512-vLt1O5Pp+flcArHGIyKEQq883nBt8nN8tVBcoL0qUXj2XT1n7p70yGIq2VK98I5FdZ1YHc0wk/koOnHjnXWk1Q==}
+  /utf-8-validate/5.0.8:
+    resolution: {integrity: sha512-k4dW/Qja1BYDl2qD4tOMB9PFVha/UJtxTc1cXYOe3WwA/2m0Yn4qB7wLMpJyLJ/7DR0XnTut3HsCSzDT4ZvKgA==}
     engines: {node: '>=6.14.2'}
     requiresBuild: true
     dependencies:
@@ -13117,11 +13117,11 @@ packages:
     resolution: {integrity: sha512-PRDso2sGwF6kM75QykIesBijKSVceR6jL2G8NGYyq2XrItNC2P5/qL5XeR056GhA+Ly7JMFvJb9I312mJfmqnQ==}
     engines: {node: '>=4.0.0'}
     dependencies:
-      bufferutil: 4.0.5
+      bufferutil: 4.0.6
       debug: 2.6.9
       es5-ext: 0.10.53
       typedarray-to-buffer: 3.1.5
-      utf-8-validate: 5.0.7
+      utf-8-validate: 5.0.8
       yaeti: 0.0.6
     dev: false
 
