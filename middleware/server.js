@@ -1,4 +1,4 @@
-const VERSION = '4';
+const VERSION = '5';
 const http = require('http');
 const cors = require("cors");
 const app = require("restana")(); // more efficient than express.js
@@ -45,7 +45,7 @@ const getInstallSQL = (EMAILS) => {
     CREATE TABLE IF NOT EXISTS buddy.authorized_users (id UUID PRIMARY KEY);
 
     INSERT INTO buddy.authorized_users (id) 
-     (SELECT id from auth.users where email in (${txtEmails}) and email not in (select email from buddy.authorized_users));
+     (SELECT id from auth.users where email in (${txtEmails}) and id not in (select id from buddy.authorized_users));
 
     DROP FUNCTION IF EXISTS execute_sql;
     CREATE OR REPLACE FUNCTION execute_sql (sqlcode text, statement_delimiter text)
