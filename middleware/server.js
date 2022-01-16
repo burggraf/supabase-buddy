@@ -1,4 +1,4 @@
-const VERSION = '2';
+const VERSION = '3';
 const http = require('http');
 const cors = require("cors");
 const app = require("restana")(); // more efficient than express.js
@@ -32,7 +32,7 @@ const getUninstallSQL = () => {
   return SQL;
 }
 const getInstallSQL = (EMAILS) => {
-  const arrEmails = EMAILS.split(',');
+  const arrEmails = EMAILS.replace(/ /g,'').toLowerCase().split(',');
   const txtEmails = arrEmails.map(email => `'${email}'`).join(',');
   const SQL = `
     CREATE EXTENSION IF NOT EXISTS PLV8;
