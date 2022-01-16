@@ -31,8 +31,13 @@ const getUninstallSQL = () => {
   `;
   return SQL;
 }
+const validateEmail = (email) => {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
+
 const getInstallSQL = (EMAILS) => {
-  const arrEmails = EMAILS.replace(/ /g,'').toLowerCase().split(',');
+  const arrEmails = EMAILS.replace(/ /g,'').toLowerCase().split(',');  
   const txtEmails = arrEmails.map(email => `'${email}'`).join(',');
   const SQL = `
     CREATE EXTENSION IF NOT EXISTS PLV8;
@@ -110,6 +115,22 @@ const install = async (req, res) => {
   // DATABASE (optional) = postgres (database name)
   // EMAILS (required) = comma separated list of email addresses
   // console.log('req.body', JSON.stringify(req.body, null, 2));
+
+  // validate email addresses
+  const arrEmails = (req.body.EMAILS || '').replace(/ /g,'').toLowerCase().split(',');
+  if (arrEmails.length == 0) {
+    res.statusCode = 400;
+    res.send({"err": "no email addresses"});
+    return;
+  }
+  arrEmails.forEach(email => {
+    if (!validateEmail(email)) {
+      res.statusCode = 400;
+      res.send({"err": "invalid email address: " + email});
+      return;
+    }
+  });
+
   const connectionString = 
   `postgresql://${req.body.USER || 'postgres'}:${req.body.PASSWORD || ''}@${req.body.HOST || 'db.' + (req.body.REF || '') + '.supabase.co'}:${req.body.PORT || '5432'}/${req.body.DATABASE || 'postgres'}`;
   try {
