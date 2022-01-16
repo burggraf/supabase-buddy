@@ -43,6 +43,9 @@ const HomeDashboard: React.FC = () => {
               }
             } else {
               toast('checkServerVersion error: ' + serverVersionError.message, 'danger');
+              if (serverVersionError.message === 'not authorized') {
+                history.replace('/installation');
+              }
             }
           } else {
             console.log('serverVersionData', serverVersionData);
