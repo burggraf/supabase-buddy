@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonInput, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonInput, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
 import { User } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
@@ -11,6 +11,20 @@ const supabaseAuthService: SupabaseAuthService = new SupabaseAuthService();
 
 const Installation: React.FC = () => {
     let _user: User | null = null;
+
+    const [present, dismiss] = useIonToast();
+    const toast = (message: string, color: string = 'danger') => {
+        present({
+            color: color,
+            message: message,
+            cssClass: 'toast',
+            buttons: [{ icon: 'close', handler: () => dismiss() }],
+            duration: 3000,
+            //onDidDismiss: () => console.log('dismissed'),
+            //onWillDismiss: () => console.log('will dismiss'),
+          })
+    }
+
 
   // const { name } = useParams<{ name: string; }>();
   const [email, setEmail] = useState('');
@@ -58,15 +72,30 @@ const Installation: React.FC = () => {
         // } , 1000);
       }, []) // <-- empty dependency array
     
-
+    const validateEmail = (email: string) => {
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
+    
     const install = async () => {
+        setEmails(emails.replace(/ /g, '').toLowerCase());
+        const emailArr = emails.split(',');
+        let abort = false;
+        emailArr.map((email: string) => {
+            if (!validateEmail(email)) {
+                abort = true;
+                toast('Invalid email: ' + email);
+                return;
+            }
+        });
+        if (abort) return;
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 'REF': projectref,
                 'PASSWORD': password,
-                'EMAILS': emails.replace(/ /g, '')
+                'EMAILS': emails
             })
         };
         // const response = await fetch('https://supabase-buddy-middleware.fly.dev', requestOptions);
