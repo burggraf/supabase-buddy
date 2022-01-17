@@ -50,7 +50,7 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 								<strong>Result #{i + 1}</strong>
 							</div>
 						</div>
-						<TableGrid rows={resultRows} rowClick={(row, index) => {
+						<TableGrid rows={resultRows} rowClick={(row: any, index: number) => {
 										console.log('onclick fired')
                                         setResultSet(i)
                                         setCurrentIndex(index+1)
