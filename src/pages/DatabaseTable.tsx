@@ -69,6 +69,14 @@ const DatabaseTable: React.FC = () => {
 		if (error) {
 			console.error(error)
 		} else {
+			rows.map((row, index) => (
+				keys.map((key, index) => {
+					// if (!Array.isArray(row[key])) {
+					if (typeof row[key] === 'object') {
+						row[key] = JSON.stringify(row[key]);
+					}
+				})
+			))
 			setRows(data!)
 		}
 	}
@@ -219,6 +227,9 @@ const DatabaseTable: React.FC = () => {
 	const clickIndex = (row: any, index: number) => {
 		setDetailCollection(indexes);setCurrentIndex(index + 1);setRecord(row);setDetailTrigger({action:'open'})		
 	}
+	const clickDataRow = (row: any, index: number) => {
+		setDetailCollection(rows);setCurrentIndex(index + 1);setRecord(row);setDetailTrigger({action:'open'})
+	}
 	return (
 		<IonPage>
 			<IonHeader>
@@ -308,42 +319,8 @@ const DatabaseTable: React.FC = () => {
 				</>
 			} 
 			{ mode === 'data' && rows?.length > 0 &&
-				<div style={{ height: '100%', overflow: 'scroll'}}>
-				<table style={{'width': gridWidth + 'px'}} key={utilsService.randomKey()}>
-				<tbody>
-				<tr key={utilsService.randomKey()}>
-					{keys.map((key, index) => (
-						<td style={{'width': columnWidths[index] + 'px'}} className='breakItUp' key={utilsService.randomKey()}>
-							<strong>{key}</strong>
-						</td>
-					))}
-				</tr>
-				{rows.map((row, index) => (
-					<tr
-						key={utilsService.randomKey()}
-						onClick={()=>{setDetailCollection(rows);setCurrentIndex(index + 1);setRecord(row);setDetailTrigger({action:'open'})}}
-					>
-						{keys.map((key, index) => {
-							// if (!Array.isArray(row[key])) {
-							if (typeof row[key] !== 'object') {
-								return (
-									<td style={{'width': columnWidths[index] + 'px'}} className='breakItUp boxed' key={utilsService.randomKey()}>
-										{row[key]}
-									</td>
-								)
-							} else {
-								return (
-									<td style={{'width': columnWidths[index] + 'px'}} className='breakItUp boxed' key={utilsService.randomKey()}>
-										{JSON.stringify(row[key])}
-									</td>
-								)
-							}
-						})}
-					</tr>
-				))}
-				</tbody>
-				</table>
-				</div>
+
+				<TableGrid rows={rows} rowClick={clickDataRow} setRows={setRows}/>
 
 			}
 			{ mode === 'tls' &&
