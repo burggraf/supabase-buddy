@@ -254,7 +254,7 @@ const Welcome: React.FC = () => {
 							</IonButton>
 						</IonCol>
 					</IonRow>
-					<IonRow>
+					{/* <IonRow>
 						<IonCol>
 							<IonButton
 								expand='block'
@@ -265,7 +265,7 @@ const Welcome: React.FC = () => {
 								<b>Reset Password</b>
 							</IonButton>
 						</IonCol>
-					</IonRow>
+					</IonRow> */}
 					<IonRow>
 						<IonCol>
 							<IonButton
@@ -280,7 +280,7 @@ const Welcome: React.FC = () => {
 					</IonRow>
 				</IonGrid>
 
-				<div className="ion-text-center">
+				{/* <div className="ion-text-center">
 					<IonLabel><b>Sign in with:</b></IonLabel>
 				</div>
 				<div className="flex-container">
@@ -297,7 +297,7 @@ const Welcome: React.FC = () => {
 						<ProviderSignInButton name="bitbucket" />
 						<ProviderSignInButton name="gitlab" />
 
-				</div>
+				</div> */}
 
 
 			</IonContent>
