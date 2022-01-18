@@ -15,7 +15,7 @@ export default class StartupService {
     // }
 
     public getDefaultRoute(): string {
-        return '/welcome';
+        return '/home-dashboard';
     }
 
     public getStartupRoute(): string {
@@ -34,10 +34,23 @@ export default class StartupService {
             }
         }
         let path = window.location.pathname.replace(/\//, '');
+        console.log('path 1', path);
         // remove querystring from path
         if (path.indexOf('?') > -1) {
             path = path.substr(0, path.indexOf('?'));
         }        
+        console.log('path 2', path);
+        console.log('localStorage.getItem("selectedPage"")', localStorage.getItem("selectedPage"));
+
+        if (!path || path.length === 0 || path === '/') {
+            path = localStorage.getItem('selectedPage') || this.getDefaultRoute();
+        }
+        if (path === 'undefined' || path === '/undefined') {
+            path = this.getDefaultRoute();
+        }
+
+        console.log('path 3', path);
+
         return path;
     }
   

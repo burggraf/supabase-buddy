@@ -2,7 +2,7 @@ import { IonApp, IonRouterOutlet, IonSplitPane, setupIonicReact } from '@ionic/r
 import { IonReactRouter } from '@ionic/react-router'
 import { User } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
-import { Redirect, Route } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 
 import Menu from './components/Menu'
 import Login from './Login/Login'
@@ -86,6 +86,7 @@ const App: React.FC = () => {
 						<IonSplitPane when={false} contentId='main'>
 							<Menu />
 							<IonRouterOutlet id='main'>
+								<Switch>
 								<Route path='/editor-tables' exact={true}>
 									<Redirect to='/home' />
 								</Route>
@@ -123,6 +124,7 @@ const App: React.FC = () => {
 									<Page />
 								</Route>
 								<Route component={PageNotFound} />
+								</Switch>
 							</IonRouterOutlet>
 						</IonSplitPane>
 					</IonReactRouter>

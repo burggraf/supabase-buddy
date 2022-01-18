@@ -111,6 +111,9 @@ const Menu: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState(selectedAccordionItem);
 
   function clickHandler(e: any) {
+    if (e.target?.parentElement?.routerLink!) {
+      localStorage.setItem('selectedPage', e.target.parentElement.routerLink);
+    }
     document.getElementById(selectedItem)?.classList.remove('selected');
     e.target.classList.add('selected');
     setSelectedItem(e.target.id);
