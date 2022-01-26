@@ -7,8 +7,8 @@ specifiers:
   '@capacitor/haptics': 1.1.0
   '@capacitor/keyboard': 1.1.0
   '@capacitor/status-bar': 1.0.3
-  '@ionic/react': 6.0.3
-  '@ionic/react-router': 6.0.3
+  '@ionic/react': 6.0.4
+  '@ionic/react-router': 6.0.4
   '@monaco-editor/react': ^4.2.2
   '@supabase/supabase-js': ^1.29.1
   '@testing-library/jest-dom': ^5.11.9
@@ -24,7 +24,7 @@ specifiers:
   '@types/react-syntax-highlighter': ^13.5.2
   allotment: ^1.2.0
   ionic-react-tablegrid: 1.0.60
-  ionicons: ^6.0.0
+  ionicons: ^6.0.1
   moment: ^2.29.1
   react: ^17.0.1
   react-copy-to-clipboard: ^5.0.4
@@ -56,8 +56,8 @@ dependencies:
   '@capacitor/haptics': 1.1.0_@capacitor+core@3.2.4
   '@capacitor/keyboard': 1.1.0_@capacitor+core@3.2.4
   '@capacitor/status-bar': 1.0.3_@capacitor+core@3.2.4
-  '@ionic/react': 6.0.3_react-dom@17.0.2+react@17.0.2
-  '@ionic/react-router': 6.0.3_ec3754057c966eea46e215a6e633f33f
+  '@ionic/react': 6.0.4_react-dom@17.0.2+react@17.0.2
+  '@ionic/react-router': 6.0.4_ec3754057c966eea46e215a6e633f33f
   '@monaco-editor/react': 4.3.1_react-dom@17.0.2+react@17.0.2
   '@supabase/supabase-js': 1.29.1
   '@testing-library/jest-dom': 5.16.1
@@ -71,7 +71,7 @@ dependencies:
   '@types/react-router-dom': 5.3.2
   allotment: 1.4.1_react-dom@17.0.2+react@17.0.2
   ionic-react-tablegrid: 1.0.60_react-dom@17.0.2+react@17.0.2
-  ionicons: 6.0.0
+  ionicons: 6.0.1
   moment: 2.29.1
   react: 17.0.2
   react-copy-to-clipboard: 5.0.4_react@17.0.2
@@ -2545,23 +2545,23 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@ionic/core/6.0.3:
-    resolution: {integrity: sha512-eH2pk34owVuUUb5liNR+hQEaUIYYy2EKBZXtb7+eDOvXzEO4nnQHZpIVvyESeA9YNYKJm8YUFWKt5vgaL4u8cA==}
+  /@ionic/core/6.0.4:
+    resolution: {integrity: sha512-s/hJidmB3qtuBE/IY6cfPYJb8U7pWP2c1oUfyZGp9dyqLy9F4fYOKBog6Pzgfs0U50CArCGJfHSp6ufPFA0G2w==}
     dependencies:
       '@stencil/core': 2.12.0
-      ionicons: 6.0.0
+      ionicons: 6.0.1
       tslib: 2.3.1
     dev: false
 
-  /@ionic/react-router/6.0.3_ec3754057c966eea46e215a6e633f33f:
-    resolution: {integrity: sha512-pvo0qAGhWnfTy7jv0dB+0Si2mAOB3jVVHLqlsRn9IOfRjos9TiOz9SvSru62EWne7H8lP5K43KwRvqe9WfPqlA==}
+  /@ionic/react-router/6.0.4_ec3754057c966eea46e215a6e633f33f:
+    resolution: {integrity: sha512-lyLiZ+y9DvQ//yz4Ife7q2KUDlKhaStxkCmoYOUsqDprKUAAkzOLec3jaGuDM8DUlBoHke+nrxigc5tuZLaAVw==}
     peerDependencies:
       react: '>=16.8.6'
       react-dom: '>=16.8.6'
       react-router: ^5.0.1
       react-router-dom: ^5.0.1
     dependencies:
-      '@ionic/react': 6.0.3_react-dom@17.0.2+react@17.0.2
+      '@ionic/react': 6.0.4_react-dom@17.0.2+react@17.0.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-router: 5.2.1_react@17.0.2
@@ -2582,14 +2582,14 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@ionic/react/6.0.3_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-URVJ80D5JEcwXk2eeNdIKaHypxabxcd0DfAfou5keucNfgBIQlUxrSBN5sc0I6WIAQ6KLHPO8+qCn/t6HYP/rw==}
+  /@ionic/react/6.0.4_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-xVBAaXgeU6IKPiPZzZMXWOGx3Z4YR2zGtAZkfyMYeYfFruQwCBam9u2U6av/JJna03nELmJzbjM1H57KO95aug==}
     peerDependencies:
       react: '>=16.8.6'
       react-dom: '>=16.8.6'
     dependencies:
-      '@ionic/core': 6.0.3
-      ionicons: 6.0.0
+      '@ionic/core': 6.0.4
+      ionicons: 6.0.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       tslib: 2.3.1
@@ -7569,7 +7569,7 @@ packages:
       styled-components: '>=5.3.0'
     dependencies:
       '@ionic/react': 5.9.3_react-dom@17.0.2+react@17.0.2
-      ionicons: 6.0.0
+      ionicons: 6.0.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     dev: false
@@ -7580,10 +7580,10 @@ packages:
       '@stencil/core': 2.10.0
     dev: false
 
-  /ionicons/6.0.0:
-    resolution: {integrity: sha512-p83W1T8jZUlllHAjuIWaDQbI36OYqdrwcf8MhYbKW7+9rjGlCMP9+5OaR0W7tl0QfM004uAiy/zkc7HTpDNKgA==}
+  /ionicons/6.0.1:
+    resolution: {integrity: sha512-xQekOJsxH82O7oB+3F60zeRggCdND9pJ/k0E6IJDVUGGlCj5mlyFqNgxUimytKgstPGv3S+3EmCxjefvtGgWUg==}
     dependencies:
-      '@stencil/core': 2.10.0
+      '@stencil/core': 2.12.0
     dev: false
 
   /ip-regex/2.1.0:
