@@ -1,8 +1,10 @@
 import { IonLabel } from '@ionic/react'
 import { TableGrid } from 'ionic-react-tablegrid'
 import { useState } from 'react'
+
 import UtilsService from '../services/utils.service'
 import DisplayDetail from './DisplayDetail'
+
 import './SqlResults.css'
 
 const utilsService = UtilsService.getInstance()
@@ -31,18 +33,6 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 		if (resultJson && Array.isArray(resultJson)) {
 			resultSetArray.push(resultJson)
 			if (resultJson.length > 0) {
-				// get keys and values of first element
-				const keys = Object.keys(resultJson[0])
-				const resultRows: any = [];
-				resultJson.map((row, index) => {
-					keys.map((key, index) => {
-						if (typeof row[key] === 'object') {
-							row[key] = JSON.stringify(row[key]);
-						}
-					})
-					resultRows.push(row);
-				});
-				const { gridWidth, columnWidths } = utilsService.getGridWidths(resultJson)
 				outputArray.push(
 					<>
 						<div key={utilsService.randomKey()}>
@@ -50,17 +40,16 @@ const SqlResults: React.FC<ContainerProps> = ({ results }) => {
 								<strong>Result #{i + 1}</strong>
 							</div>
 						</div>
-						<TableGrid rows={resultRows} rowClick={(row: any, index: number) => {
+						<TableGrid rows={resultJson} rowClick={(row: any, index: number) => {
 										console.log('onclick fired')
                                         setResultSet(i)
                                         setCurrentIndex(index+1)
 										setRecord(row)
 										setDetailTrigger({ action: 'open' })
 							
-						}} />
+						}} maxColumnWidth={400} />
 					</>
 				)
-				// resultJson[0]
 			}
 		} else {
 			outputArray.push(

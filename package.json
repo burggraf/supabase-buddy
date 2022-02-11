@@ -22,7 +22,7 @@
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
     "allotment": "^1.2.0",
-    "ionic-react-tablegrid": "^1.0.60",
+    "ionic-react-tablegrid": "^1.0.62",
     "ionicons": "^6.0.1",
     "moment": "^2.29.1",
     "react": "^17.0.1",

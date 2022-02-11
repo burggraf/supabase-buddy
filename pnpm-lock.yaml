@@ -23,7 +23,7 @@ specifiers:
   '@types/react-router-dom': ^5.1.7
   '@types/react-syntax-highlighter': ^13.5.2
   allotment: ^1.2.0
-  ionic-react-tablegrid: ^1.0.60
+  ionic-react-tablegrid: ^1.0.62
   ionicons: ^6.0.1
   moment: ^2.29.1
   react: ^17.0.1
@@ -70,7 +70,7 @@ dependencies:
   '@types/react-router': 5.1.17
   '@types/react-router-dom': 5.3.2
   allotment: 1.4.1_react-dom@17.0.2+react@17.0.2
-  ionic-react-tablegrid: 1.0.60_react-dom@17.0.2+react@17.0.2
+  ionic-react-tablegrid: 1.0.62_react-dom@17.0.2+react@17.0.2
   ionicons: 6.0.1
   moment: 2.29.1
   react: 17.0.2
@@ -2537,14 +2537,6 @@ packages:
       - supports-color
     dev: true
 
-  /@ionic/core/5.9.3:
-    resolution: {integrity: sha512-WM50vVxAAw+MQYqWXKUK4usBgkr7iQ9UWSb6t59mG4ZSy/fPAb7ZIdAjxY0U5i1ykk6A7Ur4B9ZJMpC/a7nnug==}
-    dependencies:
-      '@stencil/core': 2.13.0
-      ionicons: 5.5.4
-      tslib: 2.3.1
-    dev: false
-
   /@ionic/core/6.0.7:
     resolution: {integrity: sha512-Yl6itMcddfwfNNa6BjCxXxrIS+vPsrYSTfCmQwVfB4AiuZ5ZgE/jaZ9lMN7b0WIAy56bfX9etRlW+EjnK1znyQ==}
     dependencies:
@@ -2566,19 +2558,6 @@ packages:
       react-dom: 17.0.2_react@17.0.2
       react-router: 5.2.1_react@17.0.2
       react-router-dom: 5.3.0_react@17.0.2
-      tslib: 2.3.1
-    dev: false
-
-  /@ionic/react/5.9.3_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-jw9rWfZBT2+39A5Pq6buPF8NrmuC4AFU6uWttmo5jsxPjFzo1Hm8igOwP5rbBKx+tpleb3SJD1agTOF1cx/xmg==}
-    peerDependencies:
-      react: '>=16.8.6'
-      react-dom: '>=16.8.6'
-    dependencies:
-      '@ionic/core': 5.9.3
-      ionicons: 5.5.4
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
       tslib: 2.3.1
     dev: false
 
@@ -3030,12 +3009,6 @@ packages:
     dependencies:
       '@sinonjs/commons': 1.8.3
     dev: true
-
-  /@stencil/core/2.10.0:
-    resolution: {integrity: sha512-15rWMTPQ/sp0lSV82HVCXkIya3QLN+uBl7pqK4JnTrp4HiLrzLmNbWjbvgCs55gw0lULbCIGbRIEsFz+Pe/Q+A==}
-    engines: {node: '>=12.10.0', npm: '>=6.0.0'}
-    hasBin: true
-    dev: false
 
   /@stencil/core/2.12.1:
     resolution: {integrity: sha512-u24TZ+FEvjnZt5ZgIkLjLpUNsO6Ml3mUZqwmqk81w6RWWz75hgB5p4RFI5rvuErFeh2xvMIGo+pNdG24XUBz1A==}
@@ -7567,23 +7540,17 @@ packages:
       side-channel: 1.0.4
     dev: true
 
-  /ionic-react-tablegrid/1.0.60_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-WwK3+95DPyaFTz8vub9RsZTCiCl6m9XIaWpk8YNwf1jamRHvGGX7sDJceMztiMM73fIj17gsgMehYGB74SpyAw==}
+  /ionic-react-tablegrid/1.0.62_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-vpDDn8QrPgrolQzZiRx3ouYcvnpD8k+9XEy3xdt/j4ecjvgjwPFLowoznzZXwzOqVUKcdAo5N44QoUXOFnWS3w==}
     peerDependencies:
       react: '>=17.0.2'
       react-dom: '>=17.0.2'
       styled-components: '>=5.3.0'
     dependencies:
-      '@ionic/react': 5.9.3_react-dom@17.0.2+react@17.0.2
+      '@ionic/react': 6.0.7_react-dom@17.0.2+react@17.0.2
       ionicons: 6.0.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
-    dev: false
-
-  /ionicons/5.5.4:
-    resolution: {integrity: sha512-3ph8X9my3inhabWEZ7N0XRA0MnnNQ1v9a602mLNgWsIXnxE9G5BybIZ/pws/OZZ/hoNlvSjk801N03yL9/FNgQ==}
-    dependencies:
-      '@stencil/core': 2.10.0
     dev: false
 
   /ionicons/6.0.1:
