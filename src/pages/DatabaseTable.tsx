@@ -216,7 +216,9 @@ const DatabaseTable: React.FC = () => {
 		setColumns(newColumnsArray);	
 	}
 	const clickSchema = (row: any, index: number) => {
-		history.push(`/database-column/${table_schema}/${table_name}/${row.column_name}`);
+		console.log('clickSchema', row, index);
+		console.log('column_name', row.column_name);
+		history.push(`/database-column/${table_schema}/${table_name}/${row["column_name^"]}`);
 	}
 	const clickTLS = (row: any, index: number) => {
 		setDetailCollection(grants);setCurrentIndex(index + 1);setRecord(row);setDetailTrigger({action:'open'})

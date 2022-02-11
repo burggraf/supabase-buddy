@@ -166,7 +166,8 @@ export default class SupabaseDataService {
     information_schema.tables.table_schema as "Schema^",
     information_schema.tables.table_name as "Name^",
     information_schema.tables.table_type as "Type^",
-    pg_description.description as "Description^",
+    pg_description.description as "Description^"
+    /*
     information_schema.tables.self_referencing_column_name,	
     information_schema.tables.reference_generation,
     information_schema.tables.user_defined_type_catalog,
@@ -175,6 +176,7 @@ export default class SupabaseDataService {
     information_schema.tables.is_insertable_into,
     information_schema.tables.is_typed,
     information_schema.tables.commit_action
+    */
     FROM information_schema.tables 
     LEFT OUTER JOIN pg_description 
     ON pg_description.objoid = (information_schema.tables.table_schema || '.' || information_schema.tables.table_name)::regclass
@@ -185,12 +187,12 @@ export default class SupabaseDataService {
 
   public async getColumns(table_schema: string, table_name: string) {
     return this.runStatement(`SELECT 
-    column_name as "column_name^",
     ordinal_position::NUMERIC as "ordinal_position^",
-    column_default as "column_default^",
-    is_nullable as "is_nullable^",
-    data_type as "data_type^",
-    character_maximum_length as "character_maximum_length^",
+    column_name as "column_name^",
+    /*column_default as "column_default^",
+    is_nullable as "is_nullable^",*/
+    data_type as "data_type^"
+    /*character_maximum_length as "character_maximum_length^",
     character_octet_length as "character_octet_length^",
     numeric_precision as "numeric_precision^",
     numeric_precision_radix as "numeric_precision_radix^",
@@ -225,7 +227,7 @@ export default class SupabaseDataService {
     identity_cycle as "identity_cycle^",
     is_generated as "is_generated^",
     generation_expression as "generation_expression^",
-    is_updatable as "is_updatable^"
+    is_updatable as "is_updatable^"*/
     FROM information_schema.columns
     WHERE table_schema = '${table_schema}'
     AND table_name = '${table_name}'
