@@ -19,7 +19,6 @@ interface ContainerProps {
 
 const TableApi: React.FC<ContainerProps> = ({ columns }) => {
 	// const table_name = columns[0].table_name
-    console.log('columns:', columns);
 	const [darkMode, setDarkMode] = useState<boolean>(
 		window.matchMedia('(prefers-color-scheme: dark)').matches
 	)

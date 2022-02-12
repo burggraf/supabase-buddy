@@ -3,7 +3,8 @@ import { TableGrid } from 'ionic-react-tablegrid'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
-import ItemPicker from '../components/ItemPicker'
+//import ItemPicker from '../components/ItemPicker'
+import ItemPickerAccordion from '../components/ItemPickerAccordion'
 import SupabaseDataService from '../services/supabase.data.service'
 
 import './DatabaseColumn.css'
@@ -20,26 +21,41 @@ const DatabaseColumn: React.FC = () => {
 	const [data_type, setDataType] = useState<string>("")
 	
 	const dataTypeOptions = [
-		{ value: "boolean", text: "boolean" },
-		{ value: "text", text: "text" },
-		{ value: "char", text: "char" },	
-		{ value: "varchar", text: "varchar" },	
-		{ value: "numeric", text: "numeric" },
-		{ value: "smallint", text: "smallint" },	
-		{ value: "integer", text: "integer" },	
-		{ value: "bigint", text: "bigint" },	
-		{ value: "smallserial", text: "smallserial" },	
-		{ value: "serial", text: "serial" },
-		{ value: "bigserial", text: "bigserial" },
-		{ value: "date", text: "date" },
-		{ value: "time", text: "time" },
-		{ value: "timestamp", text: "timestamp" },
-		{ value: "timestampz", text: "timestampz" },
-		{ value: "interval", text: "interval" },
-		{ value: "array", text: "array" },
-		{ value: "json", text: "json" },
-		{ value: "jsonb", text: "jsonb" },
-		{ value: "uuid", text: "uuid" },
+		{ value: "text-items", text: "Text",
+			children:[
+				{ value: "text", text: "text" },
+				{ value: "char", text: "char" },	
+				{ value: "varchar", text: "varchar" },			
+			] },
+		{ value: "number-items", text: "Number",
+			children:[
+				{ value: "numeric", text: "numeric" },
+				{ value: "smallint", text: "smallint" },	
+				{ value: "integer", text: "integer" },	
+				{ value: "bigint", text: "bigint" },			
+			] },
+		{ value: "increment-items", text: "Auto Increment",
+			children:[
+				{ value: "smallserial", text: "smallserial" },	
+				{ value: "serial", text: "serial" },
+				{ value: "bigserial", text: "bigserial" },
+			] },
+		{ value: "temporal-items", text: "Time & Date",
+			children:[
+				{ value: "date", text: "date" },
+				{ value: "time", text: "time" },
+				{ value: "timestamp", text: "timestamp" },
+				{ value: "timestampz", text: "timestampz" },
+				{ value: "interval", text: "interval" },
+			] },
+		{ value: "other-items", text: "Others",
+			children:[
+				{ value: "boolean", text: "boolean" },
+				{ value: "array", text: "array" },
+				{ value: "json", text: "json" },
+				{ value: "jsonb", text: "jsonb" },
+				{ value: "uuid", text: "uuid" },
+			] },
 	]
 	const supabaseDataService = SupabaseDataService.getInstance();
 	const loadColumn = async () => {
@@ -86,7 +102,7 @@ const DatabaseColumn: React.FC = () => {
 				(Foreign Key)
 
 				data_type : 
-							<ItemPicker 
+							<ItemPickerAccordion 
 								stateVariable={data_type} 									
 								stateFunction={ (e: any) => {setDataType(e!)} } 
 								initialValue={data_type}

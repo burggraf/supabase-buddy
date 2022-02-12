@@ -1,0 +1,6 @@
+.unchosenItem {
+    font-weight: normal;
+}
+.chosenItem {
+    font-weight: bold;
+}

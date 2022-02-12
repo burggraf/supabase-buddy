@@ -3,10 +3,11 @@ import Editor from '@monaco-editor/react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { debounce } from 'ts-debounce'
+
 import ItemPicker from '../components/ItemPicker'
 import SupabaseDataService from '../services/supabase.data.service'
-import './DatabaseFunction.css'
 
+import './DatabaseFunction.css'
 
 const languageOptions = [
 	{ value: "sql", text: "SQL" },
@@ -165,7 +166,7 @@ const DatabaseFunction: React.FC = () => {
 							stateFunction={ (e: any) => {setFunctionLanguage(e!)} } 
 							initialValue={functionLanguage}
 							options={languageOptions}
-							title="Column Type"
+							title="Language"
 						/>
 
 					</IonCol>
