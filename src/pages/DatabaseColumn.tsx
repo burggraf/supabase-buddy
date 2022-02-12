@@ -23,9 +23,9 @@ const DatabaseColumn: React.FC = () => {
 	const dataTypeOptions = [
 		{ value: "text-items", text: "Text",
 			children:[
-				{ value: "text", text: "text" },
-				{ value: "char", text: "char" },	
-				{ value: "varchar", text: "varchar" },			
+				{ value: "text", text: "text", description: "unlimited length text string" },
+				{ value: "char", text: "char", description: "fixed length text string" },	
+				{ value: "character varying", text: "varchar", description: "variable length text string" },			
 			] },
 		{ value: "number-items", text: "Number",
 			children:[
@@ -91,7 +91,6 @@ const DatabaseColumn: React.FC = () => {
 
 
 			<IonContent className="ion-padding">
-
 
 				Name
 				Description

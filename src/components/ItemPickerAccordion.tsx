@@ -15,6 +15,7 @@ interface Option {
     children: OptionChild[]
 }
 interface ContainerProps {
+    openAccordion?: string
 	stateVariable: string //object
 	stateFunction: Function
 	initialValue: string
@@ -23,12 +24,22 @@ interface ContainerProps {
 }
 
 const ItemPickerAccordion: React.FC<ContainerProps> = ({
+    openAccordion,
 	stateVariable,
 	stateFunction,
 	initialValue,
 	options,
 	title,
 }) => {
+    if (!openAccordion) {
+        options.map((option) => {
+            option.children.map((child) => {
+                if (child.value === initialValue) {
+                    openAccordion = option.value
+                }
+            });
+        })
+    }
 	const [showModal, setShowModal] = useState({ isOpen: false })
 	const chooseValue = (e: any) => {
 		console.log('chooseValue', e)
@@ -57,7 +68,7 @@ const ItemPickerAccordion: React.FC<ContainerProps> = ({
 					</IonToolbar>
 				</IonHeader>
 				<IonContent>
-                <IonAccordionGroup>
+                <IonAccordionGroup value={openAccordion}>
                     {options.map((option) => {
                         return (
                         <IonAccordion value={option.value}>
