@@ -39,6 +39,7 @@ const DatabaseTable: React.FC = () => {
 	const [createTableStatement, setCreateTableStatement] = useState<string>("")
 	const [name, setName] = useState(table_name === 'NEW-TABLE' ? '' : table_name)
 	const [columns, setColumns] = useState<any[]>([])
+	const [rawColumns, setRawColumns] = useState<any[]>([])
 	const [detailCollection, setDetailCollection] = useState<any[]>([])
 	const [rows, setRows] = useState<any[]>([])
 	const [currentIndex, setCurrentIndex] = useState(1)
@@ -62,6 +63,12 @@ const DatabaseTable: React.FC = () => {
 			console.error(error)
 		} else {
 			setColumns(data!)
+		}
+		const { data: rawdata, error: rawerror } = await supabaseDataService.getRawColumns(table_schema, table_name)
+		if (rawerror) {
+			console.error(rawerror)
+		} else {
+			setRawColumns(rawdata!)
 		}
 	}	
 	const loadData = async () => {
@@ -216,8 +223,6 @@ const DatabaseTable: React.FC = () => {
 		setColumns(newColumnsArray);	
 	}
 	const clickSchema = (row: any, index: number) => {
-		console.log('clickSchema', row, index);
-		console.log('column_name', row.column_name);
 		history.push(`/database-column/${table_schema}/${table_name}/${row["column_name^"]}`);
 	}
 	const clickTLS = (row: any, index: number) => {
@@ -340,7 +345,7 @@ const DatabaseTable: React.FC = () => {
 			}
 			{ mode === 'api' &&
 				<div>
-					<TableApi columns={columns} />
+					<TableApi columns={rawColumns} />
 				</div>
 			}
 			<DisplayDetail 

@@ -1,11 +1,11 @@
 import { IonCol, IonGrid, IonLabel, IonRow, IonSegment, IonSegmentButton } from '@ionic/react'
 import { useState } from 'react'
+
 import { Column } from '../../models/Column'
 import CodeBlock from './CodeBlock'
 import ItemMultiPicker from './ItemMultiPicker'
+
 import './TableApi.css'
-
-
 
 interface Option {
 	value: string
@@ -121,6 +121,7 @@ const getTextHere = (operation: 'select' | 'insert' | 'update' | 'delete' | 'sub
             columns
             .filter((item) => optArr.find((opt) => opt.value === item.column_name && opt.checked))
             .map((c) => {
+                console.log('c', c);
                 if (c.numeric_scale !== null)
                     return `${c.column_name}: ${c.data_type.replace(/ /g, '_')}Value`
                 else return `${c.column_name}: '${c.data_type.replace(/ /g, '_')}Value'`
