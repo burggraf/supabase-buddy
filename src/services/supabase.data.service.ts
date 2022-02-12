@@ -237,6 +237,7 @@ export default class SupabaseDataService {
   }
   public async getRawColumns(table_schema: string, table_name: string) {
     return this.runStatement(`SELECT 
+    '${table_name}' as "table_name",
     ordinal_position::NUMERIC as "ordinal_position",
     column_name as "column_name",
     column_default as "column_default",
