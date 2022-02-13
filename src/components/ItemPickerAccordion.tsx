@@ -1,5 +1,5 @@
-import { IonAccordion, IonAccordionGroup, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonModal, IonNote, IonTitle, IonToolbar } from '@ionic/react'
-import { closeOutline } from 'ionicons/icons'
+import { IonAccordion, IonAccordionGroup, IonButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonModal, IonNote, IonRow, IonTitle, IonToolbar } from '@ionic/react'
+import { checkboxOutline, checkmarkOutline, closeOutline } from 'ionicons/icons'
 import { useState } from 'react'
 
 import './ItemPickerAccordion.css'
@@ -21,6 +21,8 @@ interface ContainerProps {
 	initialValue: string
 	options: Option[]
 	title: string
+    allowManualInput?: boolean
+    manualInputTitle?: string
 }
 
 const ItemPickerAccordion: React.FC<ContainerProps> = ({
@@ -30,6 +32,8 @@ const ItemPickerAccordion: React.FC<ContainerProps> = ({
 	initialValue,
 	options,
 	title,
+    allowManualInput,
+    manualInputTitle
 }) => {
     if (!openAccordion) {
         options.map((option) => {
@@ -41,6 +45,7 @@ const ItemPickerAccordion: React.FC<ContainerProps> = ({
         })
     }
 	const [showModal, setShowModal] = useState({ isOpen: false })
+    const [manualInput, setManualInput] = useState('')
 	const chooseValue = (e: any) => {
 		console.log('chooseValue', e)
 		setShowModal({ isOpen: false })
@@ -93,7 +98,23 @@ const ItemPickerAccordion: React.FC<ContainerProps> = ({
                     })}
                 </IonAccordionGroup>
 					{/* <IonButton onClick={() => setShowModal({ isOpen: false })}>{stateVariable}</IonButton> */}
-				</IonContent>
+	
+                    { allowManualInput &&
+                        <IonItem>
+                            <IonLabel slot='start'>{manualInputTitle || 'Other:'}</IonLabel>
+                            <IonInput type='text'
+                                     value={manualInput}
+                                     style={{border: '1px solid',paddingLeft:'5px'}}
+                                     onIonChange={(e) => {setManualInput(e.detail.value! || '')}}></IonInput>
+                            <IonButtons slot='end'>
+                                <IonButton fill='clear' color='medium' onClick={() => {chooseValue(manualInput)}}>
+                                    <IonIcon size='large' icon={checkmarkOutline}></IonIcon>
+                                </IonButton>
+                            </IonButtons>
+                        </IonItem>
+                }
+
+    			</IonContent>
 			</IonModal>
 			<IonButton
 				strong

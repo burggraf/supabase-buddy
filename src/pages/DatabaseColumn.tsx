@@ -21,26 +21,26 @@ const DatabaseColumn: React.FC = () => {
 	const [data_type, setDataType] = useState<string>("")
 	
 	const dataTypeOptions = [
-		{ value: "text-items", text: "Text",
+		{ value: "text-items", text: "Text Data Types",
 			children:[
 				{ value: "text", text: "text", description: "unlimited length text string" },
 				{ value: "char", text: "char", description: "fixed length text string" },	
 				{ value: "character varying", text: "varchar", description: "variable length text string" },			
 			] },
-		{ value: "number-items", text: "Number",
+		{ value: "number-items", text: "Numeric Data Types",
 			children:[
 				{ value: "numeric", text: "numeric" },
 				{ value: "smallint", text: "smallint" },	
 				{ value: "integer", text: "integer" },	
 				{ value: "bigint", text: "bigint" },			
 			] },
-		{ value: "increment-items", text: "Auto Increment",
+		{ value: "increment-items", text: "Auto Increment Types",
 			children:[
 				{ value: "smallserial", text: "smallserial" },	
 				{ value: "serial", text: "serial" },
 				{ value: "bigserial", text: "bigserial" },
 			] },
-		{ value: "temporal-items", text: "Time & Date",
+		{ value: "temporal-items", text: "Time & Date Types",
 			children:[
 				{ value: "date", text: "date" },
 				{ value: "time", text: "time" },
@@ -48,7 +48,7 @@ const DatabaseColumn: React.FC = () => {
 				{ value: "timestampz", text: "timestampz" },
 				{ value: "interval", text: "interval" },
 			] },
-		{ value: "other-items", text: "Others",
+		{ value: "other-items", text: "Other Data Types",
 			children:[
 				{ value: "boolean", text: "boolean" },
 				{ value: "array", text: "array" },
@@ -92,13 +92,13 @@ const DatabaseColumn: React.FC = () => {
 
 			<IonContent className="ion-padding">
 
-				Name
+				{/* Name
 				Description
 				Type
 				Default Value
 				Allow Null
 				Is Unique
-				(Foreign Key)
+				(Foreign Key) */}
 
 				data_type : 
 							<ItemPickerAccordion 
@@ -107,6 +107,8 @@ const DatabaseColumn: React.FC = () => {
 								initialValue={data_type}
 								options={dataTypeOptions}
 								title="Data Type"
+								allowManualInput={true}
+								manualInputTitle='Custom Type:'
 							/>
 
 
