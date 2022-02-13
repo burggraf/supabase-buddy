@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 
 import DisplayDetail from '../components/DisplayDetail'
+import ItemPicker from '../components/ItemPicker'
 import TableApi from '../components/TableApi'
 import SupabaseDataService from '../services/supabase.data.service'
 import UtilsService from '../services/utils.service'
@@ -36,8 +37,11 @@ const DatabaseTable: React.FC = () => {
     const history = useHistory();
 	const { table_schema } = useParams<{ table_schema: string }>()
 	const { table_name } = useParams<{ table_name: string }>()
+	const [ table, setTable ] = useState(table_name);
+	const [ schema, setSchema ] = useState(table_schema === 'NEW' ? 'public' : table_schema);
+	const [ schemas, setSchemas ] = useState<any[]>([]);
 	const [createTableStatement, setCreateTableStatement] = useState<string>("")
-	const [name, setName] = useState(table_name === 'NEW-TABLE' ? '' : table_name)
+	const [name, setName] = useState(table_schema === 'NEW' && table_name === 'TABLE' ? '' : table_name)
 	const [columns, setColumns] = useState<any[]>([])
 	const [rawColumns, setRawColumns] = useState<any[]>([])
 	const [detailCollection, setDetailCollection] = useState<any[]>([])
@@ -56,6 +60,19 @@ const DatabaseTable: React.FC = () => {
 	const [keys, setKeys] = useState<string[]>([]);
 	const [gridWidth, setGridWidth] = useState(0);
 	const [columnWidths, setColumnWidths] = useState<any[]>([]);
+
+	const loadSchemas = async () => {
+		const { data, error } = await supabaseDataService.getSchemas()
+		if (error) {
+			console.error(error)
+		} else {
+			const newSchemas: any[] = [];
+			data.forEach((schema: any) => {
+				newSchemas.push({ value: schema.schema_name, text: schema.schema_name })
+			});
+			setSchemas(newSchemas)
+		}
+	}
 
 	const loadColumns = async () => {
 		const { data, error } = await supabaseDataService.getColumns(table_schema, table_name)
@@ -142,7 +159,8 @@ const DatabaseTable: React.FC = () => {
           })
     }
 	useEffect(() => {
-		if (table_schema === 'public' && table_name === 'NEW-TABLE') {
+		if (table_schema === 'NEW' && table_name === 'TABLE') {
+			loadSchemas();
 			const newColumns = [
 				{
 					character_maximum_length: null,
@@ -247,7 +265,7 @@ const DatabaseTable: React.FC = () => {
 					<IonTitle>
 						{table_schema}.{table_name}
 					</IonTitle>
-					{ table_name === 'NEW-TABLE' &&
+					{ (table_schema === 'NEW' && table_name === 'TABLE') &&
                     	<IonButtons slot="end">
 							<IonButton color="primary" onClick={save}>
 								<IonIcon size="large" icon={checkmark}></IonIcon>
@@ -258,9 +276,20 @@ const DatabaseTable: React.FC = () => {
 			</IonHeader>
 
 			<IonContent>
-			{ (table_schema === 'public' && table_name === 'NEW-TABLE') &&
+			{ (table_schema === 'NEW' && table_name === 'TABLE') &&
 				<IonGrid>
 					<IonRow key="name-header" className="header">
+						<IonCol>
+							Schema:
+							<ItemPicker 
+							stateVariable={schema} 									
+							stateFunction={ (e: any) => {setSchema(e!)} } 
+							initialValue={'public'}
+							options={schemas}
+							title="Schema"
+							/>
+
+						</IonCol>
 						<IonCol>
 						Table Name:{' '}
 						<IonInput
@@ -275,7 +304,7 @@ const DatabaseTable: React.FC = () => {
 					</IonRow>
 				</IonGrid>
 			}
-			{ !(table_schema === 'public' && table_name === 'NEW-TABLE') &&
+			{ !(table_schema === 'NEW' && table_name === 'TABLE') &&
 				<IonSegment mode="ios" scrollable={true} value={mode} onIonChange={e => {
 					if (e.detail.value === 'data' || 
 						e.detail.value === 'schema' ||
@@ -314,7 +343,7 @@ const DatabaseTable: React.FC = () => {
 				</IonSegment>
 			}
 
-			{ ((mode === 'schema') || (table_schema === 'public' && table_name === 'NEW-TABLE')) &&
+			{ ((mode === 'schema') || (table_schema === 'NEW' && table_name === 'TABLE')) &&
 				<>
 				<TableGrid rows={columns} rowClick={clickSchema} setRows={setColumns} />
 				<pre className="ion-padding">{createTableStatement}

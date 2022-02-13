@@ -33,7 +33,7 @@ const DatabaseTables: React.FC = () => {
 		isMounted = true;
 	}, []);                               
 	const addTable = () => {
-		history.push(`/database-table/public/NEW-TABLE`)
+		history.push(`/database-table/NEW/TABLE`)
 	}
 	const clickHandler = (row: any, index: number) => {
 		console.log('clickHandler: row, index:', row, index);
