@@ -117,20 +117,22 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 		console.log('useEffect: column', column)
 		loadColumn()
 	}, [column])
-	useEffect(() => {
-		console.log('useEffect: data_type', data_type)
-		// find attribute:data_type in rows
-		const index = rows.findIndex((row) => row.Attribue === 'data_type')
-		if (index > -1) {
-			rows[index].Value = data_type
-		}
-	}, [data_type])
+	// useEffect(() => {
+	// 	console.log('useEffect: data_type', data_type, 'rows', rows)
+	// 	// find attribute:data_type in rows
+	// 	const index = rows.findIndex((row) => row.Attribue === 'data_type')
+	// 	console.log('useEffect: index', index)
+	// 	if (index > -1) {
+	// 		rows[index].Value = data_type
+	// 	}
+	// }, [data_type])
 	const save = async () => {
 		console.log('save data here')
 		const newColumn: any = {}
 		rows.map((row) => {
 			newColumn[row.Attribue] = row.Value
 		})
+		newColumn.data_type = data_type
 		console.log('newColumn', newColumn)
 		updateColumn(newColumn)
 		setShowModal({ isOpen: false })
