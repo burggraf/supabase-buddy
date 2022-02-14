@@ -1,21 +1,33 @@
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonModal, IonPage, IonTitle, IonToolbar } from '@ionic/react'
 import { TableGrid } from 'ionic-react-tablegrid'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
 //import ItemPicker from '../components/ItemPicker'
-import ItemPickerAccordion from '../components/ItemPickerAccordion'
+import ItemPickerAccordion from './ItemPickerAccordion'
 import SupabaseDataService from '../services/supabase.data.service'
 
 import './DatabaseColumn.css'
+import { arrowBackOutline, checkmarkOutline, closeOutline } from 'ionicons/icons'
 
 // const utilsService = UtilsService.getInstance();
+interface ContainerProps {
+	schema: string;
+	table: string;
+	column: string;
+	showModal: any;
+	setShowModal: any;
+	updateColumn: Function;
+}
 
-const DatabaseColumn: React.FC = () => {
-	const { table_schema } = useParams<{ table_schema: string }>()
-	const { table_name } = useParams<{ table_name: string }>()
-	const { column_name } = useParams<{ column_name: string }>()
+const DatabaseColumn: React.FC<ContainerProps> = ({
+	schema, table, column, showModal, setShowModal, updateColumn
+}) => {
+	// const { schema } = useParams<{ schema: string }>()
+	// const { table } = useParams<{ table: string }>()
+	// const { column } = useParams<{ column: string }>()
 	const [rows, setRows] = useState<any[]>([])
+	// const [showModal, setShowModal] = useState({ isOpen: false })
 
 	//const [data_type, set] = useState<string>("")
 	const [data_type, setDataType] = useState<string>("")
@@ -59,36 +71,67 @@ const DatabaseColumn: React.FC = () => {
 	]
 	const supabaseDataService = SupabaseDataService.getInstance();
 	const loadColumn = async () => {
-		const { data, error } = await supabaseDataService.getColumn(table_schema, table_name, column_name)
-		if (error) {
-			console.error(error)
-		} else {
-			const attributes = data![0];
-			const newRows:any[] = [];
-			Object.keys(attributes).map((key, index) => {
-				newRows.push({'Attribue': key, 'Value': attributes[key]});
-			});
-			setRows(newRows);
-			setDataType(attributes.data_type);
+		if (column) {
+			const { data, error } = await supabaseDataService.getColumn(schema, table, column)
+			if (error) {
+				console.error(error)
+			} else {
+				const attributes = data![0];
+				const newRows:any[] = [];
+				Object.keys(attributes).map((key, index) => {
+					newRows.push({'Attribue': key, 'Value': attributes[key]});
+				});
+				setRows(newRows);
+				setDataType(attributes.data_type);
+			}	
 		}
 	}
 	useEffect(() => {
+		console.log('useEffect: column', column);
 		loadColumn()
-	}, [])
+	}, [column])
+	useEffect(() => {
+		console.log('useEffect: data_type', data_type);
+		// find attribute:data_type in rows
+		const index = rows.findIndex(row => row.Attribue === 'data_type');
+		if (index > -1) {
+			rows[index].Value = data_type;
+		}
+	}, [data_type])
+	const save = async () => {
+		console.log('save data here');
+		const newColumn: any = {};
+		rows.map((row) => {
+			newColumn[row.Attribue] = row.Value;
+		})
+		console.log('newColumn', newColumn);
+		updateColumn(newColumn);
+		setShowModal({ isOpen: false });
+	}
 	return (
-		<IonPage>
+
+		<IonModal
+		isOpen={showModal.isOpen}
+		animated={true}
+		// onDidDismiss={() => setShowModal({ isOpen: false })}
+		className='my-custom-class'>
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot='start'>
-						<IonBackButton defaultHref="/database-tables" />
+						<IonButton color='primary' onClick={() => setShowModal({ isOpen: false })}>
+								<IonIcon size='large' icon={closeOutline}></IonIcon>
+						</IonButton>
 					</IonButtons>
 					<IonTitle>
-						{table_schema}.{table_name}.{column_name}
+						{schema}.{table}.{column}
 					</IonTitle>
+					<IonButtons slot='end'>
+						<IonButton color='primary' onClick={save}>
+								<IonIcon size='large' icon={checkmarkOutline}></IonIcon>
+						</IonButton>
+					</IonButtons>
 				</IonToolbar>
 			</IonHeader>
-
-
 
 			<IonContent className="ion-padding">
 
@@ -115,7 +158,7 @@ const DatabaseColumn: React.FC = () => {
 				<TableGrid rows={rows} rowClick={() => {}}/>
 
 			</IonContent>
-		</IonPage>
+		</IonModal>
 	)
 }
 

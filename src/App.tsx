@@ -9,7 +9,7 @@ import Login from './Login/Login'
 import ResetPassword from './Login/ResetPassword'
 import AuthUser from './pages/AuthUser'
 import AuthUsers from './pages/AuthUsers'
-import DatabaseColumn from './pages/DatabaseColumn'
+//import DatabaseColumn from './pages/DatabaseColumn'
 import DatabaseExtensions from './pages/DatabaseExtensions'
 import DatabaseFunction from './pages/DatabaseFunction'
 import DatabaseFunctions from './pages/DatabaseFunctions'
@@ -103,10 +103,10 @@ const App: React.FC = () => {
 								/>
 								<Route path='/database-tables' component={DatabaseTables} />
 								<Route path='/database-table/:table_schema/:table_name' component={DatabaseTable} />
-								<Route
+								{/* <Route
 									path='/database-column/:table_schema/:table_name/:column_name'
 									component={DatabaseColumn}
-								/>
+								/> */}
 								<Route path='/database-views' component={DatabaseViews} />
 								<Route path='/database-view/:table_schema/:table_name' component={DatabaseView} />
 								<Route path='/database-schemas' component={DatabaseSchemas} />

@@ -189,9 +189,10 @@ export default class SupabaseDataService {
     return this.runStatement(`SELECT 
     ordinal_position::NUMERIC as "ordinal_position^",
     column_name as "column_name^",
-    /*column_default as "column_default^",
+    /*
     is_nullable as "is_nullable^",*/
     data_type as "data_type^",
+    column_default as "column_default^",
     col_description((table_schema||'.'||table_name)::regclass::oid, ordinal_position) as "description^"
     /*character_maximum_length as "character_maximum_length^",
     character_octet_length as "character_octet_length^",

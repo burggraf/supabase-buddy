@@ -1,4 +1,4 @@
-import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonPage, IonRow, IonSegment, IonSegmentButton, IonTitle, IonToolbar, useIonToast } from '@ionic/react'
+import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonReorder, IonReorderGroup, IonRow, IonSegment, IonSegmentButton, IonTitle, IonToolbar, ItemReorderEventDetail, useIonToast, useIonViewWillEnter } from '@ionic/react'
 import { TableGrid } from 'ionic-react-tablegrid'
 import { checkmark } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
@@ -7,6 +7,7 @@ import { useHistory, useParams } from 'react-router'
 import DisplayDetail from '../components/DisplayDetail'
 import ItemPicker from '../components/ItemPicker'
 import TableApi from '../components/TableApi'
+import DatabaseColumn from '../components/DatabaseColumn'
 import SupabaseDataService from '../services/supabase.data.service'
 import UtilsService from '../services/utils.service'
 
@@ -35,15 +36,16 @@ const supabaseDataService = SupabaseDataService.getInstance();
 //   ];
 const DatabaseTable: React.FC = () => {
     const history = useHistory();
+	const [showColumnModal, setShowColumnModal] = useState({ isOpen: false })
 	const { table_schema } = useParams<{ table_schema: string }>()
 	const { table_name } = useParams<{ table_name: string }>()
-	const [ table, setTable ] = useState(table_name);
+	const [ table, setTable ] = useState(table_schema === 'NEW' && table_name === 'TABLE' ? '' : table_name);
 	const [ schema, setSchema ] = useState(table_schema === 'NEW' ? 'public' : table_schema);
+	const [ column, setColumn ] = useState('');
 	const [ schemas, setSchemas ] = useState<any[]>([]);
 	const [createTableStatement, setCreateTableStatement] = useState<string>("")
 	const [name, setName] = useState(table_schema === 'NEW' && table_name === 'TABLE' ? '' : table_name)
 	const [columns, setColumns] = useState<any[]>([])
-	const [rawColumns, setRawColumns] = useState<any[]>([])
 	const [detailCollection, setDetailCollection] = useState<any[]>([])
 	const [rows, setRows] = useState<any[]>([])
 	const [currentIndex, setCurrentIndex] = useState(1)
@@ -61,6 +63,10 @@ const DatabaseTable: React.FC = () => {
 	const [gridWidth, setGridWidth] = useState(0);
 	const [columnWidths, setColumnWidths] = useState<any[]>([]);
 
+	useIonViewWillEnter(() => {
+		console.log('ionViewWillEnter event fired');
+	  });
+
 	const loadSchemas = async () => {
 		const { data, error } = await supabaseDataService.getSchemas()
 		if (error) {
@@ -75,17 +81,15 @@ const DatabaseTable: React.FC = () => {
 	}
 
 	const loadColumns = async () => {
-		const { data, error } = await supabaseDataService.getColumns(table_schema, table_name)
+		const { data, error } = await supabaseDataService.getRawColumns(table_schema, table_name)
 		if (error) {
 			console.error(error)
 		} else {
+			data.map((column: any, index: number) => {
+				if (column.column_default === null) column.column_default = '';	
+				if (column.description === null) column.description = '';			
+			});
 			setColumns(data!)
-		}
-		const { data: rawdata, error: rawerror } = await supabaseDataService.getRawColumns(table_schema, table_name)
-		if (rawerror) {
-			console.error(rawerror)
-		} else {
-			setRawColumns(rawdata!)
 		}
 	}	
 	const loadData = async () => {
@@ -159,55 +163,17 @@ const DatabaseTable: React.FC = () => {
           })
     }
 	useEffect(() => {
+		console.log('useEffect: empty columns->', columns)
 		if (table_schema === 'NEW' && table_name === 'TABLE') {
 			loadSchemas();
-			const newColumns = [
-				{
-					character_maximum_length: null,
-					character_octet_length: null,
-					character_set_catalog: null,
-					character_set_name: null,
-					character_set_schema: null,
-					collation_catalog: null,
-					collation_name: null,
-					collation_schema: null,
-					column_default: "uuid_generate_v4()",
-					column_name: "id",
-					data_type: "uuid",
-					datetime_precision: null,
-					domain_catalog: null,
-					domain_name: null,
-					domain_schema: null,
-					dtd_identifier: "1",
-					generation_expression: null,
-					identity_cycle: "NO",
-					identity_generation: null,
-					identity_increment: null,
-					identity_maximum: null,
-					identity_minimum: null,
-					identity_start: null,
-					interval_precision: null,
-					interval_type: null,
-					is_generated: "NEVER",
-					is_identity: "NO",
-					is_nullable: "NO",
-					is_self_referencing: "NO",
-					is_updatable: "YES",
-					maximum_cardinality: null,
-					numeric_precision: null,
-					numeric_precision_radix: null,
-					numeric_scale: null,
-					ordinal_position: "1",
-					scope_catalog: null,
-					scope_name: null,
-					scope_schema: null,
-					table_catalog: "postgres",
-					table_name: "snippets",
-					table_schema: "public",
-					udt_catalog: "postgres",
-					udt_name: "uuid",
-					udt_schema: "pg_catalog"
-					 }
+			const newColumns: any[] = [
+				// {
+				// 	column_name: "id",
+				// 	data_type: "uuid",
+				// 	ordinal_position: "1",
+				// 	column_default: "",
+				// 	description: ""
+				// }
 			];
 			setColumns(newColumns);
 		} else {
@@ -220,6 +186,10 @@ const DatabaseTable: React.FC = () => {
 			loadCreateTableStatement();
 		}
 	}, [])
+	useEffect(() => {
+		console.log('useEffect: table');
+		generateNewCreateTableStatement();
+	}, [table,schema]);
 	const save = async () => {
 		toast('not implemented yet', 'danger');
 	}
@@ -240,8 +210,10 @@ const DatabaseTable: React.FC = () => {
 		newColumnsArray[index].data_type = e;
 		setColumns(newColumnsArray);	
 	}
-	const clickSchema = (row: any, index: number) => {
-		history.push(`/database-column/${table_schema}/${table_name}/${row["column_name^"]}`);
+	const clickColumn = (column_name: string) => {
+		console.log('clickColumn', column_name);
+		setColumn(column_name);
+		setShowColumnModal({ isOpen: true })
 	}
 	const clickTLS = (row: any, index: number) => {
 		setDetailCollection(grants);setCurrentIndex(index + 1);setRecord(row);setDetailTrigger({action:'open'})
@@ -255,6 +227,34 @@ const DatabaseTable: React.FC = () => {
 	const clickDataRow = (row: any, index: number) => {
 		setDetailCollection(rows);setCurrentIndex(index + 1);setRecord(row);setDetailTrigger({action:'open'})
 	}
+	const generateNewCreateTableStatement = () => {
+		const newStatement = 
+		`CREATE TABLE IF NOT EXISTS ${schema}.${table} (
+		);`;
+		setCreateTableStatement(newStatement);
+	}
+	const doReorder = (event: CustomEvent<ItemReorderEventDetail>) => {
+		// The `from` and `to` properties contain the index of the item
+		// when the drag started and ended, respectively
+		console.log('Dragged from index', event.detail.from, 'to', event.detail.to);
+	  
+		// Finish the reorder and position the item in the DOM based on
+		// where the gesture ended. This method can also be called directly
+		// by the reorder group
+		event.detail.complete();
+	  }
+	const updateColumn = async (column: any) => {
+		console.log('updateColumn', column);	
+		const newColumns = [...columns];
+		const column_name = column.column_name;
+		// find the index of the column
+		const index = newColumns.findIndex(x => x.column_name === column_name);
+		if (index > -1) {
+			newColumns[index] = column;
+		}
+		console.log('newColumns', newColumns);
+		setColumns(newColumns);
+	}
 	return (
 		<IonPage>
 			<IonHeader>
@@ -263,7 +263,7 @@ const DatabaseTable: React.FC = () => {
 						<IonBackButton defaultHref="/database-tables" />
 					</IonButtons>
 					<IonTitle>
-						{table_schema}.{table_name}
+						{ (table_schema === 'NEW' && table_name === 'TABLE') ? 'New Table' : `${table_schema}.${table_name}` }
 					</IonTitle>
 					{ (table_schema === 'NEW' && table_name === 'TABLE') &&
                     	<IonButtons slot="end">
@@ -293,12 +293,12 @@ const DatabaseTable: React.FC = () => {
 						<IonCol>
 						Table Name:{' '}
 						<IonInput
-							value={name}
+							value={table}
 							placeholder="Enter table name"
 							debounce={750}
-							onIonChange={(e) => setName(e.detail.value!)}
+							onIonChange={(e) => setTable(e.detail.value!)}
 							type='text'
-							style={{ border: '1px solid' }}
+							style={{ border: '1px solid', paddingLeft: '5px' }}
 						/>
 						</IonCol>
 					</IonRow>
@@ -345,7 +345,51 @@ const DatabaseTable: React.FC = () => {
 
 			{ ((mode === 'schema') || (table_schema === 'NEW' && table_name === 'TABLE')) &&
 				<>
-				<TableGrid rows={columns} rowClick={clickSchema} setRows={setColumns} />
+				{/* <TableGrid rows={columns} rowClick={clickSchema} setRows={setColumns} /> */}
+				<IonList lines='full'>
+				<IonReorderGroup disabled={false} onIonItemReorder={doReorder}>
+				<IonItem color="light">
+					<IonReorder slot="start" style={{color: 'transparent'}} />
+					<IonGrid>
+						<IonRow>							
+							<IonCol>
+								Name
+							</IonCol>
+							<IonCol>
+								Type
+							</IonCol>
+							<IonCol>
+								Default
+							</IonCol>
+							<IonCol>
+								Description
+							</IonCol>
+						</IonRow>
+					</IonGrid>
+    			</IonItem>
+					{columns.map((column: any, index: number) => (
+						<IonItem onClick={() => clickColumn(column.column_name)}>
+							<IonReorder slot="start" />
+							<IonGrid>
+								<IonRow>
+									<IonCol>
+									 {column.column_name}
+									</IonCol>
+									<IonCol>
+										{column.data_type}
+									</IonCol>
+									<IonCol>
+										{column.column_default}
+									</IonCol>
+									<IonCol>
+										{column.description}
+									</IonCol>
+								</IonRow>
+							</IonGrid>
+						</IonItem>
+					))}
+				</IonReorderGroup>
+				</IonList>
 				<pre className="ion-padding">{createTableStatement}
 				{indexes && indexes.length > 0 &&
 					indexes.map((index: any, indexNumber: number) => {
@@ -374,7 +418,7 @@ const DatabaseTable: React.FC = () => {
 			}
 			{ mode === 'api' &&
 				<div>
-					<TableApi columns={rawColumns} />
+					<TableApi columns={columns} />
 				</div>
 			}
 			<DisplayDetail 
@@ -395,6 +439,16 @@ const DatabaseTable: React.FC = () => {
 				title={`${table_schema}.${table_name} ${mode} Detail`}
 				onSave={mode === 'data' && primaryKeys.length > 0 ? saveDetailRecord : null}
 			/>
+			<DatabaseColumn 
+				schema={schema} 
+				table={table} 
+				column={column} 
+				updateColumn={updateColumn}
+				showModal={showColumnModal}
+				setShowModal={setShowColumnModal} />
+
+							<pre>{JSON.stringify(columns,null,2)}</pre>
+
 			</IonContent>
 		</IonPage>
 	)
