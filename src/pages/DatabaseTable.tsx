@@ -41,7 +41,7 @@ const DatabaseTable: React.FC = () => {
 	const { table_name } = useParams<{ table_name: string }>()
 	const [ table, setTable ] = useState(table_schema === 'NEW' && table_name === 'TABLE' ? '' : table_name);
 	const [ schema, setSchema ] = useState(table_schema === 'NEW' ? 'public' : table_schema);
-	const [ column, setColumn ] = useState('');
+	const [ column, setColumn ] = useState<any>({});
 	const [ schemas, setSchemas ] = useState<any[]>([]);
 	const [createTableStatement, setCreateTableStatement] = useState<string>("")
 	const [name, setName] = useState(table_schema === 'NEW' && table_name === 'TABLE' ? '' : table_name)
@@ -81,7 +81,7 @@ const DatabaseTable: React.FC = () => {
 	}
 
 	const loadColumns = async () => {
-		const { data, error } = await supabaseDataService.getRawColumns(table_schema, table_name)
+		const { data, error } = await supabaseDataService.getColumns(table_schema, table_name)
 		if (error) {
 			console.error(error)
 		} else {
@@ -210,9 +210,9 @@ const DatabaseTable: React.FC = () => {
 		newColumnsArray[index].data_type = e;
 		setColumns(newColumnsArray);	
 	}
-	const clickColumn = (column_name: string) => {
-		console.log('clickColumn', column_name);
-		setColumn(column_name);
+	const clickColumn = (column: any) => {
+		console.log('clickColumn', column);
+		setColumn(column);
 		setShowColumnModal({ isOpen: true })
 	}
 	const clickTLS = (row: any, index: number) => {
@@ -368,7 +368,7 @@ const DatabaseTable: React.FC = () => {
 					</IonGrid>
     			</IonItem>
 					{columns.map((column: any, index: number) => (
-						<IonItem onClick={() => clickColumn(column.column_name)}>
+						<IonItem onClick={() => clickColumn(column)}>
 							<IonReorder slot="start" />
 							<IonGrid>
 								<IonRow>
@@ -440,9 +440,7 @@ const DatabaseTable: React.FC = () => {
 				onSave={mode === 'data' && primaryKeys.length > 0 ? saveDetailRecord : null}
 			/>
 			<DatabaseColumn 
-				schema={schema} 
-				table={table} 
-				column={column} 
+				column={column}
 				updateColumn={updateColumn}
 				showModal={showColumnModal}
 				setShowModal={setShowColumnModal} />
