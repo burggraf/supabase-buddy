@@ -65,5 +65,29 @@ export default class UtilsService {
 		return {gridWidth, columnWidths};
 
 	}
+	public shortTypeName = (type: string) => {
+		const typ = type.toLowerCase();
+		switch (typ) {
+			case 'double precision':
+				return 'double';
+			case 'character varying':
+				return 'varchar';
+			case 'character':
+				return 'char';
+			case 'timestamp with time zone':
+				return 'timestamptz';
+			case 'timestamp without time zone':
+				return 'timestamp';
+			case 'time with time zone':
+				return 'timetz';
+			case 'time without time zone':
+				return 'time';
+			default:
+				return typ;
+		}
+	}
+	public stn(type: string) {
+		return this.shortTypeName(type);
+	}
 
 }

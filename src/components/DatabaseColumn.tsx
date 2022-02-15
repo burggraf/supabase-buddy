@@ -84,8 +84,8 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 			children: [
 				{ value: 'date', text: 'date' },
 				{ value: 'time', text: 'time' },
-				{ value: 'timestamp', text: 'timestamp' },
-				{ value: 'timestampz', text: 'timestampz' },
+				{ value: 'timestamp', text: 'timestamp', description: 'timestamp without time zone' },
+				{ value: 'timestampz', text: 'timestampz', description: 'timestamp with time zone' },
 				{ value: 'interval', text: 'interval' },
 			],
 		},

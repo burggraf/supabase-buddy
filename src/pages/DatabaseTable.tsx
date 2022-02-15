@@ -87,6 +87,7 @@ const DatabaseTable: React.FC = () => {
 			console.error(error)
 		} else {
 			data.map((column: any, index: number) => {
+				column.data_type = utilsService.shortTypeName(column.data_type);
 				if (column.column_default === null) column.column_default = '';	
 				if (column.description === null) column.description = '';			
 			});

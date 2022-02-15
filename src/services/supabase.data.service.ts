@@ -362,17 +362,37 @@ export default class SupabaseDataService {
     AND tablename = '${table_name}'
     `);
   }
+  public shortTypeNameSQL(field: string) {
+    return `CASE LOWER(${field}) 
+      WHEN 'double precision'
+      THEN 'double'
+      WHEN 'character varying'
+      THEN 'varchar'
+      WHEN 'character'
+      THEN 'char'
+      WHEN 'timestamp with time zone'
+      THEN 'timestamptz'
+      WHEN 'timestamp without time zone'
+      THEN 'timestamp'
+      WHEN 'time with time zone'
+      THEN 'timetz'
+      WHEN 'time without time zone'
+      THEN 'time'
+      ELSE LOWER(${field}) END`
+  }
+
   public async getCreateTableStatement(table_schema: string, table_name: string, separator: string = '\n') {
     const sql = `SELECT 'CREATE TABLE IF NOT EXISTS ' || '${table_schema}.${table_name}' || ' (' || '${separator}' || '' || 
     string_agg(column_list.column_expr, ', ' || '${separator}' || '') || 
     '' || '${separator}' || ');' as create_table_statement
     FROM (
-    SELECT '    ' || column_name || ' ' || data_type || 
+    SELECT '    ' || column_name || ' ' || ${this.shortTypeNameSQL('data_type')} || 
         coalesce('(' || character_maximum_length || ')', '') || 
         case when is_nullable = 'YES' then '' else ' NOT NULL' end as column_expr
     FROM information_schema.columns
     WHERE table_schema = '${table_schema}' AND table_name = '${table_name}'
     ORDER BY ordinal_position) column_list`;
+    console.log('sql', sql);
     return this.runStatement(sql,';;');
   }
   public async getView(table_schema: string, table_name: string) {
