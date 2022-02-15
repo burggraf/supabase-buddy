@@ -184,7 +184,9 @@ export default class SupabaseDataService {
     NOT IN (${exclude_schemas}) order by ${orderBy} ${ascending ? 'asc' : 'desc'}, table_name asc
     `);
   }
-
+  public async dropColumn(table_schema: string, table_name: string, column_name: string) {
+    return this.runStatement(`alter table ${table_schema}.${table_name} drop column ${column_name}`);
+  }
   public async getColumns(table_schema: string, table_name: string) {
     return this.runStatement(`SELECT 
     '${table_name}' as "table_name",

@@ -1,4 +1,5 @@
 import {
+	IonAlert,
 	IonBackButton,
 	IonButton,
 	IonButtons,
@@ -12,6 +13,7 @@ import {
 	IonPage,
 	IonTitle,
 	IonToolbar,
+	useIonToast,
 } from '@ionic/react'
 import { TableGrid } from 'ionic-react-tablegrid'
 import { useEffect, useState } from 'react'
@@ -22,7 +24,7 @@ import ItemPickerAccordion from './ItemPickerAccordion'
 import SupabaseDataService from '../services/supabase.data.service'
 
 import './DatabaseColumn.css'
-import { arrowBackOutline, checkmarkOutline, closeOutline } from 'ionicons/icons'
+import { arrowBackOutline, checkmarkOutline, closeOutline, trashBin, trashBinOutline } from 'ionicons/icons'
 
 // const utilsService = UtilsService.getInstance();
 interface ContainerProps {
@@ -52,7 +54,7 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 	const [data_type, setDataType] = useState<string>(column.data_type)
 
 	const [localCol, setLocalCol] = useState<any>(column);
-
+	const [showDeleteButton, setShowDeleteButton] = useState<boolean>(false);
 	const dataTypeOptions = [
 		{
 			value: 'text-items',
@@ -106,6 +108,18 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 		},
 	]
 	const supabaseDataService = SupabaseDataService.getInstance()
+	const [presentToast, dismissToast] = useIonToast();
+    const toast = (message: string, color: string = 'danger') => {
+        presentToast({
+            color: color,
+            message: message,
+            cssClass: 'toast',
+            buttons: [{ icon: 'close', handler: () => dismissToast() }],
+            duration: 6000,
+            //onDidDismiss: () => console.log('dismissed'),
+            //onWillDismiss: () => console.log('will dismiss'),
+          })
+    }
 	const loadColumn = async () => {
 		console.log('loadColumn, data_type', column, data_type, column.data_type)
 		if (column.column_name) {
@@ -162,7 +176,11 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 		console.log('e.detail.value', e.detail.value);
 		setLocalCol({ ...localCol, [fld]: newVal })
 	}
+	const deleteColumn = () => {
+		console.log('not implemented yet');
+		setShowDeleteButton(true);
 
+	}
 	return (
 		<IonModal
 			isOpen={showModal.isOpen}
@@ -180,6 +198,11 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 						{column.table_name}.{column.column_name}
 					</IonTitle>
 					<IonButtons slot='end'>
+						{ !isNewColumn &&
+						<IonButton color='danger' onClick={deleteColumn}>
+							<IonIcon size='large' icon={trashBinOutline}></IonIcon>
+						</IonButton>
+						}
 						<IonButton color='primary' onClick={save}>
 							<IonIcon size='large' icon={checkmarkOutline}></IonIcon>
 						</IonButton>
@@ -281,6 +304,39 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 				{JSON.stringify(localCol, null, 2)}
 				</pre>
 
+				<IonAlert
+          isOpen={showDeleteButton}
+          // onDidDismiss={() => setShowAlert3(false)}
+          cssClass='my-custom-class'
+          header={'Confirm Delete'}
+          message={`<strong>Delete this column - are you sure?</strong>\n
+		  			<pre><strong>ALTER TABLE\n${schema}.${localCol.table_name}\n  DROP COLUMN ${localCol.column_name};</strong></pre>`}
+          buttons={[
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              cssClass: 'secondary',
+              id: 'cancel-button',
+              handler: blah => {
+                console.log('canceled');
+				setShowDeleteButton(false);
+              }
+            },
+            {
+              text: 'DELETE',
+              id: 'confirm-button',
+              handler: async () => {
+                console.log('DELETE confirmed');
+				const { data, error } = await supabaseDataService.dropColumn(schema, localCol.table_name, localCol.column_name);
+				if (error) {
+					toast(error.message, 'danger');
+				}
+				setShowDeleteButton(false);
+				setShowModal({ isOpen: false })
+              }
+            }
+          ]}
+        />
 				{/* <TableGrid rows={rows} rowClick={() => {}} /> */}
 			</IonContent>
 		</IonModal>
