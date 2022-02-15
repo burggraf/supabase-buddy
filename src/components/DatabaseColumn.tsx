@@ -258,8 +258,10 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
                                 </IonButton>
                             </IonButtons>
                         </IonItem> */}
-				<pre>{JSON.stringify(localCol, null, 2)}</pre>
-				<TableGrid rows={rows} rowClick={() => {}} />
+
+				{/* <pre>{JSON.stringify(localCol, null, 2)}</pre> */}
+
+				{/* <TableGrid rows={rows} rowClick={() => {}} /> */}
 			</IonContent>
 		</IonModal>
 	)
