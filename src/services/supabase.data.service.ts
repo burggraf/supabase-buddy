@@ -187,6 +187,32 @@ export default class SupabaseDataService {
   public async dropColumn(table_schema: string, table_name: string, column_name: string) {
     return this.runStatement(`alter table ${table_schema}.${table_name} drop column ${column_name}`);
   }
+  public async createColumn(
+    schema: string, 
+    table_name: string, 
+    column_name: string,
+    data_type: string,
+    is_nullable: string,
+    column_default: string) {
+      let sql =
+      `alter table ${schema}.${table_name} 
+      add column ${column_name} ${data_type} 
+      ${is_nullable==='YES' ? 'NULL' : 'NOT NULL'}`;
+      if (column_default) {
+        sql += ` DEFAULT ${column_default}`;
+      }
+    return this.runStatement(sql);
+  }
+  public async setColumnDescription(
+    schema: string, 
+    table_name: string, 
+    column_name: string,
+    description: string) {
+      return this.runStatement(`
+      COMMENT ON COLUMN ${schema}.${table_name}.${column_name} 
+      IS '${description?.replace(/'/g, "''")}'`);
+    }   
+  
   public async getColumns(table_schema: string, table_name: string) {
     return this.runStatement(`SELECT 
     '${table_name}' as "table_name",

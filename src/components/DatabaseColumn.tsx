@@ -154,6 +154,30 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 	// }, [data_type])
 	const save = async () => {
 		console.log('save data here: localCol', localCol)
+		if (isNewColumn) {
+			const { data: createData, error: createError } = await supabaseDataService.createColumn(
+				schema, 
+				localCol.table_name, 
+				localCol.column_name,
+				data_type,
+				localCol.is_nullable,
+				localCol.column_default);
+			if (createError) {
+				console.error('create error', createError);
+				toast(createError.message, 'danger');
+			} else {
+				const { data: descriptionData, error: descriptionError} = 
+					await supabaseDataService.setColumnDescription(
+						schema, 
+						localCol.table_name, 
+						localCol.column_name,
+						localCol.description);
+				if (descriptionError) {
+					console.error('description error', descriptionError);
+					toast(descriptionError.message, 'danger');	
+				}
+			}
+		}
 		const newColumn = { ...localCol }
 		// const newColumn: any = {}
 		// rows.map((row) => {

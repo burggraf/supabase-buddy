@@ -262,7 +262,8 @@ const DatabaseTable: React.FC = () => {
 		newColumn.table_name = table;
 		newColumn.column_name = "";
 		newColumn.ordinal_position = columns.length + 1;
-		newColumn.data_type = "";  
+		newColumn.data_type = ""; 
+		newColumn.is_nullable = "YES"; 
 		const newColumns = [...columns];
 		newColumns.push(newColumn);
 		setIsNewColumn(true);
