@@ -5,6 +5,7 @@ import {
 	IonContent,
 	IonHeader,
 	IonIcon,
+	IonInput,
 	IonModal,
 	IonPage,
 	IonTitle,
@@ -43,6 +44,8 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 
 	//const [data_type, set] = useState<string>("")
 	const [data_type, setDataType] = useState<string>(column.data_type)
+
+	const [localCol, setLocalCol] = useState<any>(column);
 
 	const dataTypeOptions = [
 		{
@@ -115,7 +118,10 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 	}
 	useEffect(() => {
 		console.log('useEffect: column', column)
-		loadColumn()
+		loadColumn() // unnecessary?
+		setLocalCol(column);
+		setDataType(column.data_type);
+	
 	}, [column])
 	// useEffect(() => {
 	// 	console.log('useEffect: data_type', data_type, 'rows', rows)
@@ -128,15 +134,21 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 	// }, [data_type])
 	const save = async () => {
 		console.log('save data here')
-		const newColumn: any = {}
-		rows.map((row) => {
-			newColumn[row.Attribue] = row.Value
-		})
+		const newColumn = { ...localCol }
+		// const newColumn: any = {}
+		// rows.map((row) => {
+		// 	newColumn[row.Attribue] = row.Value
+		// })
 		newColumn.data_type = data_type
 		console.log('newColumn', newColumn)
 		updateColumn(newColumn)
 		setShowModal({ isOpen: false })
 	}
+	const changeHandler = (e: any) => {
+		const fld = e.srcElement.itemID
+		setLocalCol({ ...localCol, [fld]: e.detail.value! })
+	}
+
 	return (
 		<IonModal
 			isOpen={showModal.isOpen}
@@ -165,6 +177,26 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 				<table style={{width: '100%'}}>
 					<tbody>
 						<tr>
+							<td style={{verticalAlign: 'middle', paddingLeft: '10px'}}>column_name</td>
+							<td>
+								<IonInput type='text'
+										value={localCol.column_name}
+										itemID='column_name'
+										style={{border: '1px solid',paddingLeft:'5px'}}
+										onIonChange={changeHandler}></IonInput>
+							</td>
+						</tr>
+						<tr>
+							<td style={{verticalAlign: 'middle', paddingLeft: '10px'}}>description</td>
+							<td>
+								<IonInput type='text'
+										value={localCol.description}
+										itemID='description'
+										style={{border: '1px solid',paddingLeft:'5px'}}
+										onIonChange={changeHandler}></IonInput>
+							</td>
+						</tr>
+						<tr>
 							<td style={{verticalAlign: 'middle', paddingLeft: '10px'}}>data_type</td>
 							<td>
 								<ItemPickerAccordion
@@ -178,6 +210,16 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 									allowManualInput={true}
 									manualInputTitle='Custom Type:'
 								/>
+							</td>
+						</tr>
+						<tr>
+							<td style={{verticalAlign: 'middle', paddingLeft: '10px'}}>default</td>
+							<td>
+								<IonInput type='text'
+										itemID='default'
+										value={localCol.default}
+										style={{border: '1px solid',paddingLeft:'5px'}}
+										onIonChange={changeHandler}></IonInput>
 							</td>
 						</tr>
 					</tbody>
