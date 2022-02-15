@@ -42,6 +42,7 @@ const DatabaseTable: React.FC = () => {
 	const [ table, setTable ] = useState(table_schema === 'NEW' && table_name === 'TABLE' ? '' : table_name);
 	const [ schema, setSchema ] = useState(table_schema === 'NEW' ? 'public' : table_schema);
 	const [ column, setColumn ] = useState<any>({});
+	const [ columnIndex, setColumnIndex ] = useState(0);
 	const [ schemas, setSchemas ] = useState<any[]>([]);
 	const [createTableStatement, setCreateTableStatement] = useState<string>("")
 	const [name, setName] = useState(table_schema === 'NEW' && table_name === 'TABLE' ? '' : table_name)
@@ -210,9 +211,10 @@ const DatabaseTable: React.FC = () => {
 	// 	newColumnsArray[index].data_type = e;
 	// 	setColumns(newColumnsArray);	
 	// }
-	const clickColumn = (column: any) => {
+	const clickColumn = (column: any, index: number) => {
 		console.log('clickColumn', column);
 		setColumn(column);
+		setColumnIndex(index);
 		setShowColumnModal({ isOpen: true })
 	}
 	const clickTLS = (row: any, index: number) => {
@@ -246,12 +248,9 @@ const DatabaseTable: React.FC = () => {
 	const updateColumn = async (column: any) => {
 		console.log('updateColumn', column);	
 		const newColumns = [...columns];
-		const column_name = column.column_name;
+		// const column_name = column.column_name;
 		// find the index of the column
-		const index = newColumns.findIndex(x => x.column_name === column_name);
-		if (index > -1) {
-			newColumns[index] = column;
-		}
+		newColumns[columnIndex] = column;
 		console.log('newColumns', newColumns);
 		setColumns(newColumns);
 	}
@@ -379,7 +378,7 @@ const DatabaseTable: React.FC = () => {
 					</IonGrid>
     			</IonItem>
 					{columns.map((column: any, index: number) => (
-						<IonItem onClick={() => clickColumn(column)}>
+						<IonItem onClick={() => clickColumn(column, index)}>
 							<IonReorder slot="start" />
 							<IonGrid>
 								<IonRow>

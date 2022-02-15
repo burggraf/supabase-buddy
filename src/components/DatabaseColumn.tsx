@@ -135,7 +135,7 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 	// 	}
 	// }, [data_type])
 	const save = async () => {
-		console.log('save data here')
+		console.log('save data here: localCol', localCol)
 		const newColumn = { ...localCol }
 		// const newColumn: any = {}
 		// rows.map((row) => {
