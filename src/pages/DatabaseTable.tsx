@@ -1,6 +1,6 @@
 import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonReorder, IonReorderGroup, IonRow, IonSegment, IonSegmentButton, IonTitle, IonToolbar, ItemReorderEventDetail, useIonToast, useIonViewWillEnter } from '@ionic/react'
 import { TableGrid } from 'ionic-react-tablegrid'
-import { checkmark } from 'ionicons/icons'
+import { addCircleSharp, addOutline, checkmark } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 
@@ -205,11 +205,11 @@ const DatabaseTable: React.FC = () => {
 			loadData();
 		}
 	}
-	const updateColumnType = (index: any, e: any) => {
-		let newColumnsArray = [...columns]; // copying the old array
-		newColumnsArray[index].data_type = e;
-		setColumns(newColumnsArray);	
-	}
+	// const updateColumnType = (index: any, e: any) => {
+	// 	let newColumnsArray = [...columns]; // copying the old array
+	// 	newColumnsArray[index].data_type = e;
+	// 	setColumns(newColumnsArray);	
+	// }
 	const clickColumn = (column: any) => {
 		console.log('clickColumn', column);
 		setColumn(column);
@@ -253,6 +253,17 @@ const DatabaseTable: React.FC = () => {
 			newColumns[index] = column;
 		}
 		console.log('newColumns', newColumns);
+		setColumns(newColumns);
+	}
+	const addColumn = async () => {
+		console.log('addColumn');
+		const newColumn: any = supabaseDataService.newColumn();
+		newColumn.table_name = table;
+		newColumn.column_name = "new_column";
+		newColumn.ordinal_position = columns.length + 1;
+		newColumn.data_type = "text";  
+		const newColumns = [...columns];
+		newColumns.push(newColumn);
 		setColumns(newColumns);
 	}
 	return (
@@ -388,6 +399,19 @@ const DatabaseTable: React.FC = () => {
 							</IonGrid>
 						</IonItem>
 					))}
+					<IonItem onClick={addColumn}>
+						<IonButton color="primary" fill="clear">
+								<IonIcon size="large" icon={addOutline}></IonIcon>
+						</IonButton>
+						<IonGrid>
+							<IonRow>
+								<IonCol>
+									add column
+								</IonCol>
+							</IonRow>
+						</IonGrid>
+					</IonItem>
+
 				</IonReorderGroup>
 				</IonList>
 				<pre className="ion-padding">{createTableStatement}

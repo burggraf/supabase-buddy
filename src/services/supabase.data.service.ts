@@ -236,6 +236,53 @@ export default class SupabaseDataService {
     ORDER BY "ordinal_position" ASC
     `);
   }
+  public async newColumn() {
+    return {
+      "table_name": "",
+      "ordinal_position": 0,
+      "column_name": "",
+      "column_default": "",
+      "is_nullable": "YES",
+      "data_type": "text",
+      "description": "",
+      "character_maximum_length": null,
+      "character_octet_length": null,
+      "numeric_precision": null,
+      "numeric_precision_radix": null,
+      "numeric_scale": null,
+      "datetime_precision": null,
+      "interval_type": null,
+      "interval_precision": null,
+      "character_set_catalog": null,
+      "character_set_schema": null,
+      "character_set_name": null,
+      "collation_catalog": null,
+      "collation_schema": null,
+      "collation_name": null,
+      "domain_catalog": null,
+      "domain_schema": null,
+      "domain_name": null,
+      "udt_catalog": "postgres",
+      "udt_schema": "pg_catalog",
+      "udt_name": "uuid",
+      "scope_catalog": null,
+      "scope_schema": null,
+      "scope_name": null,
+      "maximum_cardinality": null,
+      "dtd_identifier": 1,
+      "is_self_referencing": "NO",
+      "is_identity": "NO",
+      "identity_generation": null,
+      "identity_start": null,
+      "identity_increment": null,
+      "identity_maximum": null,
+      "identity_minimum": null,
+      "identity_cycle": "NO",
+      "is_generated": "NEVER",
+      "generation_expression": null,
+      "is_updatable": "YES"
+    };
+  }
   public async getTableRows(table_schema: string, table_name: string) {
     return this.runStatement(`SELECT *
     FROM ${table_schema}.${table_name}
