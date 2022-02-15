@@ -2,10 +2,12 @@ import {
 	IonBackButton,
 	IonButton,
 	IonButtons,
+	IonCheckbox,
 	IonContent,
 	IonHeader,
 	IonIcon,
 	IonInput,
+	IonLabel,
 	IonModal,
 	IonPage,
 	IonTitle,
@@ -146,7 +148,15 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 	}
 	const changeHandler = (e: any) => {
 		const fld = e.srcElement.itemID
-		setLocalCol({ ...localCol, [fld]: e.detail.value! })
+		console.log('fld', fld);
+		let newVal = e.detail.value!;
+		if (fld === 'is_nullable') {
+			console.log('*** is_nullable', newVal);
+			console.log('e', e);
+			newVal = e.detail.checked ? 'YES' : 'NO'
+		}
+		console.log('e.detail.value', e.detail.value);
+		setLocalCol({ ...localCol, [fld]: newVal })
 	}
 
 	return (
@@ -222,6 +232,18 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 										onIonChange={changeHandler}></IonInput>
 							</td>
 						</tr>
+						<tr style={{height: '40px'}}>
+							<td style={{verticalAlign: 'middle', paddingLeft: '10px'}}>is_nullable</td>
+							<td style={{paddingLeft:'5px', paddingTop:'5px', verticalAlign: 'top'}}>
+								<IonCheckbox 
+										mode="ios"
+										itemID='is_nullable'
+										value={localCol.is_nullable}
+										checked={localCol.is_nullable === 'YES'}
+										onIonChange={changeHandler}></IonCheckbox>
+								<IonLabel style={{paddingLeft: '10px'}}>{localCol.is_nullable}</IonLabel>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 				{/* <IonItem>
@@ -236,6 +258,7 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
                                 </IonButton>
                             </IonButtons>
                         </IonItem> */}
+				<pre>{JSON.stringify(localCol, null, 2)}</pre>
 				<TableGrid rows={rows} rowClick={() => {}} />
 			</IonContent>
 		</IonModal>
