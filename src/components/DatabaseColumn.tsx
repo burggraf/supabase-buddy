@@ -184,6 +184,13 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 		} else {
 			console.log('column', column);
 			console.log('localCol', localCol);
+			const { data, error } = await supabaseDataService.runStatement(sql);
+			if (error) {
+				toast(error.message, 'danger');
+				return;
+			} else {
+				// continue closing modal
+			}
 		}
 		const newColumn = { ...localCol }
 		// const newColumn: any = {}
@@ -222,6 +229,23 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 		}
 		if (column.description !== localCol.description) {
 			sql += `COMMENT ON COLUMN ${localCol.table_name}.${localCol.column_name} IS '${localCol.description?.replace(/'/g,"''")}';\n`
+		}
+		if (column.data_type !== data_type) {
+			sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} TYPE ${data_type};\n`
+		}
+		if (column.is_nullable !== localCol.is_nullable) {
+			if (localCol.is_nullable === 'YES') {
+				sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} DROP NOT NULL;\n`
+			} else {
+				sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} SET NOT NULL;\n`
+			}
+		}
+		if (column.column_default !== localCol.column_default) {
+			if (localCol.column_default?.trim().length > 0) {
+				sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} SET DEFAULT ${localCol.column_default};\n`
+			} else {
+				sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} DROP DEFAULT;\n`
+			}
 		}
 		setSql(sql);
 	}
