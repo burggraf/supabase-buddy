@@ -146,7 +146,7 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 	}, [column])
 	useEffect(() => {
 		calculateSQL();
-	},[localCol])
+	},[localCol, data_type])
 	// useEffect(() => {
 	// 	console.log('useEffect: data_type', data_type, 'rows', rows)
 	// 	// find attribute:data_type in rows
@@ -158,39 +158,16 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 	// }, [data_type])
 	const save = async () => {
 		console.log('save data here: localCol', localCol)
-		if (isNewColumn) {
-			const { data: createData, error: createError } = await supabaseDataService.createColumn(
-				schema, 
-				localCol.table_name, 
-				localCol.column_name,
-				data_type,
-				localCol.is_nullable,
-				localCol.column_default);
-			if (createError) {
-				console.error('create error', createError);
-				toast(createError.message, 'danger');
-			} else {
-				const { data: descriptionData, error: descriptionError} = 
-					await supabaseDataService.setColumnDescription(
-						schema, 
-						localCol.table_name, 
-						localCol.column_name,
-						localCol.description);
-				if (descriptionError) {
-					console.error('description error', descriptionError);
-					toast(descriptionError.message, 'danger');	
-				}
-			}
+		console.log('column', column);
+		console.log('localCol', localCol);
+		const { data, error } = await supabaseDataService.runStatement(sql);
+		if (error) {
+			toast(error.message, 'danger');
+			return;
 		} else {
-			console.log('column', column);
-			console.log('localCol', localCol);
-			const { data, error } = await supabaseDataService.runStatement(sql);
-			if (error) {
-				toast(error.message, 'danger');
-				return;
-			} else {
-				// continue closing modal
-			}
+			// continue closing modal
+			console.log('sql', sql);
+			console.log('result', data);
 		}
 		const newColumn = { ...localCol }
 		// const newColumn: any = {}
@@ -224,29 +201,49 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 	const calculateSQL = () => {
 		console.log('calculateSQL');
 		let sql = '';
-		if (column.column_name !== localCol.column_name) {
-			sql += `ALTER TABLE ${localCol.table_name} RENAME COLUMN ${column.column_name} TO ${localCol.column_name};\n`
-		}
-		if (column.description !== localCol.description) {
-			sql += `COMMENT ON COLUMN ${localCol.table_name}.${localCol.column_name} IS '${localCol.description?.replace(/'/g,"''")}';\n`
-		}
-		if (column.data_type !== data_type) {
-			sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} TYPE ${data_type};\n`
-		}
-		if (column.is_nullable !== localCol.is_nullable) {
-			if (localCol.is_nullable === 'YES') {
-				sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} DROP NOT NULL;\n`
-			} else {
-				sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} SET NOT NULL;\n`
+		if (isNewColumn) {
+			sql += `ALTER TABLE ${schema}.${localCol.table_name}\n`; 
+			sql += `ADD COLUMN ${localCol.column_name} ${data_type}\n`;
+			sql += `${localCol.is_nullable==='YES' ? 'NULL' : 'NOT NULL'}\n`;
+			sql += `${localCol.column_default ? 'DEFAULT ' + localCol.column_default : ''};\n`;
+			if (localCol.description?.trim().length > 0) {
+				sql += `COMMENT ON COLUMN ${schema}.${localCol.table_name}.${localCol.column_name}\n`;
+				sql += `IS '${localCol.description?.replace(/'/g, "''")}';`;
 			}
-		}
-		if (column.column_default !== localCol.column_default) {
-			if (localCol.column_default?.trim().length > 0) {
-				sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} SET DEFAULT ${localCol.column_default};\n`
-			} else {
-				sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} DROP DEFAULT;\n`
+			// <pre>ALTER TABLE {schema}.{localCol.table_name}{'\n'}
+			// {'  '}ADD COLUMN {localCol.column_name} {data_type}{'\n'}
+			// {'  '}{localCol.is_nullable==='YES' ? 'NULL' : 'NOT NULL'}
+			// {localCol.column_default ? `\n  DEFAULT ${localCol.column_default}` : ''};{'\n'}
+			// COMMENT ON COLUMN {schema}.{localCol.table_name}.{localCol.column_name}{'\n'} 
+			// {'  '}IS '{localCol.description?.replace(/'/g, "''")}';
+	
+		} else {
+			if (column.column_name !== localCol.column_name) {
+				sql += `ALTER TABLE ${localCol.table_name} RENAME COLUMN ${column.column_name} TO ${localCol.column_name};\n`
 			}
+			if (column.description !== localCol.description) {
+				sql += `COMMENT ON COLUMN ${localCol.table_name}.${localCol.column_name} IS '${localCol.description?.replace(/'/g,"''")}';\n`
+			}
+			if (column.data_type !== data_type) {
+				sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} TYPE ${data_type};\n`
+			}
+			if (column.is_nullable !== localCol.is_nullable) {
+				if (localCol.is_nullable === 'YES') {
+					sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} DROP NOT NULL;\n`
+				} else {
+					sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} SET NOT NULL;\n`
+				}
+			}
+			if (column.column_default !== localCol.column_default) {
+				if (localCol.column_default?.trim().length > 0) {
+					sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} SET DEFAULT ${localCol.column_default};\n`
+				} else {
+					sql += `ALTER TABLE ${localCol.table_name} ALTER COLUMN ${localCol.column_name} DROP DEFAULT;\n`
+				}
+			}	
 		}
+
+
 		setSql(sql);
 	}
 	return (
@@ -353,9 +350,8 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
                                 </IonButton>
                             </IonButtons>
                         </IonItem> */}
-				SQL:
 				<pre>{sql}</pre>
-						{ isNewColumn &&
+						{/* { isNewColumn &&
 						<>
 						<pre>ALTER TABLE {schema}.{localCol.table_name}{'\n'}
 						{'  '}ADD COLUMN {localCol.column_name} {data_type}{'\n'}
@@ -365,13 +361,13 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 						{'  '}IS '{localCol.description?.replace(/'/g, "''")}';
 						</pre>
 						</>
-						}
+						} */}
 
-			    <pre>Schema: {schema}</pre>
+			    {/* <pre>Schema: {schema}</pre>
 				<pre>isNew: {isNewColumn?'YES':'NO'}</pre>
 				<pre>
 				{JSON.stringify(localCol, null, 2)}
-				</pre>
+				</pre> */}
 
 				<IonAlert
           isOpen={showDeleteButton}
