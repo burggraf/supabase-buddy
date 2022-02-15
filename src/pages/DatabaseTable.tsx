@@ -259,12 +259,17 @@ const DatabaseTable: React.FC = () => {
 		console.log('addColumn');
 		const newColumn: any = supabaseDataService.newColumn();
 		newColumn.table_name = table;
-		newColumn.column_name = "new_column";
+		newColumn.column_name = "";
 		newColumn.ordinal_position = columns.length + 1;
-		newColumn.data_type = "text";  
+		newColumn.data_type = "";  
 		const newColumns = [...columns];
 		newColumns.push(newColumn);
 		setColumns(newColumns);
+		console.log('newColumn', newColumns[newColumns.length - 1])
+		setColumnIndex(newColumns.length - 1);
+		setColumn(newColumns[newColumns.length - 1]);
+		setShowColumnModal({ isOpen: true })	
+
 	}
 	return (
 		<IonPage>
