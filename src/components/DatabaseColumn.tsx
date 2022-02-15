@@ -226,8 +226,8 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 							<td style={{verticalAlign: 'middle', paddingLeft: '10px'}}>default</td>
 							<td>
 								<IonInput type='text'
-										itemID='default'
-										value={localCol.default}
+										itemID='column_default'
+										value={localCol.column_default}
 										style={{border: '1px solid',paddingLeft:'5px'}}
 										onIonChange={changeHandler}></IonInput>
 							</td>

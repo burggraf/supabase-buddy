@@ -469,7 +469,7 @@ const DatabaseTable: React.FC = () => {
 				showModal={showColumnModal}
 				setShowModal={setShowColumnModal} />
 
-							<pre>{JSON.stringify(columns,null,2)}</pre>
+				{/* <pre>{JSON.stringify(columns,null,2)}</pre> */}
 
 			</IonContent>
 		</IonPage>
