@@ -26,6 +26,8 @@ import { arrowBackOutline, checkmarkOutline, closeOutline } from 'ionicons/icons
 
 // const utilsService = UtilsService.getInstance();
 interface ContainerProps {
+	schema: string
+	isNewColumn: boolean
 	column: any
 	showModal: any
 	setShowModal: any
@@ -33,6 +35,8 @@ interface ContainerProps {
 }
 
 const DatabaseColumn: React.FC<ContainerProps> = ({
+	schema,
+	isNewColumn,
 	column,
 	showModal,
 	setShowModal,
@@ -258,8 +262,24 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
                                 </IonButton>
                             </IonButtons>
                         </IonItem> */}
+			
+						{ isNewColumn &&
+						<>
+						<pre>ALTER TABLE {schema}.{localCol.table_name}{'\n'}
+						{'  '}ADD COLUMN {localCol.column_name} {data_type}{'\n'}
+						{'  '}{localCol.is_nullable==='YES' ? 'NULL' : 'NOT NULL'}
+						{localCol.column_default ? `\n  DEFAULT ${localCol.column_default}` : ''};{'\n'}
+						COMMENT ON COLUMN {schema}.{localCol.table_name}.{localCol.column_name}{'\n'} 
+						{'  '}IS '{localCol.description?.replace(/'/g, "''")}';
+						</pre>
+						</>
+						}
 
-				{/* <pre>{JSON.stringify(localCol, null, 2)}</pre> */}
+			    <pre>Schema: {schema}</pre>
+				<pre>isNew: {isNewColumn?'YES':'NO'}</pre>
+				<pre>
+				{JSON.stringify(localCol, null, 2)}
+				</pre>
 
 				{/* <TableGrid rows={rows} rowClick={() => {}} /> */}
 			</IonContent>

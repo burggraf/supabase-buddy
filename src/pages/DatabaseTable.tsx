@@ -42,6 +42,7 @@ const DatabaseTable: React.FC = () => {
 	const [ table, setTable ] = useState(table_schema === 'NEW' && table_name === 'TABLE' ? '' : table_name);
 	const [ schema, setSchema ] = useState(table_schema === 'NEW' ? 'public' : table_schema);
 	const [ column, setColumn ] = useState<any>({});
+	const [ isNewColumn, setIsNewColumn ] = useState(false);
 	const [ columnIndex, setColumnIndex ] = useState(0);
 	const [ schemas, setSchemas ] = useState<any[]>([]);
 	const [createTableStatement, setCreateTableStatement] = useState<string>("")
@@ -216,6 +217,7 @@ const DatabaseTable: React.FC = () => {
 		console.log('clickColumn', column);
 		setColumn(column);
 		setColumnIndex(index);
+		setIsNewColumn(false);
 		setShowColumnModal({ isOpen: true })
 	}
 	const clickTLS = (row: any, index: number) => {
@@ -256,7 +258,6 @@ const DatabaseTable: React.FC = () => {
 		setColumns(newColumns);
 	}
 	const addColumn = async () => {
-		console.log('addColumn');
 		const newColumn: any = supabaseDataService.newColumn();
 		newColumn.table_name = table;
 		newColumn.column_name = "";
@@ -264,12 +265,11 @@ const DatabaseTable: React.FC = () => {
 		newColumn.data_type = "";  
 		const newColumns = [...columns];
 		newColumns.push(newColumn);
+		setIsNewColumn(true);
 		setColumns(newColumns);
-		console.log('newColumn', newColumns[newColumns.length - 1])
 		setColumnIndex(newColumns.length - 1);
 		setColumn(newColumns[newColumns.length - 1]);
 		setShowColumnModal({ isOpen: true })	
-
 	}
 	return (
 		<IonPage>
@@ -469,9 +469,11 @@ const DatabaseTable: React.FC = () => {
 				onSave={mode === 'data' && primaryKeys.length > 0 ? saveDetailRecord : null}
 			/>
 			<DatabaseColumn 
+				schema={schema}
 				column={column}
 				updateColumn={updateColumn}
 				showModal={showColumnModal}
+				isNewColumn={isNewColumn}
 				setShowModal={setShowColumnModal} />
 
 				{/* <pre>{JSON.stringify(columns,null,2)}</pre> */}
