@@ -48,6 +48,7 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 	// const { table } = useParams<{ table: string }>()
 	// const { column } = useParams<{ column: string }>()
 	const [rows, setRows] = useState<any[]>([])
+	const [sql, setSql] = useState<string>('')
 	// const [showModal, setShowModal] = useState({ isOpen: false })
 
 	//const [data_type, set] = useState<string>("")
@@ -141,8 +142,11 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 		loadColumn() // unnecessary?
 		setLocalCol(column);
 		setDataType(column.data_type);
-	
+		// calculateSQL();
 	}, [column])
+	useEffect(() => {
+		calculateSQL();
+	},[localCol])
 	// useEffect(() => {
 	// 	console.log('useEffect: data_type', data_type, 'rows', rows)
 	// 	// find attribute:data_type in rows
@@ -177,6 +181,9 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 					toast(descriptionError.message, 'danger');	
 				}
 			}
+		} else {
+			console.log('column', column);
+			console.log('localCol', localCol);
 		}
 		const newColumn = { ...localCol }
 		// const newColumn: any = {}
@@ -189,6 +196,7 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 		setShowModal({ isOpen: false })
 	}
 	const changeHandler = (e: any) => {
+		console.log('changehandler...');
 		const fld = e.srcElement.itemID
 		console.log('fld', fld);
 		let newVal = e.detail.value!;
@@ -200,10 +208,22 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 		console.log('e.detail.value', e.detail.value);
 		setLocalCol({ ...localCol, [fld]: newVal })
 	}
+	
 	const deleteColumn = () => {
 		console.log('not implemented yet');
 		setShowDeleteButton(true);
 
+	}
+	const calculateSQL = () => {
+		console.log('calculateSQL');
+		let sql = '';
+		if (column.column_name !== localCol.column_name) {
+			sql += `ALTER TABLE ${localCol.table_name} RENAME COLUMN ${column.column_name} TO ${localCol.column_name};\n`
+		}
+		if (column.description !== localCol.description) {
+			sql += `COMMENT ON COLUMN ${localCol.table_name}.${localCol.column_name} IS '${localCol.description?.replace(/'/g,"''")}';\n`
+		}
+		setSql(sql);
 	}
 	return (
 		<IonModal
@@ -309,7 +329,8 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
                                 </IonButton>
                             </IonButtons>
                         </IonItem> */}
-			
+				SQL:
+				<pre>{sql}</pre>
 						{ isNewColumn &&
 						<>
 						<pre>ALTER TABLE {schema}.{localCol.table_name}{'\n'}
