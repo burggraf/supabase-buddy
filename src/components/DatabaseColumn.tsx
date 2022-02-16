@@ -18,6 +18,7 @@ interface ContainerProps {
 	showModal: any
 	setShowModal: any
 	updateColumn: Function
+	dropColumn: Function
 	table: string
 	isNewTable: boolean
 }
@@ -29,6 +30,7 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 	showModal,
 	setShowModal,
 	updateColumn,
+	dropColumn,
 	table,
 	isNewTable
 }) => {
@@ -373,9 +375,9 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
           isOpen={showDeleteButton}
           // onDidDismiss={() => setShowAlert3(false)}
           cssClass='my-custom-class'
-          header={'Confirm Delete'}
-          message={`<strong>Delete this column - are you sure?</strong>\n
-		  			<pre><strong>ALTER TABLE\n${schema}.${localCol.table_name}\n  DROP COLUMN ${localCol.column_name};</strong></pre>`}
+          header={'Confirm Delete' + (isNewTable ? 'NEWTABLE' : 'NOTNEWTABLE')}
+          message={`<strong>Delete this column - are you sure?</strong>\n` +
+		  			((!isNewTable) ? `<pre><strong>ALTER TABLE\n${schema}.${localCol.table_name}\n  DROP COLUMN ${localCol.column_name};</strong></pre>`:'')}
           buttons={[
             {
               text: 'Cancel',
@@ -392,10 +394,15 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
               id: 'confirm-button',
               handler: async () => {
                 console.log('DELETE confirmed');
-				const { data, error } = await supabaseDataService.dropColumn(schema, localCol.table_name, localCol.column_name);
-				if (error) {
-					toast(error.message, 'danger');
+				if (!isNewTable) {
+					const { data, error } = await supabaseDataService.dropColumn(schema, localCol.table_name, localCol.column_name);
+					if (error) {
+						toast(error.message, 'danger');
+					}	
+				} else {
+					// just delete the column in memory
 				}
+				dropColumn(localCol.column_name);
 				setShowDeleteButton(false);
 				setShowModal({ isOpen: false })
               }

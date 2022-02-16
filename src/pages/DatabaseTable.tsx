@@ -82,7 +82,11 @@ const DatabaseTable: React.FC = () => {
 			setSchemas(newSchemas)
 		}
 	}
-
+	const dropColumn = async (column: string) => {
+		// delete column from columns array
+		const newColumns = columns.filter((c: any) => c.column_name !== column);
+		setColumns(newColumns);
+	}
 	const loadColumns = async () => {
 		const { data, error } = await supabaseDataService.getColumns(table_schema, table_name)
 		if (error) {
@@ -537,6 +541,7 @@ const DatabaseTable: React.FC = () => {
 				table={table}
 				isNewTable={(isNewTable)}
 				updateColumn={updateColumn}
+				dropColumn={dropColumn}
 				showModal={showColumnModal}
 				isNewColumn={isNewColumn}
 				setShowModal={setShowColumnModal} />
