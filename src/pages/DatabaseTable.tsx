@@ -143,16 +143,16 @@ const DatabaseTable: React.FC = () => {
 			setPolicies(data!)
 		}
 	}
-	const loadCreateTableStatement = async () => {
-		const { data, error } = await supabaseDataService.getCreateTableStatement(table_schema, table_name)
-		if (error) {
-			console.error(error)
-		} else {
-			if (data && data.length) {
-				setCreateTableStatement(data[0].create_table_statement)
-			}
-		}
-	}
+	// const loadCreateTableStatement = async () => {
+	// 	const { data, error } = await supabaseDataService.getCreateTableStatement(table_schema, table_name)
+	// 	if (error) {
+	// 		console.error(error)
+	// 	} else {
+	// 		if (data && data.length) {
+	// 			setCreateTableStatement(data[0].create_table_statement)
+	// 		}
+	// 	}
+	// }
 	const [presentToast, dismissToast] = useIonToast();
     const toast = (message: string, color: string = 'danger') => {
         presentToast({
@@ -186,13 +186,19 @@ const DatabaseTable: React.FC = () => {
 			loadIndexes();
 			loadGrants();
 			loadPolicies();	
-			loadCreateTableStatement();
+			//loadCreateTableStatement();
 		}
 	}, [])
 	useEffect(() => {
 		console.log('useEffect: table');
-		generateNewCreateTableStatement();
+		// generateCreateTableStatement();
 	}, [table,schema]);
+	useEffect(() => {
+		console.log('useEffect: columns/indexes changed!')
+		console.log('columns', columns)
+		console.log('indexes', indexes)
+		generateCreateTableStatement();
+	}, [columns, indexes]);
 	const save = async () => {
 		toast('not implemented yet', 'danger');
 	}
@@ -232,12 +238,40 @@ const DatabaseTable: React.FC = () => {
 	const clickDataRow = (row: any, index: number) => {
 		setDetailCollection(rows);setCurrentIndex(index + 1);setRecord(row);setDetailTrigger({action:'open'})
 	}
-	const generateNewCreateTableStatement = () => {
-		const newStatement = 
-		`CREATE TABLE IF NOT EXISTS ${schema}.${table} (
-		);`;
-		setCreateTableStatement(newStatement);
+	const generateCreateTableStatement = () => {
+		let s = `CREATE TABLE IF NOT EXISTS ${schema}.${table} (\n`;
+		columns.forEach((column: any, index: number) => {
+			if (index > 0) {
+				s += ',\n';
+			}
+			s += `  ${column.column_name} ${column.data_type}`;
+			if (column.column_default) {
+				s += ` DEFAULT ${column.column_default}`;
+			}
+			if (column.is_nullable === 'NO') {
+				s += ` NOT NULL`;
+			} else {
+				s += ` NULL`;
+			}
+			// if (column.description) {
+			// 	s += ` COMMENT '${column.description}'`;
+			// }
+		});
+		s += `);\n`;
+		setCreateTableStatement(s);
 	}
+	function move(array: Array<string>, from: number, to: number) {
+		if( to === from ) return array;
+	  
+		var target = array[from];                         
+		var increment = to < from ? -1 : 1;
+	  
+		for(var k = from; k != to; k += increment){
+		  array[k] = array[k + increment];
+		}
+		array[to] = target;
+		return array;
+	  }
 	const doReorder = (event: CustomEvent<ItemReorderEventDetail>) => {
 		// The `from` and `to` properties contain the index of the item
 		// when the drag started and ended, respectively
@@ -246,6 +280,11 @@ const DatabaseTable: React.FC = () => {
 		// Finish the reorder and position the item in the DOM based on
 		// where the gesture ended. This method can also be called directly
 		// by the reorder group
+		// move columns
+		//const newColumns = [...columns];
+		const newColumns = move([...columns], event.detail.from-1, event.detail.to-1);
+		console.log('newColumns', newColumns)
+		setColumns(newColumns);
 		event.detail.complete();
 	  }
 	const updateColumn = async (column: any) => {
