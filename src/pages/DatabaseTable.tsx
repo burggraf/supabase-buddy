@@ -461,16 +461,16 @@ const DatabaseTable: React.FC = () => {
 					<IonReorder slot="start" style={{color: 'transparent'}} />
 					<IonGrid>
 						<IonRow>							
-							<IonCol>
+							<IonCol className='noBorder'>
 								Name
 							</IonCol>
-							<IonCol>
+							<IonCol className='noBorder'>
 								Type
 							</IonCol>
-							<IonCol>
+							<IonCol className='noBorder'>
 								Default
 							</IonCol>
-							<IonCol>
+							<IonCol className='noBorder'>
 								Description
 							</IonCol>
 						</IonRow>
@@ -481,16 +481,16 @@ const DatabaseTable: React.FC = () => {
 							<IonReorder slot="start" />
 							<IonGrid>
 								<IonRow>
-									<IonCol>
+								<IonCol className='noBorder'>
 									 	{column.column_name}
 									</IonCol>
-									<IonCol>
+									<IonCol className='noBorder'>
 										{column.data_type}
 									</IonCol>
-									<IonCol>
+									<IonCol className='noBorder'>
 										{column.column_default}
 									</IonCol>
-									<IonCol>
+									<IonCol className='noBorder'>
 										{column.description}
 									</IonCol>
 								</IonRow>
@@ -503,7 +503,7 @@ const DatabaseTable: React.FC = () => {
 						</IonButton>
 						<IonGrid>
 							<IonRow>
-								<IonCol>
+								<IonCol className='noBorder'>
 									add column
 								</IonCol>
 							</IonRow>
