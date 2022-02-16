@@ -39,14 +39,15 @@ const DatabaseTable: React.FC = () => {
 	const [showColumnModal, setShowColumnModal] = useState({ isOpen: false })
 	const { table_schema } = useParams<{ table_schema: string }>()
 	const { table_name } = useParams<{ table_name: string }>()
-	const [ table, setTable ] = useState(table_schema === 'NEW' && table_name === 'TABLE' ? '' : table_name);
+	const isNewTable = (table_schema === 'NEW' && table_name === 'TABLE');
+	const [ table, setTable ] = useState(isNewTable ? '' : table_name);
 	const [ schema, setSchema ] = useState(table_schema === 'NEW' ? 'public' : table_schema);
 	const [ column, setColumn ] = useState<any>({});
 	const [ isNewColumn, setIsNewColumn ] = useState(false);
 	const [ columnIndex, setColumnIndex ] = useState(0);
 	const [ schemas, setSchemas ] = useState<any[]>([]);
 	const [createTableStatement, setCreateTableStatement] = useState<string>("")
-	const [name, setName] = useState(table_schema === 'NEW' && table_name === 'TABLE' ? '' : table_name)
+	const [name, setName] = useState(isNewTable ? '' : table_name)
 	const [columns, setColumns] = useState<any[]>([])
 	const [detailCollection, setDetailCollection] = useState<any[]>([])
 	const [rows, setRows] = useState<any[]>([])
@@ -167,7 +168,7 @@ const DatabaseTable: React.FC = () => {
     }
 	useEffect(() => {
 		console.log('useEffect: empty columns->', columns)
-		if (table_schema === 'NEW' && table_name === 'TABLE') {
+		if (isNewTable) {
 			loadSchemas();
 			const newColumns: any[] = [
 				// {
@@ -200,7 +201,16 @@ const DatabaseTable: React.FC = () => {
 		generateCreateTableStatement();
 	}, [columns, indexes]);
 	const save = async () => {
-		toast('not implemented yet', 'danger');
+		const { data, error } = await supabaseDataService.runStatement(createTableStatement);
+		if (error) {
+			toast(error.message, 'danger');
+			return;
+		} else {
+			// continue closing modal
+			console.log('sql', createTableStatement);
+			console.log('result', data);
+			window.location.href = `/database-table/${schema}/${table}`;
+		}
 	}
 	const saveDetailRecord = async (record: any) => {
 		console.log('saveDetailRecord', record);
@@ -327,9 +337,9 @@ const DatabaseTable: React.FC = () => {
 						<IonBackButton defaultHref="/database-tables" />
 					</IonButtons>
 					<IonTitle>
-						{ (table_schema === 'NEW' && table_name === 'TABLE') ? 'New Table' : `${table_schema}.${table_name}` }
+						{ (isNewTable) ? 'New Table' : `${table_schema}.${table_name}` }
 					</IonTitle>
-					{ (table_schema === 'NEW' && table_name === 'TABLE') &&
+					{ (isNewTable) &&
                     	<IonButtons slot="end">
 							<IonButton color="primary" onClick={save}>
 								<IonIcon size="large" icon={checkmark}></IonIcon>
@@ -340,7 +350,7 @@ const DatabaseTable: React.FC = () => {
 			</IonHeader>
 
 			<IonContent>
-			{ (table_schema === 'NEW' && table_name === 'TABLE') &&
+			{ (isNewTable) &&
 				<IonGrid>
 					<IonRow key="name-header" className="header">
 						<IonCol>
@@ -368,7 +378,7 @@ const DatabaseTable: React.FC = () => {
 					</IonRow>
 				</IonGrid>
 			}
-			{ !(table_schema === 'NEW' && table_name === 'TABLE') &&
+			{ !(isNewTable) &&
 				<IonSegment mode="ios" scrollable={true} value={mode} onIonChange={e => {
 					if (e.detail.value === 'data' || 
 						e.detail.value === 'schema' ||
@@ -407,11 +417,11 @@ const DatabaseTable: React.FC = () => {
 				</IonSegment>
 			}
 
-			{ ((mode === 'schema') || (table_schema === 'NEW' && table_name === 'TABLE')) &&
+			{ ((mode === 'schema') || (isNewTable)) &&
 				<>
 				{/* <TableGrid rows={columns} rowClick={clickSchema} setRows={setColumns} /> */}
 				<IonList lines='full'>
-				<IonReorderGroup disabled={false} onIonItemReorder={doReorder}>
+				<IonReorderGroup disabled={!isNewTable} onIonItemReorder={doReorder}>
 				<IonItem color="light">
 					<IonReorder slot="start" style={{color: 'transparent'}} />
 					<IonGrid>
@@ -525,7 +535,7 @@ const DatabaseTable: React.FC = () => {
 				schema={schema}
 				column={column}
 				table={table}
-				isNewTable={(table_schema === 'NEW' && table_name === 'TABLE')}
+				isNewTable={(isNewTable)}
 				updateColumn={updateColumn}
 				showModal={showColumnModal}
 				isNewColumn={isNewColumn}
