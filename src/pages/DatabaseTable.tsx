@@ -4,10 +4,10 @@ import { addCircleSharp, addOutline, checkmark } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 
+import DatabaseColumn from '../components/DatabaseColumn'
 import DisplayDetail from '../components/DisplayDetail'
 import ItemPicker from '../components/ItemPicker'
 import TableApi from '../components/TableApi'
-import DatabaseColumn from '../components/DatabaseColumn'
 import SupabaseDataService from '../services/supabase.data.service'
 import UtilsService from '../services/utils.service'
 
@@ -472,6 +472,8 @@ const DatabaseTable: React.FC = () => {
 			<DatabaseColumn 
 				schema={schema}
 				column={column}
+				table={table}
+				isNewTable={(table_schema === 'NEW' && table_name === 'TABLE')}
 				updateColumn={updateColumn}
 				showModal={showColumnModal}
 				isNewColumn={isNewColumn}

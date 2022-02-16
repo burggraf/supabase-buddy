@@ -1,30 +1,14 @@
-import {
-	IonAlert,
-	IonBackButton,
-	IonButton,
-	IonButtons,
-	IonCheckbox,
-	IonContent,
-	IonHeader,
-	IonIcon,
-	IonInput,
-	IonLabel,
-	IonModal,
-	IonPage,
-	IonTitle,
-	IonToolbar,
-	useIonToast,
-} from '@ionic/react'
+import { IonAlert, IonBackButton, IonButton, IonButtons, IonCheckbox, IonContent, IonHeader, IonIcon, IonInput, IonLabel, IonModal, IonPage, IonTitle, IonToolbar, useIonToast } from '@ionic/react'
 import { TableGrid } from 'ionic-react-tablegrid'
+import { arrowBackOutline, checkmarkOutline, closeOutline, trashBin, trashBinOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
+import SupabaseDataService from '../services/supabase.data.service'
 //import ItemPicker from '../components/ItemPicker'
 import ItemPickerAccordion from './ItemPickerAccordion'
-import SupabaseDataService from '../services/supabase.data.service'
 
 import './DatabaseColumn.css'
-import { arrowBackOutline, checkmarkOutline, closeOutline, trashBin, trashBinOutline } from 'ionicons/icons'
 
 // const utilsService = UtilsService.getInstance();
 interface ContainerProps {
@@ -34,6 +18,8 @@ interface ContainerProps {
 	showModal: any
 	setShowModal: any
 	updateColumn: Function
+	table: string
+	isNewTable: boolean
 }
 
 const DatabaseColumn: React.FC<ContainerProps> = ({
@@ -43,7 +29,12 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 	showModal,
 	setShowModal,
 	updateColumn,
+	table,
+	isNewTable
 }) => {
+	console.log('DatabaseColumn: column', column)
+	console.log('DatabaseColumn: table', table)
+	console.log('DatabaseColumn: isNewTable', isNewTable)
 	// const { schema } = useParams<{ schema: string }>()
 	// const { table } = useParams<{ table: string }>()
 	// const { column } = useParams<{ column: string }>()
@@ -160,14 +151,18 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 		console.log('save data here: localCol', localCol)
 		console.log('column', column);
 		console.log('localCol', localCol);
-		const { data, error } = await supabaseDataService.runStatement(sql);
-		if (error) {
-			toast(error.message, 'danger');
-			return;
+		if (isNewTable) {
+
 		} else {
-			// continue closing modal
-			console.log('sql', sql);
-			console.log('result', data);
+			const { data, error } = await supabaseDataService.runStatement(sql);
+			if (error) {
+				toast(error.message, 'danger');
+				return;
+			} else {
+				// continue closing modal
+				console.log('sql', sql);
+				console.log('result', data);
+			}
 		}
 		const newColumn = { ...localCol }
 		// const newColumn: any = {}
@@ -176,8 +171,8 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 		// })
 		newColumn.data_type = data_type
 		console.log('newColumn', newColumn)
-		updateColumn(newColumn)
-		setShowModal({ isOpen: false })
+		updateColumn(newColumn)	
+	setShowModal({ isOpen: false })
 	}
 	const changeHandler = (e: any) => {
 		console.log('changehandler...');
