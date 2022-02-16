@@ -178,7 +178,7 @@ const DatabaseTable: React.FC = () => {
 				// 	description: ""
 				// }
 			];
-			setColumns(newColumns);
+			// setColumns(newColumns);
 		} else {
 			loadColumns();
 			loadPrimaryKeys();
@@ -281,11 +281,11 @@ const DatabaseTable: React.FC = () => {
 		// where the gesture ended. This method can also be called directly
 		// by the reorder group
 		// move columns
-		//const newColumns = [...columns];
-		const newColumns = move([...columns], event.detail.from-1, event.detail.to-1);
+		let newColumns = [...columns];
+		newColumns = move(newColumns, event.detail.from-1, event.detail.to-1);
 		console.log('newColumns', newColumns)
-		setColumns(newColumns);
 		event.detail.complete();
+		setColumns(newColumns);
 	  }
 	const updateColumn = async (column: any) => {
 		console.log('updateColumn', column);	
@@ -423,13 +423,13 @@ const DatabaseTable: React.FC = () => {
 						</IonRow>
 					</IonGrid>
     			</IonItem>
-					{columns.map((column: any, index: number) => (
+					{ columns.map((column: any, index: number) => (
 						<IonItem onClick={() => clickColumn(column, index)}>
 							<IonReorder slot="start" />
 							<IonGrid>
 								<IonRow>
 									<IonCol>
-									 {column.column_name}
+									 	{column.column_name}
 									</IonCol>
 									<IonCol>
 										{column.data_type}
@@ -459,12 +459,17 @@ const DatabaseTable: React.FC = () => {
 
 				</IonReorderGroup>
 				</IonList>
+
 				<pre className="ion-padding">{createTableStatement}
 				{indexes && indexes.length > 0 &&
 					indexes.map((index: any, indexNumber: number) => {
 						return ('\n' + index["indexdef^"] + ';');
 					})
 				}</pre>
+				{/* {columns.map((column: any, index: number) => (
+					<div>{column.column_name} - {index}</div>
+				))} */}
+
 				</>
 			} 
 			{ mode === 'data' && rows?.length > 0 &&

@@ -41,7 +41,7 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 	const [rows, setRows] = useState<any[]>([])
 	const [sql, setSql] = useState<string>('')
 	// const [showModal, setShowModal] = useState({ isOpen: false })
-
+	const [isComplete, setIsComplete] = useState(false)
 	//const [data_type, set] = useState<string>("")
 	const [data_type, setDataType] = useState<string>(column.data_type)
 
@@ -137,6 +137,11 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 	}, [column])
 	useEffect(() => {
 		calculateSQL();
+		if (localCol.column_name && data_type) {
+			setIsComplete(true);
+		} else {
+			setIsComplete(false);
+		}
 	},[localCol, data_type])
 	// useEffect(() => {
 	// 	console.log('useEffect: data_type', data_type, 'rows', rows)
@@ -263,7 +268,7 @@ const DatabaseColumn: React.FC<ContainerProps> = ({
 							<IonIcon size='large' icon={trashBinOutline}></IonIcon>
 						</IonButton>
 						}
-						<IonButton color='primary' onClick={save}>
+						<IonButton color='primary' onClick={save} disabled={!isComplete}>
 							<IonIcon size='large' icon={checkmarkOutline}></IonIcon>
 						</IonButton>
 					</IonButtons>
