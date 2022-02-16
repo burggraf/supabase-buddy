@@ -258,6 +258,14 @@ const DatabaseTable: React.FC = () => {
 			// }
 		});
 		s += `);\n`;
+		columns.forEach((column: any, index: number) => {
+			if (column.description) {
+				s += `COMMENT ON COLUMN ${schema}.${table}.${column.column_name}\n`;
+				s += `  IS '${column.description?.replace(/'/g, "''")}';\n`;
+			}
+		});
+
+
 		setCreateTableStatement(s);
 	}
 	function move(array: Array<string>, from: number, to: number) {
