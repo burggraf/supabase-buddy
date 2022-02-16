@@ -160,6 +160,16 @@ export default class SupabaseDataService {
     `DROP EXTENSION IF EXISTS "${name}"`);
   }
 
+  public async getTableDescription(schema: string, table: string) {
+    const sql = `SELECT pg_description.description as description
+    FROM information_schema.tables 
+    LEFT OUTER JOIN pg_description 
+    ON pg_description.objoid = (information_schema.tables.table_schema || '.' || information_schema.tables.table_name)::regclass and objsubid = 0
+    WHERE table_schema = '${schema}' AND table_name = '${table}'
+    `;
+    console.log(sql)
+    return this.runStatement(sql);
+  }
   public async getTables(orderBy: string = 'schema_name', ascending: boolean = true, exclude_schemas: string = "'pg_catalog', 'information_schema', 'extensions', 'auth', 'storage'") {
     const sql = `SELECT 
     /* information_schema.tables.table_catalog,	*/

@@ -42,6 +42,7 @@ const DatabaseTable: React.FC = () => {
 	const isNewTable = (table_schema === 'NEW' && table_name === 'TABLE');
 	const [ table, setTable ] = useState(isNewTable ? '' : table_name);
 	const [ schema, setSchema ] = useState(table_schema === 'NEW' ? 'public' : table_schema);
+	const [ description, setDescription ] = useState('');
 	const [ column, setColumn ] = useState<any>({});
 	const [ isNewColumn, setIsNewColumn ] = useState(false);
 	const [ columnIndex, setColumnIndex ] = useState(0);
@@ -100,6 +101,15 @@ const DatabaseTable: React.FC = () => {
 			setColumns(data!)
 		}
 	}	
+	const loadDescription = async () => {
+		const { data, error } = await supabaseDataService.getTableDescription(table_schema, table_name);
+		console.log('loadDescription', data, error);
+		if (error) {
+			console.error('loadDescription', error);
+		} else {
+			setDescription(data[0]?.description! || '');
+		}
+	}
 	const loadData = async () => {
 		const { data, error } = await supabaseDataService.getTableRows(table_schema, table_name)
 		if (error) {
@@ -185,6 +195,7 @@ const DatabaseTable: React.FC = () => {
 			];
 			// setColumns(newColumns);
 		} else {
+			loadDescription();
 			loadColumns();
 			loadPrimaryKeys();
 			loadData();
@@ -195,15 +206,11 @@ const DatabaseTable: React.FC = () => {
 		}
 	}, [])
 	useEffect(() => {
-		console.log('useEffect: table');
-		// generateCreateTableStatement();
-	}, [table,schema]);
-	useEffect(() => {
-		console.log('useEffect: columns/indexes changed!')
+		console.log('useEffect: [columns, indexes, table, schema, description] changed!')
 		console.log('columns', columns)
 		console.log('indexes', indexes)
 		generateCreateTableStatement();
-	}, [columns, indexes]);
+	}, [columns, indexes, table, schema, description]);
 	const save = async () => {
 		const { data, error } = await supabaseDataService.runStatement(createTableStatement);
 		if (error) {
@@ -278,7 +285,20 @@ const DatabaseTable: React.FC = () => {
 				s += `  IS '${column.description?.replace(/'/g, "''")}';\n`;
 			}
 		});
-
+		if (isNewTable) {
+			if (description) {
+				s += `COMMENT ON TABLE ${schema}.${table}\n`;
+				s += `  IS '${description?.replace(/'/g, "''")}';\n`;
+			}
+		} else {
+			if (description) {
+				s += `COMMENT ON TABLE ${schema}.${table}\n`;
+				s += `  IS '${description?.replace(/'/g, "''")}';\n`;
+			} else {
+				s += `COMMENT ON TABLE ${schema}.${table}\n`;
+				s += `  IS NULL;\n`;
+			}
+		}
 
 		setCreateTableStatement(s);
 	}
@@ -354,7 +374,7 @@ const DatabaseTable: React.FC = () => {
 			</IonHeader>
 
 			<IonContent>
-			{ (isNewTable) &&
+			{ (true || isNewTable) &&
 				<IonGrid>
 					<IonRow key="name-header" className="header">
 						<IonCol>
@@ -375,6 +395,17 @@ const DatabaseTable: React.FC = () => {
 							placeholder="Enter table name"
 							debounce={750}
 							onIonChange={(e) => setTable(e.detail.value!)}
+							type='text'
+							style={{ border: '1px solid', paddingLeft: '5px' }}
+						/>
+						</IonCol>
+						<IonCol>
+						Description:{' '}
+						<IonInput
+							value={description}
+							placeholder="Table description"
+							debounce={750}
+							onIonChange={(e) => setDescription(e.detail.value!)}
 							type='text'
 							style={{ border: '1px solid', paddingLeft: '5px' }}
 						/>
