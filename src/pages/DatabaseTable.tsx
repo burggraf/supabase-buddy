@@ -39,6 +39,7 @@ const DatabaseTable: React.FC = () => {
 	const [showColumnModal, setShowColumnModal] = useState({ isOpen: false })
 	const { table_schema } = useParams<{ table_schema: string }>()
 	const { table_name } = useParams<{ table_name: string }>()
+	const [ originalDescription, setOriginalDescription ] = useState('');
 	const isNewTable = (table_schema === 'NEW' && table_name === 'TABLE');
 	const [ table, setTable ] = useState(isNewTable ? '' : table_name);
 	const [ schema, setSchema ] = useState(table_schema === 'NEW' ? 'public' : table_schema);
@@ -48,6 +49,7 @@ const DatabaseTable: React.FC = () => {
 	const [ columnIndex, setColumnIndex ] = useState(0);
 	const [ schemas, setSchemas ] = useState<any[]>([]);
 	const [createTableStatement, setCreateTableStatement] = useState<string>("")
+	const [ modifyTableStatement, setModifyTableStatement] = useState<string>("")
 	const [name, setName] = useState(isNewTable ? '' : table_name)
 	const [columns, setColumns] = useState<any[]>([])
 	const [detailCollection, setDetailCollection] = useState<any[]>([])
@@ -107,7 +109,9 @@ const DatabaseTable: React.FC = () => {
 		if (error) {
 			console.error('loadDescription', error);
 		} else {
-			setDescription(data[0]?.description! || '');
+			const newDescription = data[0]?.description! || '';
+			setOriginalDescription(newDescription);
+			setDescription(newDescription);
 		}
 	}
 	const loadData = async () => {
@@ -212,13 +216,19 @@ const DatabaseTable: React.FC = () => {
 		generateCreateTableStatement();
 	}, [columns, indexes, table, schema, description]);
 	const save = async () => {
-		const { data, error } = await supabaseDataService.runStatement(createTableStatement);
+		let sql = '';
+		if (isNewTable) {	
+			sql = createTableStatement;
+		} else {
+			sql = modifyTableStatement;
+		}
+		const { data, error } = await supabaseDataService.runStatement(sql);
 		if (error) {
 			toast(error.message, 'danger');
 			return;
 		} else {
 			// continue closing modal
-			console.log('sql', createTableStatement);
+			console.log('sql', sql);
 			console.log('result', data);
 			window.location.href = `/database-table/${schema}/${table}`;
 		}
@@ -260,6 +270,9 @@ const DatabaseTable: React.FC = () => {
 		setDetailCollection(rows);setCurrentIndex(index + 1);setRecord(row);setDetailTrigger({action:'open'})
 	}
 	const generateCreateTableStatement = () => {
+		console.log('generateCreateTableStatement...');
+		console.log('originalDescription', originalDescription);
+		console.log('description', description);
 		let s = `CREATE TABLE IF NOT EXISTS ${schema}.${table} (\n`;
 		columns.forEach((column: any, index: number) => {
 			if (index > 0) {
@@ -301,6 +314,23 @@ const DatabaseTable: React.FC = () => {
 		}
 
 		setCreateTableStatement(s);
+		let m = '';
+		if (table_name !== table) {
+			m += 'ALTER TABLE ' + schema + '.' + table_name + ' RENAME TO ' + table + ';\n';
+		}
+		if (originalDescription !== description) {
+			if (description) {
+				m += `COMMENT ON TABLE ${schema}.${table}\n`;
+				m += `  IS '${description?.replace(/'/g, "''")}';\n`;
+			} else {
+				m += `COMMENT ON TABLE ${schema}.${table}\n`;
+				m += `  IS NULL;\n`;
+			}
+		}
+
+		setModifyTableStatement(m);
+		console.log('createTableStatement', s);
+		console.log('modifyTableStatement', m);
 	}
 	function move(array: Array<string>, from: number, to: number) {
 		if( to === from ) return array;
@@ -363,7 +393,7 @@ const DatabaseTable: React.FC = () => {
 					<IonTitle>
 						{ (isNewTable) ? 'New Table' : `${table_schema}.${table_name}` }
 					</IonTitle>
-					{ (isNewTable) &&
+					{ (isNewTable || modifyTableStatement) &&
                     	<IonButtons slot="end">
 							<IonButton color="primary" onClick={save}>
 								<IonIcon size="large" icon={checkmark}></IonIcon>
@@ -512,6 +542,23 @@ const DatabaseTable: React.FC = () => {
 
 				</IonReorderGroup>
 				</IonList>
+
+				{ (!isNewTable) && 	
+
+					<>
+					{ modifyTableStatement && 
+						<>
+						<div className="ion-padding" style={{marginTop:'20px', marginLeft:'20px', width: '50%', border: '1px solid'}}>
+						<IonLabel><b>To modify this table:</b></IonLabel>
+						</div>
+						<pre className="ion-padding">{modifyTableStatement}</pre>
+						</>
+					}
+					<div className="ion-padding" style={{marginTop:'20px', marginLeft:'20px', width: '50%', border: '1px solid'}}>
+						<IonLabel><b>To recreate this table:</b></IonLabel>
+					</div>
+					</>
+ 				}
 
 				<pre className="ion-padding">{createTableStatement}
 				{indexes && indexes.length > 0 &&
