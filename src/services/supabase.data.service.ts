@@ -14,7 +14,7 @@ export default class SupabaseDataService {
 	static myInstance:any = null;
 
 	static getInstance() {
-		if (this.myInstance == null) {
+		if (this.myInstance === null) {
 		  this.myInstance = new this();
 		}
 		return this.myInstance;
