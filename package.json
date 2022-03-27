@@ -1,6 +1,6 @@
 {
   "name": "supabase-buddy",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "private": false,
   "dependencies": {
     "@capacitor/app": "1.0.3",
@@ -8,8 +8,8 @@
     "@capacitor/haptics": "1.1.0",
     "@capacitor/keyboard": "1.1.0",
     "@capacitor/status-bar": "1.0.3",
-    "@ionic/react": "^6.0.9",
-    "@ionic/react-router": "^6.0.9",
+    "@ionic/react": "^6.0.13",
+    "@ionic/react-router": "^6.0.13",
     "@monaco-editor/react": "^4.2.2",
     "@supabase/supabase-js": "^1.30.6",
     "@testing-library/jest-dom": "^5.11.9",
